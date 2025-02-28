@@ -2,7 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
 
 import { PermissionType } from "@/enums/PermissionType";
 
-@Entity()
+@Entity({
+  name: "menu",
+})
 export class MenuEntity {
   @PrimaryGeneratedColumn()
   id: number;

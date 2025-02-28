@@ -1,0 +1,20 @@
+http:
+  host: 'localhost'
+  port: 8080
+
+db:
+  postgres:
+    url: 'localhost'
+    port: 3306
+    database: 'yaml-db'
+
+  sqlite:
+    database: 'sqlite.db'
+  
+  mysql:
+    url: 'localhost'
+    port: 3306
+    database: 'bill-zg'
+    username: 'root'
+    password: '871225feng-'
+    synchronize: true
