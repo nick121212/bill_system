@@ -11,8 +11,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserEntity = void 0;
 const class_transformer_1 = require("class-transformer");
+const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
-let UserEntity = class UserEntity {
+const Base_1 = require("./Base");
+let UserEntity = class UserEntity extends Base_1.BaseEntity {
     id;
     fullname;
     email;
@@ -20,9 +22,8 @@ let UserEntity = class UserEntity {
     avatar;
     address;
     isActive;
-    constructor(partial) {
-        Object.assign(this, partial);
-    }
+    createTime;
+    updateTime;
 };
 exports.UserEntity = UserEntity;
 __decorate([
@@ -30,15 +31,19 @@ __decorate([
     __metadata("design:type", Number)
 ], UserEntity.prototype, "id", void 0);
 __decorate([
+    (0, class_validator_1.IsNotEmpty)(),
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "fullname", void 0);
 __decorate([
+    (0, class_validator_1.IsEmail)(),
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "email", void 0);
 __decorate([
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_transformer_1.Exclude)(),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "password", void 0);
 __decorate([
@@ -53,10 +58,17 @@ __decorate([
     (0, typeorm_1.Column)({ default: true }),
     __metadata("design:type", Boolean)
 ], UserEntity.prototype, "isActive", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
+    __metadata("design:type", Date)
+], UserEntity.prototype, "createTime", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
+    __metadata("design:type", Date)
+], UserEntity.prototype, "updateTime", void 0);
 exports.UserEntity = UserEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "user",
-    }),
-    __metadata("design:paramtypes", [Object])
+    })
 ], UserEntity);
 //# sourceMappingURL=User.js.map

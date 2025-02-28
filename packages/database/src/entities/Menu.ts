@@ -1,16 +1,26 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  TreeChildren,
+  TreeParent,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Tree,
+} from "typeorm";
 
 import { PermissionType } from "@/enums/PermissionType";
+import { BaseEntity } from "./Base";
 
 @Entity({
   name: "menu",
 })
-export class MenuEntity {
+@Tree("closure-table")
+export class MenuEntity extends BaseEntity<MenuEntity> {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column()
-  parentId: number;
 
   @Column()
   label: string;
@@ -29,4 +39,16 @@ export class MenuEntity {
 
   @Column()
   order: number;
+
+  @TreeChildren()
+  children: MenuEntity[];
+
+  @TreeParent()
+  parent: MenuEntity;
+
+  @CreateDateColumn({ type: "datetime", name: "create_time" })
+  createTime: Date;
+
+  @UpdateDateColumn({ type: "datetime", name: "update_time" })
+  updateTime: Date;
 }

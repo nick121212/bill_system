@@ -11,13 +11,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleEntity = void 0;
 const typeorm_1 = require("typeorm");
-let RoleEntity = class RoleEntity {
+const Base_1 = require("./Base");
+let RoleEntity = class RoleEntity extends Base_1.BaseEntity {
     id;
     name;
     label;
     desc;
     order;
     status;
+    createTime;
+    updateTime;
 };
 exports.RoleEntity = RoleEntity;
 __decorate([
@@ -44,6 +47,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], RoleEntity.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
+    __metadata("design:type", Date)
+], RoleEntity.prototype, "createTime", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
+    __metadata("design:type", Date)
+], RoleEntity.prototype, "updateTime", void 0);
 exports.RoleEntity = RoleEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "role",

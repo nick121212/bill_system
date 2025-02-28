@@ -1,11 +1,15 @@
 import { PermissionType } from "../enums/PermissionType";
-export declare class MenuEntity {
+import { BaseEntity } from "./Base";
+export declare class MenuEntity extends BaseEntity<MenuEntity> {
     id: number;
-    parentId: number;
     label: string;
     name: string;
     icon: string;
     type: PermissionType;
     route: string;
     order: number;
+    children: MenuEntity[];
+    parent: MenuEntity;
+    createTime: Date;
+    updateTime: Date;
 }

@@ -4,14 +4,17 @@ import {
   PrimaryGeneratedColumn,
   OneToOne,
   JoinColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from "typeorm";
 import { ProductCategoryEntity } from "./ProductCategory";
 import { ProductUnitEntity } from "./ProductUnit";
+import { BaseEntity } from "./Base";
 
 @Entity({
   name: "product",
 })
-export class ProductEntity {
+export class OrderEntity extends BaseEntity<OrderEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -34,4 +37,10 @@ export class ProductEntity {
   @OneToOne(() => ProductUnitEntity)
   @JoinColumn()
   unit: ProductUnitEntity;
+
+  @CreateDateColumn({ type: "datetime", name: "create_time" })
+  createTime: Date;
+
+  @UpdateDateColumn({ type: "datetime", name: "update_time" })
+  updateTime: Date;
 }

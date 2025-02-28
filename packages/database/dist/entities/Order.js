@@ -9,72 +9,64 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.MenuEntity = void 0;
+exports.OrderEntity = void 0;
 const typeorm_1 = require("typeorm");
-const PermissionType_1 = require("../enums/PermissionType");
+const ProductCategory_1 = require("./ProductCategory");
+const ProductUnit_1 = require("./ProductUnit");
 const Base_1 = require("./Base");
-let MenuEntity = class MenuEntity extends Base_1.BaseEntity {
+let OrderEntity = class OrderEntity extends Base_1.BaseEntity {
     id;
-    label;
     name;
-    icon;
-    type;
-    route;
-    order;
-    children;
-    parent;
+    label;
+    desc;
+    price;
+    category;
+    unit;
     createTime;
     updateTime;
 };
-exports.MenuEntity = MenuEntity;
+exports.OrderEntity = OrderEntity;
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
-], MenuEntity.prototype, "id", void 0);
+], OrderEntity.prototype, "id", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], MenuEntity.prototype, "label", void 0);
+], OrderEntity.prototype, "name", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], MenuEntity.prototype, "name", void 0);
+], OrderEntity.prototype, "label", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], MenuEntity.prototype, "icon", void 0);
+], OrderEntity.prototype, "desc", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
-], MenuEntity.prototype, "type", void 0);
+], OrderEntity.prototype, "price", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], MenuEntity.prototype, "route", void 0);
+    (0, typeorm_1.OneToOne)(() => ProductCategory_1.ProductCategoryEntity),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", ProductCategory_1.ProductCategoryEntity)
+], OrderEntity.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Number)
-], MenuEntity.prototype, "order", void 0);
-__decorate([
-    (0, typeorm_1.TreeChildren)(),
-    __metadata("design:type", Array)
-], MenuEntity.prototype, "children", void 0);
-__decorate([
-    (0, typeorm_1.TreeParent)(),
-    __metadata("design:type", MenuEntity)
-], MenuEntity.prototype, "parent", void 0);
+    (0, typeorm_1.OneToOne)(() => ProductUnit_1.ProductUnitEntity),
+    (0, typeorm_1.JoinColumn)(),
+    __metadata("design:type", ProductUnit_1.ProductUnitEntity)
+], OrderEntity.prototype, "unit", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
     __metadata("design:type", Date)
-], MenuEntity.prototype, "createTime", void 0);
+], OrderEntity.prototype, "createTime", void 0);
 __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
     __metadata("design:type", Date)
-], MenuEntity.prototype, "updateTime", void 0);
-exports.MenuEntity = MenuEntity = __decorate([
+], OrderEntity.prototype, "updateTime", void 0);
+exports.OrderEntity = OrderEntity = __decorate([
     (0, typeorm_1.Entity)({
-        name: "menu",
-    }),
-    (0, typeorm_1.Tree)("closure-table")
-], MenuEntity);
-//# sourceMappingURL=Menu.js.map
+        name: "product",
+    })
+], OrderEntity);
+//# sourceMappingURL=Order.js.map

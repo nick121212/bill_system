@@ -1,11 +1,18 @@
 import { Exclude } from "class-transformer";
 import { IsEmail, IsNotEmpty } from "class-validator";
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from "typeorm";
+import { BaseEntity } from "./Base";
 
 @Entity({
   name: "user",
 })
-export class UserEntity {
+export class UserEntity extends BaseEntity<UserEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -31,7 +38,9 @@ export class UserEntity {
   @Column({ default: true })
   isActive: boolean;
 
-  constructor(partial: Partial<UserEntity>) {
-    Object.assign(this, partial);
-  }
+  @CreateDateColumn({ type: "datetime", name: "create_time" })
+  createTime: Date;
+
+  @UpdateDateColumn({ type: "datetime", name: "update_time" })
+  updateTime: Date;
 }

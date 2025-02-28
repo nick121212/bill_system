@@ -1,4 +1,5 @@
-export declare class UserEntity {
+import { BaseEntity } from "./Base";
+export declare class UserEntity extends BaseEntity<UserEntity> {
     id: number;
     fullname: string;
     email: string;
@@ -6,5 +7,6 @@ export declare class UserEntity {
     avatar: string;
     address: string;
     isActive: boolean;
-    constructor(partial: Partial<UserEntity>);
+    createTime: Date;
+    updateTime: Date;
 }

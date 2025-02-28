@@ -11,11 +11,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductCategoryEntity = void 0;
 const typeorm_1 = require("typeorm");
-let ProductCategoryEntity = class ProductCategoryEntity {
+const Base_1 = require("./Base");
+let ProductCategoryEntity = class ProductCategoryEntity extends Base_1.BaseEntity {
     id;
     name;
     label;
     desc;
+    createTime;
+    updateTime;
 };
 exports.ProductCategoryEntity = ProductCategoryEntity;
 __decorate([
@@ -34,6 +37,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], ProductCategoryEntity.prototype, "desc", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
+    __metadata("design:type", Date)
+], ProductCategoryEntity.prototype, "createTime", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
+    __metadata("design:type", Date)
+], ProductCategoryEntity.prototype, "updateTime", void 0);
 exports.ProductCategoryEntity = ProductCategoryEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "product_category",

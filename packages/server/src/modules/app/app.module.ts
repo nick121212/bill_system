@@ -7,6 +7,7 @@ import database from "@/config/database";
 import base from "@/config/base";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { UserModule } from "@/modules/user/user.module";
+import { MenuModule } from "@/modules/menu/menu.module";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from "@/modules/user/user.module";
     }),
     UserModule,
     AuthModule,
+    MenuModule
   ],
   providers: [],
 })

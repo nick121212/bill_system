@@ -1,9 +1,16 @@
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { BaseEntity } from "./Base";
 
 @Entity({
   name: "product_category",
 })
-export class ProductCategoryEntity {
+export class ProductCategoryEntity extends BaseEntity<ProductCategoryEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -15,4 +22,10 @@ export class ProductCategoryEntity {
 
   @Column()
   desc: string;
+
+  @CreateDateColumn({ type: "datetime", name: "create_time" })
+  createTime: Date;
+
+  @UpdateDateColumn({ type: "datetime", name: "update_time" })
+  updateTime: Date;
 }

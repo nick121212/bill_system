@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomerEntity = void 0;
 const DeliverType_1 = require("../enums/DeliverType");
 const typeorm_1 = require("typeorm");
-let CustomerEntity = class CustomerEntity {
+const Base_1 = require("./Base");
+let CustomerEntity = class CustomerEntity extends Base_1.BaseEntity {
     id;
     fullname;
     contact;
@@ -25,6 +26,8 @@ let CustomerEntity = class CustomerEntity {
     template;
     no;
     desc;
+    createTime;
+    updateTime;
 };
 exports.CustomerEntity = CustomerEntity;
 __decorate([
@@ -75,6 +78,14 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], CustomerEntity.prototype, "desc", void 0);
+__decorate([
+    (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
+    __metadata("design:type", Date)
+], CustomerEntity.prototype, "createTime", void 0);
+__decorate([
+    (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
+    __metadata("design:type", Date)
+], CustomerEntity.prototype, "updateTime", void 0);
 exports.CustomerEntity = CustomerEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "customer",

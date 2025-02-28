@@ -10,8 +10,7 @@ export class UserService {
   ) {}
 
   async findOne(email: string): Promise<UserEntity | null> {
-    console.log(1111);
-    return {
+    return new UserEntity({
       email: "nick@126.com",
       id: 1,
       fullname: "",
@@ -19,7 +18,7 @@ export class UserService {
       avatar: "",
       address: "",
       isActive: false,
-    };
+    });
 
     // return this.userRepo.findOne({
     //   where: {

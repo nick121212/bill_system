@@ -1,5 +1,6 @@
 import { DeliverType } from "../enums/DeliverType";
-export declare class CustomerEntity {
+import { BaseEntity } from "./Base";
+export declare class CustomerEntity extends BaseEntity<CustomerEntity> {
     id: number;
     fullname: string;
     contact: string;
@@ -12,4 +13,6 @@ export declare class CustomerEntity {
     template: number;
     no: string;
     desc: string;
+    createTime: Date;
+    updateTime: Date;
 }
