@@ -27,6 +27,9 @@ export class ProductEntity {
   @Column()
   price: number;
 
+  @Column()
+  cost: number;
+
   @OneToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;
