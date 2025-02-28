@@ -18,7 +18,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "start:dev": "nest build --webpack --webpackPath webpack-hmr.config.js --watch"
+    "start:dev": "nest build --webpack --webpackPath webpack-hmr.config.js --watch",
+    "doc": "npx @compodoc/compodoc -p tsconfig.json -s"
   },
   "dependencies": {
     "@bill/database": "^1.0.0",
