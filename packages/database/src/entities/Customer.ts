@@ -1,5 +1,13 @@
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+} from "typeorm";
+
 import { DeliverType } from "@/enums/DeliverType";
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+
 import { BaseEntity } from "./Base";
 
 @Entity({

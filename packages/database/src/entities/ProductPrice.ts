@@ -1,3 +1,4 @@
+import { Max, Min } from "class-validator";
 import {
   Entity,
   Column,
@@ -8,9 +9,9 @@ import {
   CreateDateColumn,
 } from "typeorm";
 
+import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
 import { ProductEntity } from "./Product";
-import { BaseEntity } from "./Base";
 
 @Entity({
   name: "product_price",
@@ -21,6 +22,11 @@ export class ProductPriceEntity extends BaseEntity<ProductPriceEntity> {
 
   @Column()
   price: number;
+
+  @Min(10)
+  @Max(100)
+  @Column({ default: 100 })
+  discount: number;
 
   @OneToOne(() => ProductEntity)
   @JoinColumn()

@@ -1,8 +1,8 @@
-import { Controller, Request, Post, UseGuards, Get } from "@nestjs/common";
-import { AuthGuard } from "@nestjs/passport";
+import { Controller, Request, Get } from "@nestjs/common";
+
+import { Public } from "@/decorator/public";
 
 import { MenuService } from "./menu.service";
-import { Public } from "@/decorator/public";
 
 @Controller({
   path: ["menus"],

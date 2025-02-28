@@ -7,9 +7,10 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
 } from "typeorm";
+
+import { BaseEntity } from "./Base";
 import { ProductCategoryEntity } from "./ProductCategory";
 import { ProductUnitEntity } from "./ProductUnit";
-import { BaseEntity } from "./Base";
 
 @Entity({
   name: "product",
