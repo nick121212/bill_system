@@ -1,13 +1,14 @@
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule, ConfigService } from "@nestjs/config";
 import entities from "@bill/database";
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
 
-import database from "@/config/database";
 import base from "@/config/base";
+import database from "@/config/database";
 import { AuthModule } from "@/modules/auth/auth.module";
-import { UserModule } from "@/modules/user/user.module";
+import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
+import { UserModule } from "@/modules/user/user.module";
 
 @Module({
   imports: [
@@ -29,9 +30,10 @@ import { MenuModule } from "@/modules/menu/menu.module";
       },
       inject: [ConfigService],
     }),
+    Log4jsGlobalModule.forRoot(),
     UserModule,
     AuthModule,
-    MenuModule
+    MenuModule,
   ],
   providers: [],
 })

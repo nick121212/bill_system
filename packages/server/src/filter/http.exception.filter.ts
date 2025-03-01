@@ -6,15 +6,19 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 
-import { ApiException } from "./api.exception";
+import { Log4jsService } from "@/modules/log4js";
+
+import { ApiException } from "../exception/api.exception";
 
 export class HttpExceptionFilter implements ExceptionFilter {
-  // constructor(private logger: log4jslogger)
+  constructor(private readonly logger: Log4jsService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const req = ctx.getRequest();
+
+    this.logger.getLogger("HttpExceptionFilter").error(exception.message);
 
     if (exception instanceof ApiException) {
       const status = exception.getStatus();
@@ -35,7 +39,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         timestamp: Date.now(),
         path: req.url,
       },
-      message: "UNKNOWN_ERROR",
+      message: exception.message || "UNKNOWN_ERROR",
     });
   }
 }

@@ -6,17 +6,21 @@ import { NestFactory } from "@nestjs/core";
 
 import { ApiException } from "@/exception/api.exception";
 import { AppModule } from "@/modules/app/app.module";
+import { Log4jsService } from "@/modules/log4js";
 
-import { HttpExceptionFilter } from "./exception/http.exception.filter";
+import { HttpExceptionFilter } from "./filter/http.exception.filter";
+import { ResponseInterceptor } from "./interceptor/res.interceptor";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {  });
   const configService = app.get(ConfigService);
   const port = (configService.get("base") || {}).port || 3000;
+  const logger = app.get(Log4jsService);
 
+  app.useLogger(logger);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter(logger));
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -42,6 +46,8 @@ async function bootstrap() {
       credential: true,
     });
   }
+
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(port).then(() => {
     console.log("serer start on port: ", port);

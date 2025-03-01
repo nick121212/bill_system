@@ -1,6 +1,7 @@
 import { Controller, Request, Get, Post, Body, Param } from "@nestjs/common";
 
 import { Public } from "@/decorator/public";
+import { Log4jsService } from "@/modules/log4js";
 
 import { MenuBodyRequest } from "./menu.interface";
 import { MenuService } from "./menu.service";
@@ -9,7 +10,9 @@ import { MenuService } from "./menu.service";
   path: ["menus"],
 })
 export class MenuController {
-  constructor(private menuService: MenuService) {}
+  constructor(private menuService: MenuService, private readonly log4jService: Log4jsService) {
+    this.log4jService.warn("abc");
+  }
 
   @Public()
   @Get("/")

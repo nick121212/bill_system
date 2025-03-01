@@ -38,6 +38,8 @@ export class MenuService {
       ...body,
       parent: await this.getById(body.parentId || 0),
     });
+
+    return await this.repo.create(child);
   }
 
   async testData() {
