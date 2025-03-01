@@ -1,0 +1,7 @@
+export declare enum ApiStatusCode {
+    SUCCESS = "RET0000",
+    KEY_NOT_EXIST = "RET0001",
+    DUPLICATE_KEY = "RET0002",
+    PARAMETER_VALIDATE_ERROR = "RET1111",
+    UNKOWN_ERROR = "RET9999"
+}

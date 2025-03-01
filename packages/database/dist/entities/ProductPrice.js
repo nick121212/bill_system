@@ -10,13 +10,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductPriceEntity = void 0;
+const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
+const Base_1 = require("./Base");
 const Customer_1 = require("./Customer");
 const Product_1 = require("./Product");
-const Base_1 = require("./Base");
 let ProductPriceEntity = class ProductPriceEntity extends Base_1.BaseEntity {
     id;
     price;
+    discount;
     product;
     customer;
     createTime;
@@ -31,6 +33,12 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], ProductPriceEntity.prototype, "price", void 0);
+__decorate([
+    (0, class_validator_1.Min)(10),
+    (0, class_validator_1.Max)(100),
+    (0, typeorm_1.Column)({ default: 100 }),
+    __metadata("design:type", Number)
+], ProductPriceEntity.prototype, "discount", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => Product_1.ProductEntity),
     (0, typeorm_1.JoinColumn)(),

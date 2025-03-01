@@ -11,9 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProductEntity = void 0;
 const typeorm_1 = require("typeorm");
+const Base_1 = require("./Base");
 const ProductCategory_1 = require("./ProductCategory");
 const ProductUnit_1 = require("./ProductUnit");
-const Base_1 = require("./Base");
 let ProductEntity = class ProductEntity extends Base_1.BaseEntity {
     id;
     name;

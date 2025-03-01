@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CustomerEntity = void 0;
-const DeliverType_1 = require("../enums/DeliverType");
 const typeorm_1 = require("typeorm");
+const DeliverType_1 = require("../enums/DeliverType");
 const Base_1 = require("./Base");
 let CustomerEntity = class CustomerEntity extends Base_1.BaseEntity {
     id;

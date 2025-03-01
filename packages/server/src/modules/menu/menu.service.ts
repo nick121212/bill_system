@@ -4,6 +4,8 @@ import { MenuEntity, UserEntity } from "@bill/database/dist/entities";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
+import { MenuBodyRequest } from "./menu.interface";
+
 @Injectable()
 export class MenuService {
   constructor(
@@ -17,6 +19,25 @@ export class MenuService {
       .findTrees();
 
     return trees;
+  }
+
+  async getById(id?: number) {
+    if (!id) {
+      return undefined;
+    }
+
+    const menu = await this.repo.findOneBy({
+      id,
+    });
+
+    return menu || undefined;
+  }
+
+  async create(body: MenuBodyRequest) {
+    const child = new MenuEntity().extend({
+      ...body,
+      parent: await this.getById(body.parentId || 0),
+    });
   }
 
   async testData() {
@@ -47,8 +68,6 @@ export class MenuService {
       order: 1,
       parent: dashboard,
     });
-
-    console.log(child1);
 
     await this.em.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager.save(dashboard);

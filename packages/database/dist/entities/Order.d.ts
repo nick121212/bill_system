@@ -1,6 +1,6 @@
+import { BaseEntity } from "./Base";
 import { ProductCategoryEntity } from "./ProductCategory";
 import { ProductUnitEntity } from "./ProductUnit";
-import { BaseEntity } from "./Base";
 export declare class OrderEntity extends BaseEntity<OrderEntity> {
     id: number;
     name: string;

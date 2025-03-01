@@ -1,7 +1,8 @@
-import { Controller, Request, Get } from "@nestjs/common";
+import { Controller, Request, Get, Post, Body, Param } from "@nestjs/common";
 
 import { Public } from "@/decorator/public";
 
+import { MenuBodyRequest } from "./menu.interface";
 import { MenuService } from "./menu.service";
 
 @Controller({
@@ -12,8 +13,20 @@ export class MenuController {
 
   @Public()
   @Get("/")
-  async login(@Request() req) {
+  async tree(@Request() req) {
     return this.menuService.all();
+  }
+
+  @Public()
+  @Get("/:id")
+  async one(@Param("id") id: number) {
+    return this.menuService.getById(id);
+  }
+
+  @Public()
+  @Post("/")
+  async create(@Body() body: MenuBodyRequest) {
+    return this.menuService.create(body);
   }
 
   @Public()
