@@ -5,11 +5,10 @@ import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 
 import { ApiException } from "@/exception/api.exception";
+import { HttpExceptionFilter } from "@/filter/http.exception.filter";
+import { ResponseInterceptor } from "@/interceptor/res.interceptor";
 import { AppModule } from "@/modules/app/app.module";
 import { Log4jsService } from "@/modules/log4js";
-
-import { HttpExceptionFilter } from "./filter/http.exception.filter";
-import { ResponseInterceptor } from "./interceptor/res.interceptor";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {  });
@@ -20,6 +19,7 @@ async function bootstrap() {
   app.useLogger(logger);
   app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
+  // app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter(logger));
 
   app.useGlobalPipes(
@@ -47,7 +47,6 @@ async function bootstrap() {
     });
   }
 
-  app.useGlobalInterceptors(new ResponseInterceptor());
 
   await app.listen(port).then(() => {
     console.log("serer start on port: ", port);

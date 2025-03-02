@@ -3,5 +3,6 @@ export declare enum ApiStatusCode {
     KEY_NOT_EXIST = "RET0001",
     DUPLICATE_KEY = "RET0002",
     PARAMETER_VALIDATE_ERROR = "RET1111",
-    UNKOWN_ERROR = "RET9999"
+    UNKOWN_ERROR = "RET9999",
+    SQL_ERROR = "RET8888"
 }

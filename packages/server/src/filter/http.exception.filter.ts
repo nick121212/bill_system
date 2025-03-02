@@ -1,3 +1,4 @@
+import { QueryFailedError } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   ArgumentsHost,
@@ -20,6 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     this.logger.getLogger("HttpExceptionFilter").error(exception.message);
 
+    // custom error
     if (exception instanceof ApiException) {
       const status = exception.getStatus();
 
@@ -33,6 +35,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     }
 
+    // sql error can not expose to users
+    if (exception instanceof QueryFailedError) {
+      return response.status(HttpStatus.OK).json({
+        code: ApiStatusCode.SQL_ERROR,
+        data: {
+          timestamp: Date.now(),
+          path: req.url,
+        },
+        message: "SQL_ERROR",
+      });
+    }
+
+    // common error
     response.status(HttpStatus.OK).json({
       code: ApiStatusCode.UNKOWN_ERROR,
       data: {

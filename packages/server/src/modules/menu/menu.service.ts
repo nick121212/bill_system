@@ -1,19 +1,23 @@
 import { EntityManager, Repository } from "typeorm";
-import { PermissionType } from "@bill/database";
+import { ApiStatusCode, PermissionType } from "@bill/database";
 import { MenuEntity, UserEntity } from "@bill/database/dist/entities";
-import { Injectable } from "@nestjs/common";
+import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+
+import { ApiException } from "@/exception/api.exception";
+import { Log4jsService } from "@/modules/log4js";
 
 import { MenuBodyRequest } from "./menu.interface";
 
 @Injectable()
 export class MenuService {
   constructor(
+    private logger: Log4jsService,
     @InjectRepository(MenuEntity) private repo: Repository<MenuEntity>,
     private em: EntityManager
   ) {}
 
-  async all() {
+  async all(): Promise<MenuEntity[]> {
     const trees = await this.repo.manager
       .getTreeRepository(MenuEntity)
       .findTrees();
@@ -21,7 +25,7 @@ export class MenuService {
     return trees;
   }
 
-  async getById(id?: number) {
+  async getById(id?: number): Promise<MenuEntity | undefined> {
     if (!id) {
       return undefined;
     }
@@ -33,13 +37,56 @@ export class MenuService {
     return menu || undefined;
   }
 
-  async create(body: MenuBodyRequest) {
+  async create(body: MenuBodyRequest): Promise<MenuEntity> {
     const child = new MenuEntity().extend({
       ...body,
       parent: await this.getById(body.parentId || 0),
     });
 
     return await this.repo.create(child);
+  }
+
+  async update(id: number, body: MenuBodyRequest): Promise<MenuEntity> {
+    const child = await this.getById(id);
+
+    if (!child) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK
+      );
+    }
+
+    child.icon = body.icon;
+    child.label = body.label;
+    child.name = body.name;
+    child.order = body.order;
+    child.route = body.route;
+    child.type = body.type;
+
+    child.parent = undefined;
+
+    if (body.parentId) {
+      child.parent = await this.getById(body.parentId);
+    }
+
+    return this.repo.save(child);
+  }
+
+  async remove(id: number) {
+    const child = await this.getById(id);
+
+    if (!child) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK
+      );
+    }
+
+    this.logger.log("jdlkfjlkadjfkljalksdjlfkja");
+
+    return this.repo.remove(child, {});
   }
 
   async testData() {

@@ -8,4 +8,6 @@ export enum ApiStatusCode {
   PARAMETER_VALIDATE_ERROR = "RET1111",
 
   UNKOWN_ERROR = "RET9999",
+
+  SQL_ERROR = "RET8888"
 }

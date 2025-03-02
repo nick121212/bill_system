@@ -10,12 +10,12 @@ export class ApiException extends HttpException {
     errorMsg: string,
     errorCode: ApiStatusCode,
     statusCode: HttpStatus,
-    errorData: Record<string, any>
+    errorData?: Record<string, any>
   ) {
     super(errorMsg, statusCode);
 
     this.errorCode = errorCode;
-    this.errorData = errorData;
+    this.errorData = errorData || {};
     this.errorMsg = errorMsg;
   }
 
@@ -24,7 +24,7 @@ export class ApiException extends HttpException {
   }
 
   getErrorCode() {
-    return this.errorData;
+    return this.errorCode;
   }
 
   getErrorData() {

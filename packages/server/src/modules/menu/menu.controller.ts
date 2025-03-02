@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Post, Body, Param } from "@nestjs/common";
+import { Controller, Request, Get, Post, Body, Param, Put, Delete } from "@nestjs/common";
 
 import { Public } from "@/decorator/public";
 import { Log4jsService } from "@/modules/log4js";
@@ -30,6 +30,18 @@ export class MenuController {
   @Post("/")
   async create(@Body() body: MenuBodyRequest) {
     return this.menuService.create(body);
+  }
+
+  @Public()
+  @Put("/:id")
+  async update(@Param("id") id: number, @Body() body: MenuBodyRequest) {
+    return this.menuService.update(id, body);
+  }
+
+  @Public()
+  @Delete("/:id")
+  async remote(@Param("id") id: number) {
+    return this.menuService.remove(id);
   }
 
   @Public()

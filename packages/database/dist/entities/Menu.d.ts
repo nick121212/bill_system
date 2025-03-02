@@ -9,7 +9,7 @@ export declare class MenuEntity extends BaseEntity<MenuEntity> {
     route: string;
     order: number;
     children: MenuEntity[];
-    parent: MenuEntity;
+    parent?: MenuEntity;
     createTime: Date;
     updateTime: Date;
 }

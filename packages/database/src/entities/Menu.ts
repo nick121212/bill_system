@@ -45,7 +45,7 @@ export class MenuEntity extends BaseEntity<MenuEntity> {
   children: MenuEntity[];
 
   @TreeParent()
-  parent: MenuEntity;
+  parent?: MenuEntity;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
