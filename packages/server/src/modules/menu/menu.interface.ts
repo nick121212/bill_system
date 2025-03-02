@@ -1,4 +1,4 @@
-import { IsNumber, IsString, isString, Max, Min } from "class-validator";
+import { IsNumber, IsString, Max, Min } from "class-validator";
 import { PermissionType } from "@bill/database";
 
 export class MenuBodyRequest {
