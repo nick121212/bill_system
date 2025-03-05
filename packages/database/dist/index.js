@@ -24,5 +24,8 @@ exports.default = [
     entities_1.ProductCategoryEntity,
     entities_1.ProductEntity,
     entities_1.ProductUnitEntity,
+    entities_1.TemplateCategoryEntity,
+    entities_1.TemplateCategoryProductEntity,
+    entities_1.TemplateEntity,
 ];
 //# sourceMappingURL=index.js.map

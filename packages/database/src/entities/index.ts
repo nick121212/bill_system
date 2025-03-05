@@ -5,3 +5,6 @@ export * from "./Customer";
 export * from "./Product";
 export * from "./ProductUnit";
 export * from "./ProductCategory";
+export * from "./Template";
+export * from "./TemplateCategory";
+export * from "./TemplateCategoryProduct";

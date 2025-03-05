@@ -12,4 +12,5 @@ export declare class ProductEntity extends BaseEntity<ProductEntity> {
     unit: ProductUnitEntity;
     createTime: Date;
     updateTime: Date;
+    deletedDate: Date;
 }

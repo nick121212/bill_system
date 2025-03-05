@@ -38,12 +38,15 @@ export class MenuService {
   }
 
   async create(body: MenuBodyRequest): Promise<MenuEntity> {
+    const { id, parentId, ...rest } = body;
+
     const child = new MenuEntity().extend({
-      ...body,
-      parent: await this.getById(body.parentId || 0),
+      ...rest,
+      children: [],
+      parent: await this.getById(parentId || 0),
     });
 
-    return await this.repo.create(child);
+    return await this.repo.save(child);
   }
 
   async update(id: number, body: MenuBodyRequest): Promise<MenuEntity> {
@@ -84,9 +87,7 @@ export class MenuService {
       );
     }
 
-    this.logger.log("jdlkfjlkadjfkljalksdjlfkja");
-
-    return this.repo.remove(child, {});
+    return this.repo.remove(child);
   }
 
   async testData() {
@@ -118,13 +119,15 @@ export class MenuService {
       parent: dashboard,
     });
 
-    await this.em.transaction(async (transactionalEntityManager) => {
+    return await this.em.transaction(async (transactionalEntityManager) => {
       await transactionalEntityManager.save(dashboard);
 
-      await Promise.all([
+      return await Promise.all([
         transactionalEntityManager.save(child1),
         transactionalEntityManager.save(child2),
       ]);
     });
+
+    console.log(1111);
   }
 }

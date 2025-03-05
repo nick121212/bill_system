@@ -2,21 +2,17 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
-import { ProductCategoryEntity } from "./ProductCategory";
-import { ProductUnitEntity } from "./ProductUnit";
 
 @Entity({
-  name: "product",
+  name: "template",
 })
-export class ProductEntity extends BaseEntity<ProductEntity> {
+export class TemplateEntity extends BaseEntity<TemplateEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,24 +20,10 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   name: string;
 
   @Column()
-  label: string;
-
-  @Column()
   desc: string;
 
   @Column()
-  price: number;
-
-  @Column()
-  cost: number;
-
-  @OneToOne(() => ProductCategoryEntity)
-  @JoinColumn()
-  category: ProductCategoryEntity;
-
-  @OneToOne(() => ProductUnitEntity)
-  @JoinColumn()
-  unit: ProductUnitEntity;
+  status: number;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
@@ -50,5 +32,5 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   updateTime: Date;
 
   @DeleteDateColumn()
-  deletedDate: Date
+  deletedDate: Date;
 }

@@ -8,6 +8,7 @@ import database from "@/config/database";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
+import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
 
 @Module({
@@ -19,13 +20,14 @@ import { UserModule } from "@/modules/user/user.module";
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => {
-        console.log(config.get("database"));
         return Object.assign(
           {
             entities: entities || [],
             synchronize: true,
           },
-          config.get("database")
+          config.get("database"),
+          {
+          }
         );
       },
       inject: [ConfigService],
@@ -34,6 +36,7 @@ import { UserModule } from "@/modules/user/user.module";
     UserModule,
     AuthModule,
     MenuModule,
+    TemplateModule
   ],
   providers: [],
 })

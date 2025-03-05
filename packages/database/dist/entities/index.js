@@ -21,4 +21,7 @@ __exportStar(require("./Customer"), exports);
 __exportStar(require("./Product"), exports);
 __exportStar(require("./ProductUnit"), exports);
 __exportStar(require("./ProductCategory"), exports);
+__exportStar(require("./Template"), exports);
+__exportStar(require("./TemplateCategory"), exports);
+__exportStar(require("./TemplateCategoryProduct"), exports);
 //# sourceMappingURL=index.js.map

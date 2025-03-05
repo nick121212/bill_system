@@ -19,7 +19,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const req = ctx.getRequest();
 
-    this.logger.getLogger("HttpExceptionFilter").error(exception.message);
+    this.logger.getLogger("HttpExceptionFilter").error(exception?.message);
 
     // custom error
     if (exception instanceof ApiException) {
@@ -54,7 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         timestamp: Date.now(),
         path: req.url,
       },
-      message: exception.message || "UNKNOWN_ERROR",
+      message: exception?.message || "UNKNOWN_ERROR",
     });
   }
 }
