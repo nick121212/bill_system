@@ -1,17 +1,12 @@
+import { Type } from "class-transformer";
+
 export class BaseQuery {
+  @Type(() => Number)
   skip?: number;
+
+  @Type(() => Number)
   take?: number;
+
+  @Type(() => Object)
   where?: Record<string, any>;
-
-  get skip_c() {
-    return this.skip || 0;
-  }
-
-  get take_c() {
-    return this.take || 10;
-  }
-
-  get where_c() {
-    return this.where || {};
-  }
 }

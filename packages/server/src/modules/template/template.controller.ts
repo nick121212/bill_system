@@ -1,4 +1,4 @@
-import { Controller, Request, Get, Post, Body, Param, Put, Delete } from "@nestjs/common";
+import { Controller, Request, Get, Post, Body, Param, Put, Delete, Query } from "@nestjs/common";
 
 import { Public } from "@/decorator/public";
 import { Log4jsService } from "@/modules/log4js";
@@ -16,7 +16,7 @@ export class MenuController {
   }
 
   @Get("/")
-  async all(@Body() query: TemplateQuery) {
+  async all(@Query() query: TemplateQuery) {
     return this.templateService.all(query);
   }
 

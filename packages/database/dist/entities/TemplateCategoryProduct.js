@@ -27,12 +27,12 @@ __decorate([
     __metadata("design:type", Number)
 ], TemplateCategoryProductEntity.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => TemplateCategory_1.TemplateCategoryEntity),
+    (0, typeorm_1.ManyToOne)(() => TemplateCategory_1.TemplateCategoryEntity),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", TemplateCategory_1.TemplateCategoryEntity)
 ], TemplateCategoryProductEntity.prototype, "templateCategory", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => Product_1.ProductEntity),
+    (0, typeorm_1.ManyToOne)(() => Product_1.ProductEntity),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", Product_1.ProductEntity)
 ], TemplateCategoryProductEntity.prototype, "product", void 0);

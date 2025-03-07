@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
+  ManyToOne,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
@@ -35,11 +36,11 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   @Column()
   cost: number;
 
-  @OneToOne(() => ProductCategoryEntity)
+  @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;
 
-  @OneToOne(() => ProductUnitEntity)
+  @ManyToOne(() => ProductUnitEntity)
   @JoinColumn()
   unit: ProductUnitEntity;
 

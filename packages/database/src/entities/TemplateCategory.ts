@@ -5,6 +5,9 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
+  OneToMany,
+  ManyToOne,
+  ManyToMany,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
@@ -18,11 +21,11 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => TemplateEntity)
+  @ManyToMany(() => TemplateEntity, (temp) => temp.categories)
   @JoinColumn()
   template: TemplateEntity;
 
-  @OneToOne(() => ProductCategoryEntity)
+  @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;
 

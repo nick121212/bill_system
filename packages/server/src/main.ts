@@ -11,16 +11,15 @@ import { AppModule } from "@/modules/app/app.module";
 import { Log4jsService } from "@/modules/log4js";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {  });
+  const app = await NestFactory.create(AppModule, {});
   const configService = app.get(ConfigService);
   const port = (configService.get("base") || {}).port || 3000;
   const logger = app.get(Log4jsService);
 
   app.useLogger(logger);
-  app.useGlobalPipes(new ValidationPipe());
   app.use(cookieParser());
-  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter(logger));
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -30,10 +29,6 @@ async function bootstrap() {
           Object.values(validationErrors[0].constraints || [])[0],
           ApiStatusCode.PARAMETER_VALIDATE_ERROR,
           HttpStatus.OK,
-          {
-            success: 0,
-            message: Object.values(validationErrors[0].constraints || []),
-          }
         );
       },
     })
@@ -46,7 +41,6 @@ async function bootstrap() {
       credential: true,
     });
   }
-
 
   await app.listen(port).then(() => {
     console.log("serer start on port: ", port);

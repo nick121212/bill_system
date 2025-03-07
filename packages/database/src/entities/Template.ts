@@ -5,9 +5,12 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
+  OneToMany,
+  ManyToMany,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { TemplateCategoryEntity } from "./TemplateCategory";
 
 @Entity({
   name: "template",
@@ -24,6 +27,9 @@ export class TemplateEntity extends BaseEntity<TemplateEntity> {
 
   @Column()
   status: number;
+
+  @ManyToMany(() => TemplateCategoryEntity, (category) => category.template)
+  categories: TemplateCategoryEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

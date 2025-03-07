@@ -1,23 +1,17 @@
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsNumber,
-  isString,
   IsString,
-  Length,
-  Max,
-  Min,
 } from "class-validator";
-import { PermissionType } from "@bill/database";
-import {
-  ProductCategoryEntity,
-  TemplateCategoryEntity,
-} from "@bill/database/dist/entities";
 
 import { BaseQuery } from "@/utils/query";
 
 export class TemplateCategory {
   @IsNumber()
   productCategoryId: number;
-  @Length(1)
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
   products: number[];
 }
 
@@ -33,7 +27,8 @@ export class TemplateBodyRequest {
   @IsNumber()
   status: number;
 
-  @Length(1)
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
   categories: TemplateCategory[];
 }
 

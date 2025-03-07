@@ -8,6 +8,9 @@ import database from "@/config/database";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
+import { ProductModule } from "@/modules/product/product.module";
+import { ProductCategoryModule } from "@/modules/productCategory/category.module";
+import { ProductUnitModule } from "@/modules/productUnit/unit.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
 
@@ -36,7 +39,10 @@ import { UserModule } from "@/modules/user/user.module";
     UserModule,
     AuthModule,
     MenuModule,
-    TemplateModule
+    TemplateModule,
+    ProductModule,
+    ProductCategoryModule,
+    ProductUnitModule
   ],
   providers: [],
 })

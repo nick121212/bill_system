@@ -12,11 +12,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TemplateEntity = void 0;
 const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
+const TemplateCategory_1 = require("./TemplateCategory");
 let TemplateEntity = class TemplateEntity extends Base_1.BaseEntity {
     id;
     name;
     desc;
     status;
+    categories;
     createTime;
     updateTime;
     deletedDate;
@@ -38,6 +40,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], TemplateEntity.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => TemplateCategory_1.TemplateCategoryEntity, (category) => category.template),
+    __metadata("design:type", Array)
+], TemplateEntity.prototype, "categories", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
     __metadata("design:type", Date)

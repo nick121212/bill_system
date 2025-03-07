@@ -7,17 +7,18 @@ export class ResponseInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>
   ): Observable<any> | Promise<Observable<any>> {
-    const ctx = context.switchToHttp();
+    // const ctx = context.switchToHttp();
 
-    return next
-      .handle()
-      .pipe(
-        map((data) => ({
+    return next.handle().pipe(
+      map((data, ...args) => {
+        console.log(data, args);
+        return {
           data,
           code: ApiStatusCode.SUCCESS,
           message: "SUCCESS",
-        }))
-      )
-      .pipe(catchError((err) => throwError((err) => err)));
+        };
+      })
+    );
+    // .pipe(catchError((err) => ));
   }
 }

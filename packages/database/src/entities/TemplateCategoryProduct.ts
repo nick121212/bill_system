@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   OneToOne,
   JoinColumn,
+  ManyToOne,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
@@ -19,11 +20,11 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => TemplateCategoryEntity)
+  @ManyToOne(() => TemplateCategoryEntity)
   @JoinColumn()
   templateCategory: TemplateCategoryEntity;
 
-  @OneToOne(() => ProductEntity)
+  @ManyToOne(() => ProductEntity)
   @JoinColumn()
   product: ProductEntity;
 

@@ -53,12 +53,12 @@ __decorate([
     __metadata("design:type", Number)
 ], ProductEntity.prototype, "cost", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => ProductCategory_1.ProductCategoryEntity),
+    (0, typeorm_1.ManyToOne)(() => ProductCategory_1.ProductCategoryEntity),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", ProductCategory_1.ProductCategoryEntity)
 ], ProductEntity.prototype, "category", void 0);
 __decorate([
-    (0, typeorm_1.OneToOne)(() => ProductUnit_1.ProductUnitEntity),
+    (0, typeorm_1.ManyToOne)(() => ProductUnit_1.ProductUnitEntity),
     (0, typeorm_1.JoinColumn)(),
     __metadata("design:type", ProductUnit_1.ProductUnitEntity)
 ], ProductEntity.prototype, "unit", void 0);
