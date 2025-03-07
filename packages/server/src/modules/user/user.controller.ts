@@ -16,9 +16,9 @@ import { UserQuery, UserRequest } from "./user.interface";
 import { UserService } from "./user.service";
 
 @Controller({
-  path: ["products"],
+  path: ["users"],
 })
-export class ProductController {
+export class UserController {
   constructor(
     private userService: UserService,
     private readonly log4jService: Log4jsService

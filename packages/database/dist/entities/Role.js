@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RoleEntity = void 0;
 const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
+const Menu_1 = require("./Menu");
 let RoleEntity = class RoleEntity extends Base_1.BaseEntity {
     id;
     name;
@@ -19,6 +20,7 @@ let RoleEntity = class RoleEntity extends Base_1.BaseEntity {
     desc;
     order;
     status;
+    menus;
     createTime;
     updateTime;
 };
@@ -47,6 +49,11 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], RoleEntity.prototype, "status", void 0);
+__decorate([
+    (0, typeorm_1.ManyToMany)(() => Menu_1.MenuEntity),
+    (0, typeorm_1.JoinTable)(),
+    __metadata("design:type", Array)
+], RoleEntity.prototype, "menus", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "datetime", name: "create_time" }),
     __metadata("design:type", Date)

@@ -1,6 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
+  JoinColumn,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { MenuEntity } from "./Menu";
 
 @Entity({
   name: "role",
@@ -23,6 +34,10 @@ export class RoleEntity extends BaseEntity<RoleEntity> {
 
   @Column()
   status: number;
+
+  @ManyToMany(() => MenuEntity)
+  @JoinTable()
+  menus: MenuEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

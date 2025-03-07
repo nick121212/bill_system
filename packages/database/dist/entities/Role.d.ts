@@ -1,4 +1,5 @@
 import { BaseEntity } from "./Base";
+import { MenuEntity } from "./Menu";
 export declare class RoleEntity extends BaseEntity<RoleEntity> {
     id: number;
     name: string;
@@ -6,6 +7,7 @@ export declare class RoleEntity extends BaseEntity<RoleEntity> {
     desc: string;
     order: number;
     status: number;
+    menus: MenuEntity[];
     createTime: Date;
     updateTime: Date;
 }
