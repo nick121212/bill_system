@@ -1,7 +1,25 @@
-import { IsNumber, isString, IsString, Max, Min } from "class-validator";
+import {
+  IsNumber,
+  isString,
+  IsString,
+  Length,
+  Max,
+  Min,
+} from "class-validator";
 import { PermissionType } from "@bill/database";
+import {
+  ProductCategoryEntity,
+  TemplateCategoryEntity,
+} from "@bill/database/dist/entities";
 
 import { BaseQuery } from "@/utils/query";
+
+export class TemplateCategory {
+  @IsNumber()
+  productCategoryId: number;
+  @Length(1)
+  products: number[];
+}
 
 export class TemplateBodyRequest {
   id?: number;
@@ -15,9 +33,8 @@ export class TemplateBodyRequest {
   @IsNumber()
   status: number;
 
+  @Length(1)
+  categories: TemplateCategory[];
 }
 
-export class TemplateQuery extends BaseQuery{
-  
-  
-}
+export class TemplateQuery extends BaseQuery {}
