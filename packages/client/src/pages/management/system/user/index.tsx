@@ -13,7 +13,6 @@ const USERS: UserInfo[] = USER_LIST as UserInfo[];
 export default function RolePage() {
 	const { push } = useRouter();
 	const pathname = usePathname();
-
 	const columns: ColumnsType<UserInfo> = [
 		{
 			title: "Name",

@@ -87,14 +87,14 @@ export const useLogout = () => {
     mutationFn: userService.logout,
   });
 
-  const profileMutation = useMutation({
-    mutationFn: userService.findById,
-  });
+  // const profileMutation = useMutation({
+  //   mutationFn: userService.findById,
+  // });
 
   const logout = async () => {
     try {
-      // await logoutMutation.mutateAsync();
-      await profileMutation.mutateAsync("1");
+      await logoutMutation.mutateAsync();
+      // await profileMutation.mutateAsync("1");
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",
