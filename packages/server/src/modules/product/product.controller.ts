@@ -10,7 +10,6 @@ import {
   Query,
 } from "@nestjs/common";
 
-import { Public } from "@/decorator/public";
 import { Log4jsService } from "@/modules/log4js";
 
 import { ProductBodyRequest, ProductQuery } from "./product.interface";
@@ -19,7 +18,6 @@ import { ProductService } from "./product.service";
 @Controller({
   path: ["products"],
 })
-@Public()
 export class ProductController {
   constructor(
     private productService: ProductService,

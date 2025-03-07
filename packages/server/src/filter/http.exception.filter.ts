@@ -24,7 +24,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return next();
     }
 
-    this.logger.getLogger("HttpExceptionFilter").error(exception?.message);
+    this.logger.getLogger("HttpExceptionFilter").error(exception);
 
     // custom error
     if (exception instanceof ApiException) {

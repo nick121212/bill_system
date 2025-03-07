@@ -1,4 +1,5 @@
 import * as cookieParser from "cookie-parser";
+import { EntityManager } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { HttpStatus, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
@@ -10,11 +11,14 @@ import { ResponseInterceptor } from "@/interceptor/res.interceptor";
 import { AppModule } from "@/modules/app/app.module";
 import { Log4jsService } from "@/modules/log4js";
 
+import migrationExecutor from "./migrate";
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {});
   const configService = app.get(ConfigService);
-  const port = (configService.get("base") || {}).port || 3000;
+  const port = (configService.get("app") || {}).port || 3000;
   const logger = app.get(Log4jsService);
+  const em = app.get(EntityManager);
 
   app.useLogger(logger);
   app.use(cookieParser());
@@ -28,13 +32,13 @@ async function bootstrap() {
         throw new ApiException(
           Object.values(validationErrors[0].constraints || [])[0],
           ApiStatusCode.PARAMETER_VALIDATE_ERROR,
-          HttpStatus.OK,
+          HttpStatus.OK
         );
       },
     })
   );
 
-  if (configService.get("base").env !== "production") {
+  if (configService.get("app").nodeEnv !== "production") {
     app.enableCors({
       origin: true,
       methods: "GET,HEAD,PUT,PATCH,DELETE,POST,OPTIONS",
@@ -44,6 +48,8 @@ async function bootstrap() {
 
   await app.listen(port).then(() => {
     console.log("serer start on port: ", port);
+
+    migrationExecutor(em);
   });
 
   if ((module as any).hot) {

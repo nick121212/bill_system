@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { UserEntity } from "@bill/database/dist/entities";
 import {
   Get,
@@ -6,18 +7,23 @@ import {
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 
 import { PERMISSION_LIST } from "@/assets";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { UserService } from "@/modules/user/user.service";
 
+import { RedisService } from "../redis/redis.service";
 import { AuthRequest } from "./auth.interface";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private readonly redisService: RedisService,
+    private configService:ConfigService
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -48,5 +54,30 @@ export class AuthService {
       refreshToken: "",
       user,
     };
+  }
+
+  async signOut(userId: string): Promise<void> {
+    this.redisService.delete(`user-${userId}`);
+  }
+
+  async generateAccessToken(
+    user: Partial<UserEntity>
+  ): Promise<{ accessToken: string }> {
+    const tokenId = randomUUID();
+
+    await this.redisService.insert(`user-${user.id}`, tokenId);
+
+    const accessToken = await this.jwtService.signAsync(
+      {
+        id: user.id,
+        email: user.email,
+        tokenId,
+      } as ActiveUserData,
+      {
+        ...this.configService.get("jwt")
+      }
+    );
+
+    return { accessToken };
   }
 }

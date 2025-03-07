@@ -1,16 +1,23 @@
 import entities from "@bill/database";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import base from "@/config/base";
-import database from "@/config/database";
-import { AuthModule } from "@/modules/auth/auth.module";
+// import base from "@/config1/base";
+// import database from "@/config1/database";
+import appConfig from "@/config/app.config";
+import databaseConfig from "@/config/database.config";
+import { validate } from '@/config/env.validation';
+import jwtConfig from "@/config/jwt.config";
+import redisConfig from "@/config/redis.config";
+import { AuthModule } from "@/modules/auth1/auth.module";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
 import { ProductModule } from "@/modules/product/product.module";
 import { ProductCategoryModule } from "@/modules/productCategory/category.module";
 import { ProductUnitModule } from "@/modules/productUnit/unit.module";
+import { RedisModule } from "@/modules/redis/redis.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
 
@@ -18,23 +25,34 @@ import { UserModule } from "@/modules/user/user.module";
   imports: [
     ConfigModule.forRoot({
       envFilePath: [".env"],
-      load: [database, base],
+      load: [appConfig, databaseConfig, jwtConfig, redisConfig],
       isGlobal: true,
+      validate
+    }),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => {
+        return {
+          global: true,
+          secret: configService.get("jwt").secret,
+          signOptions: { expiresIn: "60s" },
+        };
+      },
+      inject: [ConfigService],
     }),
     TypeOrmModule.forRootAsync({
-      useFactory: (config: ConfigService) => {
+      useFactory: (configService: ConfigService) => {
         return Object.assign(
           {
             entities: entities || [],
             synchronize: true,
           },
-          config.get("database"),
-          {
-          }
+          configService.get("database"),
+          {}
         );
       },
       inject: [ConfigService],
     }),
+    RedisModule,
     Log4jsGlobalModule.forRoot(),
     UserModule,
     AuthModule,
@@ -42,7 +60,7 @@ import { UserModule } from "@/modules/user/user.module";
     TemplateModule,
     ProductModule,
     ProductCategoryModule,
-    ProductUnitModule
+    ProductUnitModule,
   ],
   providers: [],
 })

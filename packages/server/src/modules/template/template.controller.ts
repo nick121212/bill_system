@@ -1,6 +1,5 @@
 import { Controller, Request, Get, Post, Body, Param, Put, Delete, Query } from "@nestjs/common";
 
-import { Public } from "@/decorator/public";
 import { Log4jsService } from "@/modules/log4js";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
@@ -9,7 +8,6 @@ import { TemplateService } from "./template.service";
 @Controller({
   path: ["templates"],
 })
-@Public()
 export class MenuController {
   constructor(private templateService: TemplateService, private readonly log4jService: Log4jsService) {
     

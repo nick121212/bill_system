@@ -10,7 +10,6 @@ import {
   Query,
 } from "@nestjs/common";
 
-import { Public } from "@/decorator/public";
 import { Log4jsService } from "@/modules/log4js";
 
 import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
@@ -19,7 +18,6 @@ import { ProductUnitService } from "./unit.service";
 @Controller({
   path: ["product/units"],
 })
-@Public()
 export class ProductUnitController {
   constructor(
     private ProductUnitService: ProductUnitService,
