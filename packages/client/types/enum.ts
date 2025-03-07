@@ -4,9 +4,17 @@ export enum BasicStatus {
 }
 
 export enum ResultEnum {
-	SUCCESS = 0,
-	ERROR = -1,
-	TIMEOUT = 401,
+	SUCCESS = "RET0000",
+
+  KEY_NOT_EXIST = "RET0001",
+
+  DUPLICATE_KEY = "RET0002",
+
+  PARAMETER_VALIDATE_ERROR = "RET1111",
+
+  UNKOWN_ERROR = "RET9999",
+
+  SQL_ERROR = "RET8888"
 }
 
 export enum StorageEnum {

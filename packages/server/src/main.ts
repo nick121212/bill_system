@@ -5,9 +5,9 @@ import { HttpStatus, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 
-import { ApiException } from "@/exception/api.exception";
-import { HttpExceptionFilter } from "@/filter/http.exception.filter";
-import { ResponseInterceptor } from "@/interceptor/res.interceptor";
+import { ApiException } from "@/common/exception/api.exception";
+import { HttpExceptionFilter } from "@/common/filter/http.exception.filter";
+import { ResponseInterceptor } from "@/common/interceptor/res.interceptor";
 import { AppModule } from "@/modules/app/app.module";
 import { Log4jsService } from "@/modules/log4js";
 

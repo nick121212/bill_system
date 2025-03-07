@@ -1,11 +1,11 @@
-import { faker } from "@faker-js/faker";
 import { http, HttpResponse, delay } from "msw";
+import { faker } from "@faker-js/faker";
 
 import { UserApi } from "@/api/services/userService";
 
 import { USER_LIST } from "../assets";
 
-const signIn = http.post(`/api${UserApi.SignIn}`, async ({ request }) => {
+const signIn = http.post(`/api/auto/signin`, async ({ request }) => {
 	const { username, password } = await request.json();
 
 	const user = USER_LIST.find((item) => item.username === username);

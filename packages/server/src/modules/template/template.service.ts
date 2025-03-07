@@ -10,7 +10,7 @@ import {
 import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { ApiException } from "@/exception/api.exception";
+import { ApiException } from "@/common/exception/api.exception";
 import { Log4jsService } from "@/modules/log4js";
 import { ProductService } from "@/modules/product/product.service";
 import { ProductCategoryService } from "@/modules/productCategory/category.service";

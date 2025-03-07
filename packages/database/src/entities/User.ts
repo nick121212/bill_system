@@ -6,13 +6,18 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
+  PrimaryColumn,
+  Unique,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { RoleEntity } from "./Role";
 
 @Entity({
   name: "user",
 })
+@Unique(["email", "fullname"])
 export class UserEntity extends BaseEntity<UserEntity> {
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,6 +40,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
 
   @Column()
   address: string;
+
+  @ManyToOne(() => RoleEntity)
+  role: RoleEntity;
 
   @Column({ default: true })
   isActive: boolean;

@@ -5,6 +5,7 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  UnauthorizedException,
 } from "@nestjs/common";
 
 import { Log4jsService } from "@/modules/log4js";
@@ -38,6 +39,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
           path: req.url,
         },
       });
+    }
+
+    if(exception instanceof UnauthorizedException){
+      return next(exception);
     }
 
     // sql error can not expose to users

@@ -1,41 +1,22 @@
-import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
-import { JwtModule } from "@nestjs/jwt";
-import { PassportModule } from "@nestjs/passport";
+import { UserEntity } from '@bill/database/dist/entities';
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserModule } from "@/modules/user/user.module";
+import jwtConfig from '@/config/jwt.config';
+import { UserService } from '@/modules/user/user.service';
 
-import { AuthController } from "./auth.controller";
-import { AuthService } from "./auth.service";
-import { JwtAuthGuard } from "./jwt-auth.guard";
-import { JwtStrategy } from "./jwt.strategy";
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { BcryptService } from './bcrypt.service';
 
 @Module({
   imports: [
-    UserModule,
-    PassportModule,
-    JwtModule.registerAsync({
-      useFactory: (config: ConfigService) => {
-        const opts = config.get("base") || {};
-
-        return {
-          secret: opts.jwtSecret,
-          signOptions: { expiresIn: "60s" },
-        };
-      },
-      inject: [ConfigService],
-    }),
-  ],
-  providers: [
-    AuthService,
-    // LocalStrategy,
-    JwtStrategy,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    TypeOrmModule.forFeature([UserEntity]),
+    JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AuthController],
+  providers: [AuthService, BcryptService,UserService],
+  exports: [JwtModule],
 })
 export class AuthModule {}

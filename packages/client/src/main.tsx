@@ -1,35 +1,26 @@
 // react-query
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// vercel analytics
-import { Analytics } from "@vercel/analytics/react";
-// react
 import { Suspense } from "react";
+// vercel analytics
 import ReactDOM from "react-dom/client";
-// helmet
+// react
 import { HelmetProvider } from "react-helmet-async";
-// svg icons
 import "virtual:svg-icons-register";
+// helmet
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// svg icons
+import { Analytics } from "@vercel/analytics/react";
+
 // mock api
 import worker from "./_mock";
 // i18n
-import "./locales/i18n";
+import App from "./App";
 // css
-import "./global.css";
-import "./theme/theme.css";
+import ProgressBar from "./components/progress-bar";
+import "./locales/i18n";
 
 // root component
-import App from "./App";
-import ProgressBar from "./components/progress-bar";
-
-const charAt = `
-    ███████╗██╗      █████╗ ███████╗██╗  ██╗ 
-    ██╔════╝██║     ██╔══██╗██╔════╝██║  ██║
-    ███████╗██║     ███████║███████╗███████║
-    ╚════██║██║     ██╔══██║╚════██║██╔══██║
-    ███████║███████╗██║  ██║███████║██║  ██║
-    ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝
-  `;
-console.info(`%c${charAt}`, "color: #5BE49B");
+import "./global.css";
+import "./theme/theme.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

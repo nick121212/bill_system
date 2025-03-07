@@ -1,41 +1,42 @@
 import {
   Controller,
-  Request,
-  Response,
   Post,
-  UseGuards,
-  Get,
   Body,
+  HttpCode,
+  HttpStatus,
+  Request,
+  Get,
 } from "@nestjs/common";
 
-import { Public } from "@/decorator/public";
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { Public } from "@/common/decorators/public.decorator";
 
-import { AuthGuard } from "./auth.guard";
 import { AuthRequest } from "./auth.interface";
 import { AuthService } from "./auth.service";
 
-@Controller({
-  path: ["auth"],
-})
+@Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Public()
-  // @UseGuards(AuthGuard)
-  @Post("login")
-  async login(@Body() body: AuthRequest) {
-    return this.authService.login(body);
+  @Post("sign-in")
+  signIn(@Body() signInDto: AuthRequest) {
+    return this.authService.login(signInDto);
   }
 
-  @UseGuards(AuthGuard)
-  @Post("logout")
-  async logout(@Response() res) {
-    return res.logout();
-  }
-
-  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Get("profile")
-  getProfile(@Request() req) {
-    return req.user;
+  profile(
+    @ActiveUser("id") userId: string,
+    @Request() req: Request
+  ): Promise<any> {
+    return req["user"];
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post("sign-out")
+  signOut(@ActiveUser("id") userId: string): Promise<void> {
+    return this.authService.signOut(userId);
   }
 }

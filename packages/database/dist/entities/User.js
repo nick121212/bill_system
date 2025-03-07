@@ -14,6 +14,7 @@ const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
+const Role_1 = require("./Role");
 let UserEntity = class UserEntity extends Base_1.BaseEntity {
     id;
     fullname;
@@ -21,6 +22,7 @@ let UserEntity = class UserEntity extends Base_1.BaseEntity {
     password;
     avatar;
     address;
+    role;
     isActive;
     createTime;
     updateTime;
@@ -55,6 +57,10 @@ __decorate([
     __metadata("design:type", String)
 ], UserEntity.prototype, "address", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => Role_1.RoleEntity),
+    __metadata("design:type", Role_1.RoleEntity)
+], UserEntity.prototype, "role", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: true }),
     __metadata("design:type", Boolean)
 ], UserEntity.prototype, "isActive", void 0);
@@ -69,6 +75,7 @@ __decorate([
 exports.UserEntity = UserEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "user",
-    })
+    }),
+    (0, typeorm_1.Unique)(["email", "fullname"])
 ], UserEntity);
 //# sourceMappingURL=User.js.map

@@ -8,7 +8,7 @@ import {
   Min,
 } from "class-validator";
 
-import { BaseQuery } from "@/utils/query";
+import { BaseQuery } from "@/common/interfaces/query";
 
 export class UserRequest {
   @IsString()

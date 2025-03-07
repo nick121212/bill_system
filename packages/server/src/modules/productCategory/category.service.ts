@@ -4,7 +4,7 @@ import { ProductCategoryEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { ApiException } from "@/exception/api.exception";
+import { ApiException } from "@/common/exception/api.exception";
 import { Log4jsService } from "@/modules/log4js";
 
 import {

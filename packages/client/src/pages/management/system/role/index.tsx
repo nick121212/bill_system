@@ -1,12 +1,11 @@
+import { useState } from "react";
 import { Button, Card, Popconfirm, Tag } from "antd";
 import Table, { type ColumnsType } from "antd/es/table";
-import { useState } from "react";
 
 import { ROLE_LIST } from "@/_mock/assets";
 import { IconButton, Iconify } from "@/components/icon";
 
 import { RoleModal, type RoleModalProps } from "./role-modal";
-
 import type { Role } from "#/entity";
 import { BasicStatus } from "#/enum";
 
@@ -73,7 +72,6 @@ export default function RolePage() {
 			),
 		},
 	];
-
 	const onCreate = () => {
 		setRoleModalProps((prev) => ({
 			...prev,
@@ -85,7 +83,6 @@ export default function RolePage() {
 			},
 		}));
 	};
-
 	const onEdit = (formValue: Role) => {
 		setRoleModalProps((prev) => ({
 			...prev,

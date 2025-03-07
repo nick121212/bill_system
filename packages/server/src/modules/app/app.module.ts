@@ -1,17 +1,19 @@
 import entities from "@bill/database";
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
-import { TypeOrmModule } from "@nestjs/typeorm";
-
 // import base from "@/config1/base";
 // import database from "@/config1/database";
+import { TypeOrmModule } from "@nestjs/typeorm";
+
 import appConfig from "@/config/app.config";
 import databaseConfig from "@/config/database.config";
 import { validate } from '@/config/env.validation';
 import jwtConfig from "@/config/jwt.config";
 import redisConfig from "@/config/redis.config";
-import { AuthModule } from "@/modules/auth1/auth.module";
+import { AuthModule } from "@/modules/auth/auth.module";
+import { JwtAuthGuard } from "@/modules/auth/guards/jwt-auth.guard";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
 import { ProductModule } from "@/modules/product/product.module";
@@ -62,6 +64,10 @@ import { UserModule } from "@/modules/user/user.module";
     ProductCategoryModule,
     ProductUnitModule,
   ],
-  providers: [],
-})
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],})
 export class AppModule {}

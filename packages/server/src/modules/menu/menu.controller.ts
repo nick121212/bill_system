@@ -1,6 +1,6 @@
 import { Controller, Request, Get, Post, Body, Param, Put, Delete } from "@nestjs/common";
 
-import { Public } from "@/decorator/public";
+import { Public } from "@/common/decorators/public.decorator";
 import { Log4jsService } from "@/modules/log4js";
 
 import { MenuBodyRequest } from "./menu.interface";
