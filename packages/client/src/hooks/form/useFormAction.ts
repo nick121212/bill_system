@@ -28,6 +28,12 @@ export default function useFormAction(
     };
   }, [formRef.current]);
 
+  useEffect(()=>{
+    // formRef.current
+    console.log(formRef.current);
+    
+  },[formRef.current]);
+
   useEffect(() => {
     if (!error) {
       return;

@@ -30,9 +30,19 @@ export class MenuService {
       return undefined;
     }
 
-    const menu = await this.repo.findOneBy({
-      id,
+    const menu = await this.repo.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        parent: true,
+      },
     });
+
+    if (menu) {
+      menu.parentId = menu?.parent?.id;
+      menu.parent = undefined;
+    }
 
     return menu || undefined;
   }

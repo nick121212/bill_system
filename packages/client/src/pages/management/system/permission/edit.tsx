@@ -22,7 +22,9 @@ import {
   AutoForm,
   ErrorsField,
   SelectField,
+  SubmitField,
   TreeSelect,
+  ValidatedForm,
 } from "@/uniforms/fields";
 import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
@@ -37,14 +39,17 @@ export type PermissionModalProps = {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function PermissionModal({ title }: PermissionModalProps) {
+export default function PermissionModal({
+  title,
+  formValue,
+}: PermissionModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { permissions, loading } = usePermission();
   const [{ data, loading: loadingAjax, error }, callAjax] = useAxios(
     {
       url: "/menus",
-      method: "POST",
+      method: "PUT",
     },
     { manual: true }
   );
@@ -103,6 +108,7 @@ export default function PermissionModal({ title }: PermissionModalProps) {
               ref={formRef as any}
               showInlineError
               schema={bridge as any}
+              model={formValue as any}
               onSubmit={(formData) => {
                 setFormData(formData);
                 callAjax({
