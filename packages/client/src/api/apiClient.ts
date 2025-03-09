@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
+import { configure } from "axios-hooks";
 import { toast } from "sonner";
 
 import { t } from "@/locales/i18n";
@@ -39,7 +40,10 @@ axiosInstance.interceptors.response.use(
     // 业务请求成功
     const hasSuccess = data && code === ResultEnum.SUCCESS;
     if (hasSuccess) {
-      return data;
+      res.data = data;
+      res.statusText = code;
+
+      return res;
     }
 
     // 业务请求错误
@@ -61,6 +65,8 @@ axiosInstance.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+configure({ axios: axiosInstance });
 
 class APIClient {
   get<T = any>(config: AxiosRequestConfig): Promise<T> {

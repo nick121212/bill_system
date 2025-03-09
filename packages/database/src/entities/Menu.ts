@@ -41,11 +41,16 @@ export class MenuEntity extends BaseEntity<MenuEntity> {
   @Column()
   order: number;
 
+  @Column()
+  component?: string;
+
   @TreeChildren()
   children: MenuEntity[];
 
   @TreeParent()
   parent?: MenuEntity;
+
+  parentId?: number;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

@@ -8,8 +8,10 @@ export declare class MenuEntity extends BaseEntity<MenuEntity> {
     type: PermissionType;
     route: string;
     order: number;
+    component?: string;
     children: MenuEntity[];
     parent?: MenuEntity;
+    parentId?: number;
     createTime: Date;
     updateTime: Date;
 }

@@ -14,15 +14,6 @@ const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
 const Menu_1 = require("./Menu");
 let RoleEntity = class RoleEntity extends Base_1.BaseEntity {
-    id;
-    name;
-    label;
-    desc;
-    order;
-    status;
-    menus;
-    createTime;
-    updateTime;
 };
 exports.RoleEntity = RoleEntity;
 __decorate([

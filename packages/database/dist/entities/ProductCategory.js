@@ -13,12 +13,6 @@ exports.ProductCategoryEntity = void 0;
 const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
 let ProductCategoryEntity = class ProductCategoryEntity extends Base_1.BaseEntity {
-    id;
-    name;
-    label;
-    desc;
-    createTime;
-    updateTime;
 };
 exports.ProductCategoryEntity = ProductCategoryEntity;
 __decorate([

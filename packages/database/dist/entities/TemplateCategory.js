@@ -15,11 +15,6 @@ const Base_1 = require("./Base");
 const ProductCategory_1 = require("./ProductCategory");
 const Template_1 = require("./Template");
 let TemplateCategoryEntity = class TemplateCategoryEntity extends Base_1.BaseEntity {
-    id;
-    template;
-    category;
-    createTime;
-    updateTime;
 };
 exports.TemplateCategoryEntity = TemplateCategoryEntity;
 __decorate([

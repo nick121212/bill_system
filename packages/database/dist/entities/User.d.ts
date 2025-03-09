@@ -3,6 +3,7 @@ import { RoleEntity } from "./Role";
 export declare class UserEntity extends BaseEntity<UserEntity> {
     id: number;
     fullname: string;
+    company: string;
     email: string;
     password: string;
     avatar: string;

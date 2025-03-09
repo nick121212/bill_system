@@ -1,13 +1,15 @@
+import type { CSSProperties } from "react";
+import { Content } from "antd/es/layout/layout";
+import { Outlet } from "react-router";
+
 import { useSettings } from "@/store/settingStore";
 import { themeVars } from "@/theme/theme.css";
 import { cn } from "@/utils";
-import { Content } from "antd/es/layout/layout";
-import type { CSSProperties } from "react";
-import { Outlet } from "react-router";
-import { ThemeLayout } from "#/enum";
+
 import { MULTI_TABS_HEIGHT } from "./config";
 import MultiTabs from "./multi-tabs";
 import { MultiTabsProvider } from "./multi-tabs/providers/multi-tabs-provider";
+import { ThemeLayout } from "#/enum";
 
 const Main = () => {
 	const { themeStretch, themeLayout, multiTab } = useSettings();
@@ -25,7 +27,7 @@ const Main = () => {
 				<div
 					className={cn(
 						"m-auto size-full flex-grow sm:p-2",
-						themeStretch ? "" : "xl:max-w-screen-xl",
+						// themeStretch ? "" : "xl:max-w-screen-xl",
 						themeLayout === ThemeLayout.Horizontal ? "flex-col" : "flex-row",
 					)}
 				>

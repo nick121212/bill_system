@@ -1,3 +1,5 @@
+import { AxiosResponse } from "axios";
+
 import apiClient from "../apiClient";
 import type { UserInfo, UserToken } from "#/entity";
 
@@ -20,7 +22,7 @@ export enum UserApi {
 }
 
 const signin = (data: SignInReq) =>
-	apiClient.post<SignInRes>({ url: UserApi.SignIn, data });
+	apiClient.post<AxiosResponse<SignInRes>>({ url: UserApi.SignIn, data });
 const signup = (data: SignUpReq) =>
 	apiClient.post<SignInRes>({ url: UserApi.SignUp, data });
 const logout = () => apiClient.post({ url: UserApi.Logout });

@@ -1,0 +1,14 @@
+{
+  "crud": {
+    "create": {
+      "buttonText": "新建"
+    },
+    "edit": {},
+    "remove": {},
+    "error": {
+      "title": "错误提示"
+    },
+    "confirm": "确定",
+    "cancel": "取消"
+  }
+}

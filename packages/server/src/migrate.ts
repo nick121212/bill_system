@@ -24,7 +24,7 @@ async function addRoleData(em: EntityManager) {
           desc: r.desc,
           order: r.order,
           status: r.status,
-          menus: menus
+          menus: menus,
         })
       );
     })
@@ -76,6 +76,7 @@ async function addPermission(
     type: root?.type,
     route: root?.route || "",
     order: root?.order || 1,
+    component: root?.component || "",
     parent: parent,
   });
 
@@ -88,7 +89,6 @@ async function addPermission(
 
 export default async function migrationExecutor(em: EntityManager) {
   // await addPermission(em, PERMISSION_LIST as any);
-
   // await addRoleData(em);
   // await addUserData(em);
 }

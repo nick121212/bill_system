@@ -1,4 +1,5 @@
 import * as crypto from "crypto";
+import * as _ from "lodash";
 import { Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { MenuEntity, RoleEntity } from "@bill/database/dist/entities";
@@ -36,10 +37,30 @@ export class RoleService {
     };
   }
 
+  getValidMenus(menus: MenuEntity[], menuIds: number[], parentId = 0) {
+    for (const key in menus) {
+      if (Object.prototype.hasOwnProperty.call(menus, key)) {
+        const menu = menus[key];
+
+        if (menuIds.indexOf(menu.id) < 0) {
+          _.remove(menus, function (n, i) {
+            return i.toString() === key;
+          });
+        } else {
+          menu.parentId = parentId;
+          menu.children?.length &&
+            (menu.children = this.getValidMenus(menu.children, menuIds, menu.id));
+        }
+      }
+    }
+    return menus;
+  }
+
   async getByIdWithPermission(id: number): Promise<RoleEntity> {
     const data = await this.getById(id, true);
+    const menuTree = await this.menuService.all();
 
-    if (!data) {
+    if (!data || !menuTree) {
       throw new ApiException(
         "can not find recoed",
         ApiStatusCode.KEY_NOT_EXIST,
@@ -51,12 +72,16 @@ export class RoleService {
       );
     }
 
+    const menuIds = data.menus;
+
+    data.menus = this.getValidMenus(menuTree, menuIds as any);
+
     return data;
   }
 
   async getById(
     id?: number,
-    withRelation = false
+    loadRelationIds = false
   ): Promise<RoleEntity | undefined> {
     if (!id) {
       return undefined;
@@ -66,11 +91,7 @@ export class RoleService {
       where: {
         id,
       },
-      relations: withRelation
-        ? {
-            menus: true,
-          }
-        : {},
+      loadRelationIds: loadRelationIds,
     });
 
     return data || undefined;

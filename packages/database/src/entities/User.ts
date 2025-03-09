@@ -26,6 +26,10 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column()
   fullname: string;
 
+  @IsNotEmpty()
+  @Column()
+  company: string;
+
   @IsEmail()
   @Column()
   email: string;

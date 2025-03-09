@@ -3,7 +3,6 @@ import { Divider, type MenuProps } from "antd";
 import Dropdown, { type DropdownProps } from "antd/es/dropdown/dropdown";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
-import { UserOutlined } from "@ant-design/icons";
 
 import businessman from "@/assets/icons/flat-color-icons--businessman.svg";
 import { IconButton } from "@/components/icon";
@@ -31,9 +30,9 @@ export default function AccountDropdown() {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			// clearUserInfoAndToken();
-			// backToLogin();
-			// replace("/login");
+			clearUserInfoAndToken();
+			backToLogin();
+			replace("/login");
 		}
 	};
 	const {
@@ -74,10 +73,10 @@ export default function AccountDropdown() {
 			label: <NavLink to={HOMEPAGE}>{t("sys.menu.dashboard")}</NavLink>,
 			key: "1",
 		},
-		{
-			label: <NavLink to="/management/user/profile">{t("sys.menu.user.profile")}</NavLink>,
-			key: "2",
-		},
+		// {
+		// 	label: <NavLink to="/management/user/profile">{t("sys.menu.user.profile")}</NavLink>,
+		// 	key: "2",
+		// },
 		{
 			label: <NavLink to="/management/user/account">{t("sys.menu.user.account")}</NavLink>,
 			key: "3",

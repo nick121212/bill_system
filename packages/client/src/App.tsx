@@ -1,3 +1,4 @@
+import { ConfigProvider } from "antd";
 import { Helmet } from "react-helmet-async";
 
 import Logo from "@/assets/images/logo.png";
@@ -9,19 +10,21 @@ import { AntdAdapter } from "./theme/adapter/antd.adapter";
 import { ThemeProvider } from "./theme/theme-provider";
 
 function App() {
-	return (
-		<ThemeProvider adapters={[AntdAdapter]}>
-			<MotionLazy>
-				<Helmet>
-					<title>Slash Admin</title>
-					<link rel="icon" href={Logo} />
-				</Helmet>
-				<Toast />
+  return (
+    <ConfigProvider csp={{ nonce: "YourNonceCode" }}>
+      <ThemeProvider adapters={[AntdAdapter]}>
+        <MotionLazy>
+          <Helmet>
+            <title>Slash Admin</title>
+            <link rel="icon" href={Logo} />
+          </Helmet>
+          <Toast />
 
-				<Router />
-			</MotionLazy>
-		</ThemeProvider>
-	);
+          <Router />
+        </MotionLazy>
+      </ThemeProvider>
+    </ConfigProvider>
+  );
 }
 
 export default App;

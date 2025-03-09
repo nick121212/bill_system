@@ -12,15 +12,17 @@ import { JwtService } from "@nestjs/jwt";
 
 import { PERMISSION_LIST } from "@/assets";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import { RedisService } from "@/modules/redis/redis.service";
+import { RoleService } from "@/modules/role/role.service";
 import { UserService } from "@/modules/user/user.service";
 
-import { RedisService } from "../redis/redis.service";
 import { AuthRequest } from "./auth.interface";
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
+    private roleService: RoleService,
     private jwtService: JwtService,
     private readonly redisService: RedisService,
     private configService: ConfigService
@@ -45,15 +47,10 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
+    const role = await this.roleService.getByIdWithPermission(user.role.id);
+
     (user as any).permissions = PERMISSION_LIST;
-
-    // const payload = { sub: user.id, username: user.fullname };
-
-    // return {
-    //   accessToken: await this.jwtService.signAsync(payload),
-    //   refreshToken: "",
-    //   user,
-    // };
+    (user as any).permissions = role.menus;
 
     return await this.generateAccessToken(user);
   }

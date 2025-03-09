@@ -15,15 +15,6 @@ const Base_1 = require("./Base");
 const ProductCategory_1 = require("./ProductCategory");
 const ProductUnit_1 = require("./ProductUnit");
 let OrderEntity = class OrderEntity extends Base_1.BaseEntity {
-    id;
-    name;
-    label;
-    desc;
-    price;
-    category;
-    unit;
-    createTime;
-    updateTime;
 };
 exports.OrderEntity = OrderEntity;
 __decorate([

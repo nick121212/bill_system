@@ -14,20 +14,6 @@ const typeorm_1 = require("typeorm");
 const DeliverType_1 = require("../enums/DeliverType");
 const Base_1 = require("./Base");
 let CustomerEntity = class CustomerEntity extends Base_1.BaseEntity {
-    id;
-    fullname;
-    contact;
-    phone;
-    email;
-    address;
-    deliver;
-    level;
-    discount;
-    template;
-    no;
-    desc;
-    createTime;
-    updateTime;
 };
 exports.CustomerEntity = CustomerEntity;
 __decorate([

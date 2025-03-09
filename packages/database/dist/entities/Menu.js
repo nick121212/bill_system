@@ -14,17 +14,6 @@ const typeorm_1 = require("typeorm");
 const PermissionType_1 = require("../enums/PermissionType");
 const Base_1 = require("./Base");
 let MenuEntity = class MenuEntity extends Base_1.BaseEntity {
-    id;
-    label;
-    name;
-    icon;
-    type;
-    route;
-    order;
-    children;
-    parent;
-    createTime;
-    updateTime;
 };
 exports.MenuEntity = MenuEntity;
 __decorate([
@@ -55,6 +44,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
 ], MenuEntity.prototype, "order", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], MenuEntity.prototype, "component", void 0);
 __decorate([
     (0, typeorm_1.TreeChildren)(),
     __metadata("design:type", Array)

@@ -16,13 +16,6 @@ const Base_1 = require("./Base");
 const Customer_1 = require("./Customer");
 const Product_1 = require("./Product");
 let ProductPriceEntity = class ProductPriceEntity extends Base_1.BaseEntity {
-    id;
-    price;
-    discount;
-    product;
-    customer;
-    createTime;
-    updateTime;
 };
 exports.ProductPriceEntity = ProductPriceEntity;
 __decorate([

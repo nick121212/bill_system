@@ -14,14 +14,6 @@ const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
 const TemplateCategory_1 = require("./TemplateCategory");
 let TemplateEntity = class TemplateEntity extends Base_1.BaseEntity {
-    id;
-    name;
-    desc;
-    status;
-    categories;
-    createTime;
-    updateTime;
-    deletedDate;
 };
 exports.TemplateEntity = TemplateEntity;
 __decorate([

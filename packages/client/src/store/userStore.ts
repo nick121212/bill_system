@@ -67,7 +67,7 @@ export const useSignIn = () => {
   const signIn = async (data: SignInReq) => {
     try {
       const res = await signInMutation.mutateAsync(data);
-      const { user, accessToken, refreshToken } = res;
+      const { user, accessToken, refreshToken } = res.data;
       setUserToken({ accessToken, refreshToken });
       setUserInfo(user);
       navigatge(HOMEPAGE, { replace: true });
@@ -87,14 +87,9 @@ export const useLogout = () => {
     mutationFn: userService.logout,
   });
 
-  // const profileMutation = useMutation({
-  //   mutationFn: userService.findById,
-  // });
-
   const logout = async () => {
     try {
       await logoutMutation.mutateAsync();
-      // await profileMutation.mutateAsync("1");
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",

@@ -16,16 +16,6 @@ const typeorm_1 = require("typeorm");
 const Base_1 = require("./Base");
 const Role_1 = require("./Role");
 let UserEntity = class UserEntity extends Base_1.BaseEntity {
-    id;
-    fullname;
-    email;
-    password;
-    avatar;
-    address;
-    role;
-    isActive;
-    createTime;
-    updateTime;
 };
 exports.UserEntity = UserEntity;
 __decorate([
@@ -37,6 +27,11 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], UserEntity.prototype, "fullname", void 0);
+__decorate([
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], UserEntity.prototype, "company", void 0);
 __decorate([
     (0, class_validator_1.IsEmail)(),
     (0, typeorm_1.Column)(),
