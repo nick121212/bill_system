@@ -24,3 +24,5 @@ export { default as ValidatedQuickForm } from './ValidatedQuickForm';
 export { default as TreeSelect } from './TreeSelectField';
 export { default as wrapField } from './wrapField';
 export { default as AutoCompleteField } from './AutoCompleteField';
+export { default as TreeField } from './TreeField';
+export { default as TextAreaField } from './TextAreaField';

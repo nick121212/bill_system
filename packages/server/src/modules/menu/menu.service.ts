@@ -137,7 +137,5 @@ export class MenuService {
         transactionalEntityManager.save(child2),
       ]);
     });
-
-    console.log(1111);
   }
 }

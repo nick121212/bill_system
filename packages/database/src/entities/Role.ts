@@ -8,6 +8,7 @@ import {
   ManyToOne,
   ManyToMany,
   JoinTable,
+  DeleteDateColumn,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
@@ -44,4 +45,7 @@ export class RoleEntity extends BaseEntity<RoleEntity> {
 
   @UpdateDateColumn({ type: "datetime", name: "update_time" })
   updateTime: Date;
+
+  @DeleteDateColumn()
+  deletedDate: Date;
 }

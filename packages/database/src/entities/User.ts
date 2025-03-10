@@ -48,6 +48,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @ManyToOne(() => RoleEntity)
   role: RoleEntity;
 
+  @Column()
+  roleId: number;
+
   @Column({ default: true })
   isActive: boolean;
 

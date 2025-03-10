@@ -1,116 +1,118 @@
-import { useState } from "react";
-import { Button, Card, Popconfirm, Tag } from "antd";
-import Table, { type ColumnsType } from "antd/es/table";
+import { useCallback, useRef, useState } from "react";
+import { Button, Space, Tag } from "antd";
+import { type ColumnsType } from "antd/es/table";
+import useAxios from "axios-hooks";
+import { useTranslation } from "react-i18next";
+import { ReloadOutlined } from "@ant-design/icons";
 
-import { ROLE_LIST } from "@/_mock/assets";
-import { IconButton, Iconify } from "@/components/icon";
+import TablePage from "@/components/table";
+import usePagination from "@/hooks/data/usePagination";
 
-import { RoleModal, type RoleModalProps } from "./role-modal";
+import Create from "./create";
+import Edit from "./edit";
+import Remove from "./remove";
+import Search from "./search";
 import type { Role } from "#/entity";
 import { BasicStatus } from "#/enum";
 
-const ROLES: Role[] = ROLE_LIST as Role[];
+export default function PermissionPage() {
+  const { t } = useTranslation();
+  const [{ data: rows, loading: loading }, refresh] = useAxios({
+    url: "/roles",
+  },{
+    manual: true,
+  });
+  const onSuccess = useCallback((formData?: any) => {
+    refresh({
+      params: formData,
+    });
+  }, []);
+  const pag = usePagination(onSuccess);
 
-const DEFAULE_ROLE_VALUE: Role = {
-	id: "",
-	name: "",
-	label: "",
-	status: BasicStatus.ENABLE,
-	permission: [],
-};
-export default function RolePage() {
-	const [roleModalPros, setRoleModalProps] = useState<RoleModalProps>({
-		formValue: { ...DEFAULE_ROLE_VALUE },
-		title: "New",
-		show: false,
-		onOk: () => {
-			setRoleModalProps((prev) => ({ ...prev, show: false }));
-		},
-		onCancel: () => {
-			setRoleModalProps((prev) => ({ ...prev, show: false }));
-		},
-	});
-	const columns: ColumnsType<Role> = [
-		{
-			title: "Name",
-			dataIndex: "name",
-			width: 300,
-		},
-		{
-			title: "Label",
-			dataIndex: "label",
-		},
-		{ title: "Order", dataIndex: "order", width: 60 },
-		{
-			title: "Status",
-			dataIndex: "status",
-			align: "center",
-			width: 120,
-			render: (status) => (
-				<Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
-					{status === BasicStatus.DISABLE ? "Disable" : "Enable"}
-				</Tag>
-			),
-		},
-		{ title: "Desc", dataIndex: "desc" },
-		{
-			title: "Action",
-			key: "operation",
-			align: "center",
-			width: 100,
-			render: (_, record) => (
-				<div className="flex w-full justify-center text-gray">
-					<IconButton onClick={() => onEdit(record)}>
-						<Iconify icon="solar:pen-bold-duotone" size={18} />
-					</IconButton>
-					<Popconfirm title="Delete the Role" okText="Yes" cancelText="No" placement="left">
-						<IconButton>
-							<Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
-						</IconButton>
-					</Popconfirm>
-				</div>
-			),
-		},
-	];
-	const onCreate = () => {
-		setRoleModalProps((prev) => ({
-			...prev,
-			show: true,
-			title: "Create New",
-			formValue: {
-				...prev.formValue,
-				...DEFAULE_ROLE_VALUE,
-			},
-		}));
-	};
-	const onEdit = (formValue: Role) => {
-		setRoleModalProps((prev) => ({
-			...prev,
-			show: true,
-			title: "Edit",
-			formValue,
-		}));
-	};
+  const columns: ColumnsType<Role> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      width: 300,
+    },
+    {
+      title: "Label",
+      dataIndex: "label",
+    },
+    { title: "Order", dataIndex: "order", width: 60 },
+    {
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      width: 120,
+      render: (status) => (
+        <Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
+          {status === BasicStatus.DISABLE ? "Disable" : "Enable"}
+        </Tag>
+      ),
+    },
+    { title: "Desc", dataIndex: "desc" },
+    {
+      title: "Action",
+      key: "operation",
+      align: "center",
+      width: 100,
+      render: (_, record) => (
+        <div className="flex w-full justify-center text-gray">
+          <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
+          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} />
+        </div>
+      ),
+    },
+  ];
 
-	return (
-		<Card
-			title="Role List"
-			extra={
-				<Button type="primary" onClick={onCreate}>
-					New
-				</Button>
-			}
-		>
-			<Table
-				rowKey="id"
-				size="small"
-				scroll={{ x: "max-content" }}
-				pagination={false}
-				columns={columns}
-				dataSource={ROLES}
-			/>
-
-			<RoleModal {...roleModalPros} />
-		</Card>
-	);
+  return (
+    <TablePage
+      extra={
+        <>
+          <Space
+            direction="horizontal"
+            size="small"
+            style={{ display: "flex" }}
+          >
+            <Create title="新建角色" onSuccess={pag.refresh} />
+            <Button
+              icon={<ReloadOutlined />}
+              type="text"
+              onClick={() => {
+                pag.refresh();
+              }}
+            >
+              {t("common.redo")}
+            </Button>
+          </Space>
+        </>
+      }
+      tableProps={{
+        size: "small",
+        rowKey: "id",
+        pagination: {
+          pageSize: pag.pageSize,
+          current: pag.page,
+          showSizeChanger: true,
+          // onShowSizeChange = { onShowSizeChange },
+          onChange: (page, pageSize) => {
+            pag.setPage(page);
+            pag.setPageSize(pageSize);
+          },
+          total: rows?.count,
+        },
+        dataSource: rows?.rows || [],
+        columns,
+      }}
+    >
+      <Search
+        loading={loading}
+        onSuccess={(searchData) => {
+          pag.setPage(1);
+          pag.setSearchData(searchData);
+        }}
+      />
+    </TablePage>
+  );
 }

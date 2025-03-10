@@ -1,6 +1,6 @@
 import * as crypto from "crypto";
 import * as _ from "lodash";
-import { Repository } from "typeorm";
+import { In, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { MenuEntity, RoleEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
@@ -28,6 +28,10 @@ export class RoleService {
       where: {
         ...query.where,
       },
+      relations: {
+        menus: true,
+      },
+      loadRelationIds:true,
       withDeleted: false,
     });
 
@@ -38,21 +42,39 @@ export class RoleService {
   }
 
   getValidMenus(menus: MenuEntity[], menuIds: number[], parentId = 0) {
+    const removeIds: { menus: Array<any>; removeId: number }[] = [];
+
     for (const key in menus) {
       if (Object.prototype.hasOwnProperty.call(menus, key)) {
         const menu = menus[key];
 
         if (menuIds.indexOf(menu.id) < 0) {
-          _.remove(menus, function (n, i) {
-            return i.toString() === key;
-          });
+          // _.remove(menus, function (n, i) {
+          //   return i.toString() === key;
+          // });
+          removeIds.push({ menus, removeId: menu.id });
         } else {
           menu.parentId = parentId;
           menu.children?.length &&
-            (menu.children = this.getValidMenus(menu.children, menuIds, menu.id));
+            (menu.children = this.getValidMenus(
+              menu.children,
+              menuIds,
+              menu.id
+            ));
         }
       }
     }
+
+    for (const key in removeIds) {
+      if (Object.prototype.hasOwnProperty.call(removeIds, key)) {
+        const remove = removeIds[key];
+
+        _.remove(remove.menus, (m) => {
+          return m.id === remove.removeId;
+        });
+      }
+    }
+
     return menus;
   }
 
@@ -103,6 +125,12 @@ export class RoleService {
       ...rest,
     });
 
+    role.menus = await this.repo.manager.find(MenuEntity, {
+      where: {
+        id: In(menus || []),
+      },
+    });
+
     return await this.repo.save(role);
   }
 
@@ -123,6 +151,12 @@ export class RoleService {
     }
 
     role.extend(rest);
+
+    role.menus = await this.repo.manager.find(MenuEntity, {
+      where: {
+        id: In(menus || []),
+      },
+    });
 
     return this.repo.save(role);
   }

@@ -56,6 +56,10 @@ __decorate([
     __metadata("design:type", Role_1.RoleEntity)
 ], UserEntity.prototype, "role", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], UserEntity.prototype, "roleId", void 0);
+__decorate([
     (0, typeorm_1.Column)({ default: true }),
     __metadata("design:type", Boolean)
 ], UserEntity.prototype, "isActive", void 0);

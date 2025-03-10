@@ -7,24 +7,31 @@ import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 
+import { RoleService } from "../role/role.service";
 import { UserQuery, UserRequest } from "./user.interface";
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity) private repo: Repository<UserEntity>
+    @InjectRepository(UserEntity) private repo: Repository<UserEntity>,
+    private roleService: RoleService
   ) {}
 
   async all(query: UserQuery): Promise<{ rows: UserEntity[]; count: number }> {
+    const {  ...rest } = query?.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
+        ...rest,
+      },
+      relations: {
+        role: true,
       },
       withDeleted: false,
     });
 
+    
     return {
       rows,
       count,

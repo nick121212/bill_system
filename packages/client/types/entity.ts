@@ -9,8 +9,10 @@ export interface UserInfo {
 	id: string;
 	email: string;
 	username: string;
+	fullname: string;
 	password?: string;
 	avatar?: string;
+	company?:string;
 	role?: Role;
 	status?: BasicStatus;
 	permissions?: Permission[];

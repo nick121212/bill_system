@@ -1,12 +1,6 @@
 import { useCallback, useRef } from "react";
 import { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import {
-  Button,
-  Drawer,
-  Form,
-  Space,
-  Spin,
-} from "antd";
+import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -14,20 +8,17 @@ import usePermission from "@/hooks/data/usePermission";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
 import {
-  AutoCompleteField,
-  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,
-  SelectField,
-  TreeSelect,
+  TextAreaField,
+  TreeField,
 } from "@/uniforms/fields";
-import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
 import schema from "./schemas/create.json";
 import type { Permission } from "#/entity";
 
-export type PermissionModalProps = {
+export type RoleModalProps = {
   formValue?: Permission;
   title: string;
   onSuccess: () => void;
@@ -35,13 +26,10 @@ export type PermissionModalProps = {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function PermissionModal({
-  title,
-  onSuccess,
-}: PermissionModalProps) {
+export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const { permissions, loading } = usePermission();
+  const { permissions } = usePermission();
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
@@ -57,7 +45,7 @@ export default function PermissionModal({
   } = useFormAction(
     formRef,
     {
-      url: "/menus",
+      url: "/roles",
       method: "POST",
     },
     onSuccessCall
@@ -66,7 +54,7 @@ export default function PermissionModal({
   return (
     <>
       <Button
-        loading={loading || loadingAjax}
+        loading={loadingAjax}
         type="link"
         icon={<PlusOutlined />}
         onClick={() => {
@@ -119,38 +107,20 @@ export default function PermissionModal({
             >
               <ErrorsField />
 
-              <AutoFields fields={["label", "name", "icon", "route"]} />
-              <AutoCompleteField
-                name="component"
-                allowClear
-                options={PAGE_SELECT_OPTIONS}
-                filterOption={(input, option) =>
-                  ((option?.label || "") as string)
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              />
+              <AutoFields fields={["label", "name"]} />
 
-              <SelectField
-                name="type"
-                options={[
-                  { label: "Catalogue", value: 0 },
-                  { label: "Menu", value: 1 },
-                  { label: "Button", value: 2 },
-                ]}
-              />
+              <TextAreaField name="desc" />
 
-              <TreeSelect
-                name="parentId"
+              <TreeField
+                name="menus"
+                checkable
                 treeData={permissions}
-                loading={loading}
                 fieldNames={{
-                  label: "name",
-                  value: "id",
+                  key: "id",
                   children: "children",
+                  title: "name",
                 }}
               />
-              <AutoField name={"order"} info="数字越大越靠后" />
             </AutoForm>
           </Spin>
         </Form>

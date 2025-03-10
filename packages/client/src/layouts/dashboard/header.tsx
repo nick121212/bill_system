@@ -1,23 +1,22 @@
-import { Drawer } from "antd";
 import { type CSSProperties, useState } from "react";
+import { Drawer, Space } from "antd";
 
 import { IconButton, Iconify, SvgIcon } from "@/components/icon";
 import LocalePicker from "@/components/locale-picker";
 import Logo from "@/components/logo";
 import { useSettings } from "@/store/settingStore";
+import { themeVars } from "@/theme/theme.css";
+import { cn } from "@/utils";
+import { rgbAlpha } from "@/utils/theme";
 
 import AccountDropdown from "../components/account-dropdown";
 import BreadCrumb from "../components/bread-crumb";
 import NoticeButton from "../components/notice";
 import SearchBar from "../components/search-bar";
 import SettingButton from "../components/setting-button";
-
-import { themeVars } from "@/theme/theme.css";
-import { cn } from "@/utils";
-import { rgbAlpha } from "@/utils/theme";
-import { ThemeLayout } from "#/enum";
 import { HEADER_HEIGHT, NAV_COLLAPSED_WIDTH, NAV_WIDTH } from "./config";
 import NavVertical from "./nav/nav-vertical";
+import { ThemeLayout } from "#/enum";
 
 export default function Header() {
 	const [drawerOpen, setDrawerOpen] = useState(false);
@@ -56,19 +55,19 @@ export default function Header() {
 						<div className="ml-4 hidden md:block">{breadCrumb ? <BreadCrumb /> : null}</div>
 					</div>
 
-					<div className="flex">
+					<Space className="flex">
 						<SearchBar />
-						<LocalePicker />
-						<IconButton onClick={() => window.open("https://github.com/d3george/slash-admin")}>
+						{/* <LocalePicker /> */}
+						{/* <IconButton onClick={() => window.open("https://github.com/d3george/slash-admin")}>
 							<Iconify icon="mdi:github" size={24} />
 						</IconButton>
 						<IconButton onClick={() => window.open("https://discord.gg/fXemAXVNDa")}>
 							<Iconify icon="carbon:logo-discord" size={24} />
-						</IconButton>
-						<NoticeButton />
-						<SettingButton />
+						</IconButton> */}
+						{/* <NoticeButton /> */}
+						{/* <SettingButton /> */}
 						<AccountDropdown />
-					</div>
+					</Space>
 				</div>
 			</header>
 			<Drawer

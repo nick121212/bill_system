@@ -1,40 +1,30 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 import { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import {
-  Alert,
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Modal,
-  notification,
-  Space,
-  Spin,
-} from "antd";
-import useAxios from "axios-hooks";
+import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
+import { EditOutlined } from "@ant-design/icons";
 
+import usePermission from "@/hooks/data/usePermission";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
 import {
   AutoCompleteField,
+  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,
   SelectField,
-  SubmitField,
   TreeSelect,
-  ValidatedForm,
 } from "@/uniforms/fields";
 import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
-import usePermission from "./hooks/usePermission";
 import schema from "./schemas/create.json";
 import type { Permission } from "#/entity";
 
 export type PermissionModalProps = {
   formValue?: Permission;
   title: string;
+  onSuccess: () => void;
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
@@ -42,37 +32,43 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function PermissionModal({
   title,
   formValue,
+  onSuccess,
 }: PermissionModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { permissions, loading } = usePermission();
-  const [{ data, loading: loadingAjax, error }, callAjax] = useAxios(
-    {
-      url: "/menus",
-      method: "PUT",
-    },
-    { manual: true }
-  );
+  const onSuccessCall = useCallback(() => {
+    onSuccess?.();
+    setShowModal(false);
+  }, []);
   const {
-    onReset,
     onSubmit,
     showModal,
     setShowModal,
-    formData,
     setFormData,
     onClose,
-  } = useFormAction(formRef, error);
+    loadingAjax,
+    callAjax,
+  } = useFormAction(
+    formRef,
+    {
+      url: `/menus/${formValue?.id}`,
+      method: "PUT",
+    },
+    onSuccessCall
+  );
 
   return (
     <>
       <Button
-        loading={loading || loadingAjax}
+        type="text"
+        shape="circle"
+        loading={loadingAjax}
+        icon={<EditOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
-      >
-        {t("crud.create.buttonText")}
-      </Button>
+      ></Button>
 
       <Drawer
         title={title}
@@ -118,17 +114,7 @@ export default function PermissionModal({
             >
               <ErrorsField />
 
-              <AutoFields />
-
-              <SelectField
-                name="type"
-                options={[
-                  { label: "Catalogue", value: 0 },
-                  { label: "Menu", value: 1 },
-                  { label: "Button", value: 2 },
-                ]}
-              />
-
+              <AutoFields fields={["label", "name", "icon", "route"]} />
               <AutoCompleteField
                 name="component"
                 allowClear
@@ -138,6 +124,15 @@ export default function PermissionModal({
                     .toLowerCase()
                     .includes(input.toLowerCase())
                 }
+              />
+
+              <SelectField
+                name="type"
+                options={[
+                  { label: "Catalogue", value: 0 },
+                  { label: "Menu", value: 1 },
+                  { label: "Button", value: 2 },
+                ]}
               />
 
               <TreeSelect
@@ -150,6 +145,7 @@ export default function PermissionModal({
                   children: "children",
                 }}
               />
+              <AutoField name={"order"} info="数字越大越靠后" />
             </AutoForm>
           </Spin>
         </Form>

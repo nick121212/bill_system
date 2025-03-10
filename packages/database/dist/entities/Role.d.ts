@@ -10,4 +10,5 @@ export declare class RoleEntity extends BaseEntity<RoleEntity> {
     menus: MenuEntity[];
     createTime: Date;
     updateTime: Date;
+    deletedDate: Date;
 }

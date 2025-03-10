@@ -77,6 +77,7 @@ declare module "uniforms" {
     validateStatus: never;
     wrapperCol: never;
     wrapperStyle: never;
+    layout: never;
   }
 }
 
@@ -87,5 +88,6 @@ filterDOMProps.register(
   "labelCol",
   "validateStatus",
   "wrapperCol",
-  "wrapperStyle"
+  "wrapperStyle",
+  "layout"
 );

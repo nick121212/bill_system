@@ -8,7 +8,13 @@
     "error": {
       "title": "错误提示"
     },
+    "success": {
+      "title": "成功提示",
+      "message": "操作成功"
+    },
     "confirm": "确定",
-    "cancel": "取消"
+    "cancel": "取消",
+    "reset": "重置",
+    "search": "搜索"
   }
 }

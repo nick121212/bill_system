@@ -1,12 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { notification } from "antd";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosRequestConfig } from "axios";
+import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
+
+import { ResultEnum } from "#/enum";
 
 export default function useFormAction(
   formRef: React.RefObject<any>,
-  error?: AxiosError<any, any> | null
+  axiosConfig: AxiosRequestConfig<any>,
+  onSuccess?: VoidFunction
 ) {
+  const [{ data, loading: loadingAjax, error, response }, callAjax] = useAxios(
+    {
+      ...axiosConfig,
+    },
+    { manual: true }
+  );
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({});
   const { t } = useTranslation();
@@ -28,11 +38,10 @@ export default function useFormAction(
     };
   }, [formRef.current]);
 
-  useEffect(()=>{
+  useEffect(() => {
     // formRef.current
     console.log(formRef.current);
-    
-  },[formRef.current]);
+  }, [formRef.current]);
 
   useEffect(() => {
     if (!error) {
@@ -44,8 +53,26 @@ export default function useFormAction(
       description: error.message,
       duration: 3,
       placement: "topLeft",
+      showProgress: true,
     });
   }, [error]);
+
+  useEffect(() => {
+    if (loadingAjax) {
+      return;
+    }
+
+    if (!error && response?.statusText === ResultEnum.SUCCESS) {
+      notification.success({
+        message: t("crud.success.title"),
+        description:t("crud.success.message"),
+        duration: 2,
+        placement: "bottomLeft",
+        showProgress: true,
+      });
+      onSuccess?.();
+    }
+  }, [onSuccess, error, loadingAjax, response?.statusText]);
 
   return {
     onSubmit,
@@ -55,5 +82,7 @@ export default function useFormAction(
     setShowModal,
     formData,
     setFormData,
+    loadingAjax,
+    callAjax,
   };
 }

@@ -4,6 +4,7 @@ import { ApiStatusCode } from "@bill/database";
 import { HttpStatus, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
+import { NestExpressApplication } from "@nestjs/platform-express";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { HttpExceptionFilter } from "@/common/filter/http.exception.filter";
@@ -14,7 +15,7 @@ import { Log4jsService } from "@/modules/log4js";
 import migrationExecutor from "./migrate";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {});
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
   const configService = app.get(ConfigService);
   const port = (configService.get("app") || {}).port || 3000;
   const logger = app.get(Log4jsService);
@@ -37,13 +38,14 @@ async function bootstrap() {
       },
     })
   );
+  app.set('query parser', 'extended'); // <-- Add this line
 
   if (configService.get("app").nodeEnv !== "production") {
     app.enableCors({
       origin: true,
       methods: "GET,HEAD,PUT,PATCH,DELETE,POST,OPTIONS",
       credential: true,
-    });
+    } as any);
   }
 
   await app.listen(port).then(() => {

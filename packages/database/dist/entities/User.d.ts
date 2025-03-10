@@ -9,6 +9,7 @@ export declare class UserEntity extends BaseEntity<UserEntity> {
     avatar: string;
     address: string;
     role: RoleEntity;
+    roleId: number;
     isActive: boolean;
     createTime: Date;
     updateTime: Date;

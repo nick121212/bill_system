@@ -1,18 +1,34 @@
-import { Popconfirm, Space, Tag } from "antd";
-import { ConfigProvider } from "antd";
+import { useCallback, useRef, useState } from "react";
+import { Button, Space, Tag } from "antd";
 import { type ColumnsType } from "antd/es/table";
+import useAxios from "axios-hooks";
 import { isNil } from "ramda";
 import { useTranslation } from "react-i18next";
+import { ReloadOutlined } from "@ant-design/icons";
 
-import { IconButton, Iconify, SvgIcon } from "@/components/icon";
+import { Iconify, SvgIcon } from "@/components/icon";
+import TablePage from "@/components/table";
 
 import Create from "./create";
-import TablePage from "./table";
+import Edit from "./edit";
+import Remove from "./remove";
 import type { Permission } from "#/entity";
 import { BasicStatus, PermissionType } from "#/enum";
 
 export default function PermissionPage() {
   const { t } = useTranslation();
+  const tableRef = useRef<any>();
+  const [{ data: rows, loading: loading }, refresh] = useAxios({
+    url: "/menus",
+  });
+  const onSuccess = useCallback(
+    (formData?: any) => {
+      refresh({
+        params: formData,
+      });
+    },
+    [tableRef]
+  );
   const columns: ColumnsType<Permission> = [
     {
       title: "Name",
@@ -65,20 +81,12 @@ export default function PermissionPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-end text-gray">
-          <Popconfirm
-            title="Delete the Permission"
-            okText="Yes"
-            cancelText="No"
-            placement="left"
-          >
-            <IconButton>
-              <Iconify
-                icon="mingcute:delete-2-fill"
-                size={18}
-                className="text-error"
-              />
-            </IconButton>
-          </Popconfirm>
+          <Edit title="编辑权限菜单" formValue={record} onSuccess={onSuccess} />
+          <Remove
+            title="删除权限菜单"
+            formValue={record}
+            onSuccess={onSuccess}
+          />
         </div>
       ),
     },
@@ -86,21 +94,34 @@ export default function PermissionPage() {
 
   return (
     <TablePage
-      title="Permission List"
+      ref={tableRef}
       extra={
         <>
-          <Space direction="vertical" size="small" style={{ display: "flex" }}>
-            <Create title="新建权限菜单" />
+          <Space
+            direction="horizontal"
+            size="small"
+            style={{ display: "flex" }}
+          >
+            <Create title="新建权限菜单" onSuccess={onSuccess} />
+            <Button
+              icon={<ReloadOutlined />}
+              type="text"
+              onClick={() => {
+                onSuccess();
+              }}
+            >
+              {t("common.redo")}
+            </Button>
           </Space>
         </>
       }
       tableProps={{
         size: "small",
-        scroll: { x: "max-content" },
+        rowKey: "id",
         pagination: false,
+        dataSource: rows,
+        columns,
       }}
-      columns={columns}
-      axiosConfig={{ url: "/menus" }}
     ></TablePage>
   );
 }

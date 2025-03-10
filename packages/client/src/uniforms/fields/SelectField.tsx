@@ -83,6 +83,7 @@ function Select(props: SelectFieldProps) {
             props.onChange(value);
           }
         }}
+        style={{ minWidth: "164px" }}
         placeholder={props.placeholder}
         // @ts-expect-error: Incorrect `inputRef` type.
         ref={props.inputRef}

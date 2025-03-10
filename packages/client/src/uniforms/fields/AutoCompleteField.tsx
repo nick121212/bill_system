@@ -20,7 +20,7 @@ function AutoCompleteField(props: AutoCompleteFieldProps) {
       }}
       placeholder={props.placeholder}
       ref={props.autoRef as any}
-      style={{ width: "100%" }}
+      style={{ minWidth: "164px" }}
       value={props.value}
       {...filterDOMProps(props)}
     />

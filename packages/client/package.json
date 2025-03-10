@@ -34,6 +34,7 @@
     "@vercel/analytics": "^1.2.2",
     "@vitejs/plugin-react": "^4.1.0",
     "antd": "^5.9.3",
+    "antd-style": "^3.7.1",
     "apexcharts": "^4.5.0",
     "autosuggest-highlight": "^3.3.4",
     "axios": "^1.8.2",

@@ -1,97 +1,140 @@
-import { Button, Card, Popconfirm, Tag } from "antd";
-import Table, { type ColumnsType } from "antd/es/table";
+import { useCallback, useRef, useState } from "react";
+import { Button, Space, Tag } from "antd";
+import { type ColumnsType } from "antd/es/table";
+import useAxios from "axios-hooks";
+import { useTranslation } from "react-i18next";
+import { ReloadOutlined } from "@ant-design/icons";
 
-import { USER_LIST } from "@/_mock/assets";
-import { IconButton, Iconify } from "@/components/icon";
-import { usePathname, useRouter } from "@/router/hooks";
+import TablePage from "@/components/table";
+import usePagination from "@/hooks/data/usePagination";
 
+// import Create from "./create";
+// import Edit from "./edit";
+// import Remove from "./remove";
+// import Search from "./search";
+import Search from "./search";
 import type { Role, UserInfo } from "#/entity";
 import { BasicStatus } from "#/enum";
 
-const USERS: UserInfo[] = USER_LIST as UserInfo[];
+export default function PermissionPage() {
+  const { t } = useTranslation();
+  const [{ data: rows, loading: loading }, refresh] = useAxios(
+    {
+      url: "/users",
+    },
+    {
+      manual: true,
+    }
+  );
+  const onSuccess = useCallback((formData?: any) => {
+    refresh({
+      params: formData,
+    });
+  }, []);
+  const pag = usePagination(onSuccess);
 
-export default function RolePage() {
-	const { push } = useRouter();
-	const pathname = usePathname();
-	const columns: ColumnsType<UserInfo> = [
-		{
-			title: "Name",
-			dataIndex: "name",
-			width: 300,
-			render: (_, record) => {
-				return (
-					<div className="flex">
-						<img alt="" src={record.avatar} className="h-10 w-10 rounded-full" />
-						<div className="ml-2 flex flex-col">
-							<span className="text-sm">{record.username}</span>
-							<span className="text-xs text-text-secondary">{record.email}</span>
-						</div>
-					</div>
-				);
-			},
-		},
-		{
-			title: "Role",
-			dataIndex: "role",
-			align: "center",
-			width: 120,
-			render: (role: Role) => <Tag color="cyan">{role.name}</Tag>,
-		},
-		{
-			title: "Status",
-			dataIndex: "status",
-			align: "center",
-			width: 120,
-			render: (status) => (
-				<Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
-					{status === BasicStatus.DISABLE ? "Disable" : "Enable"}
-				</Tag>
-			),
-		},
-		{
-			title: "Action",
-			key: "operation",
-			align: "center",
-			width: 100,
-			render: (_, record) => (
-				<div className="flex w-full justify-center text-gray-500">
-					<IconButton
-						onClick={() => {
-							push(`${pathname}/${record.id}`);
-						}}
-					>
-						<Iconify icon="mdi:card-account-details" size={18} />
-					</IconButton>
-					<IconButton onClick={() => {}}>
-						<Iconify icon="solar:pen-bold-duotone" size={18} />
-					</IconButton>
-					<Popconfirm title="Delete the User" okText="Yes" cancelText="No" placement="left">
-						<IconButton>
-							<Iconify icon="mingcute:delete-2-fill" size={18} className="text-error" />
-						</IconButton>
-					</Popconfirm>
-				</div>
-			),
-		},
-	];
+  const columns: ColumnsType<UserInfo> = [
+    {
+      title: "Name",
+      dataIndex: "name",
+      width: 300,
+      render: (_, record) => {
+        return (
+          <div className="flex">
+            <img
+              alt=""
+              src={record.avatar}
+              className="h-10 w-10 rounded-full"
+            />
+            <div className="ml-2 flex flex-col">
+              <span className="text-sm">{record.fullname}</span>
+              <span className="text-xs text-text-secondary">
+                {record.email}
+              </span>
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      title: "Role",
+      dataIndex: "role",
+      align: "center",
+      width: 120,
+      render: (role: Role) => <Tag color="cyan">{role?.name}</Tag>,
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      width: 120,
+      render: (status) => (
+        <Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
+          {status === BasicStatus.DISABLE ? "Disable" : "Enable"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Action",
+      key: "operation",
+      align: "center",
+      width: 100,
+      render: (_, record) => (
+        <div className="flex w-full justify-center text-gray">
+          {/* <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
+          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} /> */}
+        </div>
+      ),
+    },
+  ];
 
-	return (
-		<Card
-			title="User List"
-			extra={
-				<Button type="primary" onClick={() => {}}>
-					New
-				</Button>
-			}
-		>
-			<Table
-				rowKey="id"
-				size="small"
-				scroll={{ x: "max-content" }}
-				pagination={false}
-				columns={columns}
-				dataSource={USERS}
-			/>
-		</Card>
-	);
+  return (
+    <TablePage
+      extra={
+        <>
+          <Space
+            direction="horizontal"
+            size="small"
+            style={{ display: "flex" }}
+          >
+            {/* <Create title="新建用户" onSuccess={pag.refresh} /> */}
+            <Button
+              icon={<ReloadOutlined />}
+              type="text"
+              onClick={() => {
+                pag.refresh();
+              }}
+            >
+              {t("common.redo")}
+            </Button>
+          </Space>
+        </>
+      }
+      tableProps={{
+        size: "small",
+        rowKey: "id",
+        pagination: {
+          pageSize: pag.pageSize,
+          current: pag.page,
+          showSizeChanger: true,
+          // onShowSizeChange = { onShowSizeChange },
+          onChange: (page, pageSize) => {
+            pag.setPage(page);
+            pag.setPageSize(pageSize);
+          },
+          total: rows?.count,
+        },
+        dataSource: rows?.rows || [],
+        columns,
+      }}
+    >
+      <Search
+        loading={loading}
+        onSuccess={(searchData) => {
+          pag.setPage(1);
+          pag.setSearchData(searchData);
+        }}
+      />
+    </TablePage>
+  );
 }

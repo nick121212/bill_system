@@ -53,6 +53,10 @@ __decorate([
     (0, typeorm_1.UpdateDateColumn)({ type: "datetime", name: "update_time" }),
     __metadata("design:type", Date)
 ], RoleEntity.prototype, "updateTime", void 0);
+__decorate([
+    (0, typeorm_1.DeleteDateColumn)(),
+    __metadata("design:type", Date)
+], RoleEntity.prototype, "deletedDate", void 0);
 exports.RoleEntity = RoleEntity = __decorate([
     (0, typeorm_1.Entity)({
         name: "role",

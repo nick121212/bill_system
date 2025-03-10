@@ -18,11 +18,11 @@ function TreeSelect(props: TreeSelectFieldProps) {
   return wrapField(
     props,
     <TreeSelectD
-      style={{ width: "100%" }}
       fieldNames={props.fieldNames}
       value={props.value}
       disabled={props.disabled}
       allowClear
+      style={{ minWidth: "164px" }}
       onChange={(_value: any, _labelList: any) => {
         props.onChange(_value);
       }}
@@ -31,4 +31,4 @@ function TreeSelect(props: TreeSelectFieldProps) {
   );
 }
 
-export default connectField<TreeSelectFieldProps>(TreeSelect, { kind: "leaf" });
+export default connectField<TreeSelectFieldProps>(TreeSelect, { kind: "node" });

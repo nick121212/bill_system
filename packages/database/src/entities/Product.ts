@@ -51,5 +51,5 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   updateTime: Date;
 
   @DeleteDateColumn()
-  deletedDate: Date
+  deletedDate: Date;
 }

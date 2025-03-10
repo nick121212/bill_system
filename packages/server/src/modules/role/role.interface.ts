@@ -18,7 +18,7 @@ export class RoleRequest {
   @IsNumber()
   status: number;
   
-  menus?: MenuBodyRequest[];
+  menus?: number[];
 }
 
 export class RoleQuery extends BaseQuery {}
