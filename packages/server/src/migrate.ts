@@ -5,7 +5,7 @@ import {
   UserEntity,
 } from "@bill/database/dist/entities";
 
-import { ROLE_LIST, USER_LIST } from "./assets";
+import { ROLE_LIST, USER_LIST, PERMISSION_LIST } from "./assets";
 import hashPwd from "./common/utils/hash";
 
 async function addRoleData(em: EntityManager) {
@@ -50,6 +50,7 @@ async function addUserData(em: EntityManager, secret: string) {
           company: '',
           fullname: r.username,
           password: hashPwd("demo1234", secret),
+          phone: '12345678901',
           role: index % 2 === 0 ? role1 ?? undefined : role2 ?? undefined,
         })
       );
