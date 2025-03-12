@@ -124,6 +124,7 @@ export default function PermissionPage() {
   ];
 
   useEffect(() => {
+    console.log('test')
     getCategory().then((res) => {
       const { data } = res;
       console.log('Category: ', data);
