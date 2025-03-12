@@ -6,7 +6,6 @@
     "email": { "type": "string", "format": "email", "title": "邮箱" },
     "avatar": { "type": "string", "title": "头像" },
     "address": { "type": "string", "title": "地址" },
-    "company": { "type": "string", "title": "公司名称" },
     "password": { "type": "string", "title": "密码" },
     "phone": {
       "type": "string",
@@ -23,6 +22,10 @@
     "role": {
       "type": "integer",
       "title": "角色"
+    },
+    "company": {
+      "type": "integer",
+      "title": "公司名称"
     }
   },
   "required": [

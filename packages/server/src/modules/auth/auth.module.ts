@@ -8,6 +8,7 @@ import { MenuService } from "@/modules/menu/menu.service";
 import { RoleService } from "@/modules/role/role.service";
 import { UserService } from "@/modules/user/user.service";
 
+import { CompanyService } from "../company/company.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { BcryptService } from "./bcrypt.service";
@@ -18,7 +19,14 @@ import { BcryptService } from "./bcrypt.service";
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   controllers: [AuthController],
-  providers: [AuthService, BcryptService, UserService, RoleService,MenuService],
+  providers: [
+    AuthService,
+    BcryptService,
+    UserService,
+    RoleService,
+    MenuService,
+    CompanyService
+  ],
   exports: [JwtModule],
 })
 export class AuthModule {}

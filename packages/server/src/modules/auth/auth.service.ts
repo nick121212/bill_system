@@ -44,7 +44,9 @@ export class AuthService {
       throw new UnauthorizedException();
     }
 
-    const role = await this.roleService.getByIdWithPermission(user.role.id);
+    const role = await this.roleService.getByIdWithPermission(
+      user.role?.id ?? 0
+    );
 
     // user.permissions = PERMISSION_LIST;
     user.permissions = role.menus;

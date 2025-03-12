@@ -80,8 +80,6 @@ export class ProductUnitService {
     const child = await this.getById(id);
 
     if (!child) {
-      console.log(11111111);
-      
       throw new ApiException(
         "can not find recoed",
         ApiStatusCode.KEY_NOT_EXIST,

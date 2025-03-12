@@ -54,7 +54,7 @@ export default function PermissionModal({
           />
 
           <SelectField
-            name="roleId"
+            name="role.id"
             loading={roleLoading}
             options={roles?.rows?.map((r: RoleEntity) => {
               return { label: r.name, value: r.id };

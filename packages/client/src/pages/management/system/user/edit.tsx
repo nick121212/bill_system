@@ -1,9 +1,9 @@
 import { useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
+import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { EditOutlined } from "@ant-design/icons";
-import type { RoleEntity, UserEntity } from "@bill/database/esm";
+import type { CompanyEntity, RoleEntity, UserEntity } from "@bill/database/esm";
 
 import useData from "@/hooks/data/useData";
 import useFormAction from "@/hooks/form/useFormAction";
@@ -18,7 +18,7 @@ import {
 import schema from "./schemas/create.json";
 
 export type UserModalProps = {
-  formValue?: UserEntity;
+  formValue?: Partial<UserEntity>;
   title: string;
   onSuccess: () => void;
 };
@@ -32,6 +32,8 @@ export default function PermissionModal({
 }: UserModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
+  const { rows: company, loading: comLoad } =
+    useData<CompanyEntity[]>("companie");
   const { rows, loading } = useData<RoleEntity[]>("role");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
@@ -114,8 +116,17 @@ export default function PermissionModal({
               <AutoField name="email" />
               <AutoField name="avatar" />
               <AutoField name="address" />
-              <AutoField name="company" />
-              <AutoField name="password" />
+              <SelectField
+                name="company"
+                loading={comLoad}
+                options={company?.map((r: CompanyEntity) => {
+                  return {
+                    label: r.name,
+                    value: r.id,
+                  };
+                })}
+              />
+              {/* <AutoField name="password" /> */}
               <AutoField name="phone" />
               <AutoField name="validateDate" />
               <AutoField name="isActive" />

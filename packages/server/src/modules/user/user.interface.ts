@@ -24,8 +24,8 @@ export class UserRequest {
   @IsString()
   address?: string;
 
-  @IsString()
-  company: string;
+  @IsNumber()
+  company: number;
 
   @IsString()
   password: string;
@@ -43,8 +43,12 @@ export class UserRequest {
 class UserSearchModel {
   @Type(() => Boolean)
   isActive?: boolean;
-  @Type(() => Number)
-  roleId?: number;
+  @Type(() => String)
+  name?: string;
+
+  role?: {
+    id: number;
+  };
 }
 
 export class UserQuery extends BaseQuery<UserSearchModel> {}

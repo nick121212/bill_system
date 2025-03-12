@@ -7,6 +7,7 @@ export default registerAs("database", () => ({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: Number.parseInt(process.env.DB_PORT || "3306"),
+  logging:true
   // migrationsRun: process.env.TYPEORM_MIGRATIONS_RUN === "true",
   // synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",
 }));
