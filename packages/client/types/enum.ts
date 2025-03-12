@@ -3,20 +3,6 @@ export enum BasicStatus {
   ENABLE = 1,
 }
 
-export enum ResultEnum {
-  SUCCESS = "RET0000",
-
-  KEY_NOT_EXIST = "RET0001",
-
-  DUPLICATE_KEY = "RET0002",
-
-  PARAMETER_VALIDATE_ERROR = "RET1111",
-
-  UNKOWN_ERROR = "RET9999",
-
-  SQL_ERROR = "RET8888",
-}
-
 export enum StorageEnum {
   UserInfo = "userInfo",
   UserToken = "userToken",
@@ -57,10 +43,4 @@ export enum MultiTabOperation {
   CLOSEALL = "closeAll",
   CLOSELEFT = "closeLeft",
   CLOSERIGHT = "closeRight",
-}
-
-export enum PermissionType {
-  CATALOGUE = 0,
-  MENU = 1,
-  BUTTON = 2,
 }

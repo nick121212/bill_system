@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(
     // 业务请求成功
     const hasSuccess = data && code === ApiStatusCode.SUCCESS;
     if (hasSuccess) {
-      res.data = data;
+      res.data = data as any;
       res.statusText = code;
 
       return res;

@@ -5,7 +5,7 @@ import useAxios from "axios-hooks";
 import { isNil } from "ramda";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { MenuEntity } from "@bill/database/esm";
+import { PermissionType, type MenuEntity } from "@bill/database/esm";
 
 import { Iconify, SvgIcon } from "@/components/icon";
 import TablePage from "@/components/table";
@@ -13,7 +13,7 @@ import TablePage from "@/components/table";
 import Create from "./create";
 import Edit from "./edit";
 import Remove from "./remove";
-import { BasicStatus, PermissionType } from "#/enum";
+import { BasicStatus } from "#/enum";
 
 export default function PermissionPage() {
   const { t } = useTranslation();

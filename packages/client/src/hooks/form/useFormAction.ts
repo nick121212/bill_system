@@ -4,12 +4,11 @@ import { notification } from "antd";
 import type { AxiosRequestConfig } from "axios";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
-
-import { ResultEnum } from "#/enum";
+import { ApiStatusCode } from "@bill/database/esm";
 
 export default function useFormAction(
   formRef: React.RefObject<any>,
-  axiosConfig: AxiosRequestConfig<any>,
+  axiosConfig: AxiosRequestConfig<unknown>,
   onSuccess?: VoidFunction
 ) {
   const [{ loading: loadingAjax, error, response }, callAjax] = useAxios(
@@ -37,7 +36,7 @@ export default function useFormAction(
     return () => {
       setShowModal(false);
     };
-  }, [formRef.current]);
+  }, []);
 
   useEffect(() => {
     // formRef.current
@@ -56,24 +55,24 @@ export default function useFormAction(
       placement: "topLeft",
       showProgress: true,
     });
-  }, [error]);
+  }, [error, t]);
 
   useEffect(() => {
     if (loadingAjax) {
       return;
     }
 
-    if (!error && response?.statusText === ResultEnum.SUCCESS) {
+    if (!error && response?.statusText === ApiStatusCode.SUCCESS) {
       notification.success({
         message: t("crud.success.title"),
-        description:t("crud.success.message"),
+        description: t("crud.success.message"),
         duration: 2,
         placement: "bottomLeft",
         showProgress: true,
       });
       onSuccess?.();
     }
-  }, [onSuccess, error, loadingAjax, response?.statusText]);
+  }, [onSuccess, t, error, loadingAjax, response?.statusText]);
 
   return {
     onSubmit,

@@ -3,20 +3,6 @@ export interface UserToken {
 	refreshToken?: string;
 }
 
-// export interface UserInfo {
-// 	id: string;
-// 	email: string;
-// 	username: string;
-// 	fullname: string;
-// 	password?: string;
-// 	phone?:string;
-// 	avatar?: string;
-// 	company?:string;
-// 	role?: Role;
-// 	status?: BasicStatus;
-// 	permissions?: Permission[];
-// }
-
 export interface Organization {
 	id: string;
 	name: string;
@@ -25,31 +11,3 @@ export interface Organization {
 	order?: number;
 	children?: Organization[];
 }
-
-// export interface Permission {
-// 	id: string;
-// 	parentId: string;
-// 	name: string;
-// 	label: string;
-// 	type: PermissionType;
-// 	route: string;
-// 	status?: BasicStatus;
-// 	order?: number;
-// 	icon?: string;
-// 	component?: string;
-// 	hide?: boolean;
-// 	hideTab?: boolean;
-// 	frameSrc?: URL;
-// 	newFeature?: boolean;
-// 	children?: Permission[];
-// }
-
-// export interface Role {
-// 	id: string;
-// 	name: string;
-// 	label: string;
-// 	status: BasicStatus;
-// 	order?: number;
-// 	desc?: string;
-// 	permission?: Permission[];
-// }

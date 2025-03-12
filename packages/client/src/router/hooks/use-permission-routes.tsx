@@ -2,7 +2,7 @@ import { Suspense, lazy, useMemo } from "react";
 import { Tag } from "antd";
 import { isEmpty } from "ramda";
 import { Navigate, Outlet } from "react-router";
-import type { MenuEntity } from "@bill/database/esm";
+import { PermissionType, type MenuEntity } from "@bill/database/esm";
 
 import { Iconify } from "@/components/icon";
 import { CircleLoading } from "@/components/loading";
@@ -10,7 +10,6 @@ import { useUserPermission } from "@/store/userStore";
 import { flattenTrees } from "@/utils/tree";
 
 import { getRoutesFromModules } from "../utils";
-import { PermissionType } from "#/enum";
 import type { AppRouteObject } from "#/router";
 
 const ENTRY_PATH = "/src/pages";
