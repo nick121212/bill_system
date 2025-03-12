@@ -11,7 +11,6 @@ export class ResponseInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       map((data, ...args) => {
-        console.log(data, args);
         return {
           data,
           code: ApiStatusCode.SUCCESS,

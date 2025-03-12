@@ -3,16 +3,12 @@ import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { PlusOutlined } from "@ant-design/icons";
-import type { MenuEntity ,RoleEntity} from "@bill/database/esm";
+import type { CompanyEntity, MenuEntity, RoleEntity } from "@bill/database/esm";
 
 import useData from "@/hooks/data/useData";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
-import {
-  AutoField,
-  AutoForm,
-  SelectField,
-} from "@/uniforms/fields";
+import { AutoField, AutoForm, SelectField } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
 
@@ -28,6 +24,8 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   const { t } = useTranslation();
   const formRef = useRef();
   const { rows, loading } = useData<RoleEntity[]>("role");
+  const { rows: company, loading: comLoad } =
+    useData<CompanyEntity[]>("companie");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
@@ -112,6 +110,17 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
               <AutoField name="phone" />
               <AutoField name="validateDate" />
               <AutoField name="isActive" />
+
+              <SelectField
+                name="company"
+                loading={comLoad}
+                options={company?.map((r: CompanyEntity) => {
+                  return {
+                    label: r.name,
+                    value: r.id,
+                  };
+                })}
+              />
 
               <SelectField
                 name="role"

@@ -25,11 +25,14 @@ export default function PermissionPage() {
       manual: true,
     }
   );
-  const onSuccess = useCallback((formData?: unknown) => {
-    refresh({
-      params: formData,
-    });
-  }, [refresh]);
+  const onSuccess = useCallback(
+    (formData?: unknown) => {
+      refresh({
+        params: formData,
+      });
+    },
+    [refresh]
+  );
   const pag = usePagination(onSuccess);
 
   const columns: ColumnsType<UserEntity> = [
@@ -40,7 +43,6 @@ export default function PermissionPage() {
       render: (_, record) => {
         return (
           <div className="flex">
-            
             <div className="ml-2 flex flex-col">
               <span className="text-sm">{record.fullname}</span>
               <span className="text-xs text-text-secondary">
@@ -82,7 +84,15 @@ export default function PermissionPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
+          <Edit
+            title="编辑角色"
+            formValue={{
+              ...record,
+              company: record.company?.id,
+              role: record.role?.id,
+            } as any}
+            onSuccess={pag.refresh}
+          />
           <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} />
         </div>
       ),

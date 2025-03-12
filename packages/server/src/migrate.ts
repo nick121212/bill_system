@@ -1,5 +1,6 @@
 import type { EntityManager } from "typeorm";
 import {
+  CompanyEntity,
   MenuEntity,
   RoleEntity,
   UserEntity,
@@ -32,6 +33,13 @@ async function addRoleData(em: EntityManager) {
 }
 
 async function addUserData(em: EntityManager, secret: string) {
+  const company = await em.save(
+    new CompanyEntity().extend({
+      name: "Coupang",
+      address: "ShangHai zhangjiang",
+      phone: "12345678954",
+    })
+  );
   const role1 = await em.findOneBy(RoleEntity, {
     name: "Admin",
   });
@@ -47,7 +55,8 @@ async function addUserData(em: EntityManager, secret: string) {
           avatar: r.avatar,
           email: r.email,
           address: "ceshi",
-          company: '',
+          company: company,
+          phone: "",
           fullname: r.username,
           password: hashPwd("demo1234", secret),
           role: index % 2 === 0 ? role1 ?? undefined : role2 ?? undefined,

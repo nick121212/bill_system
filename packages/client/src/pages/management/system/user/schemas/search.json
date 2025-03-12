@@ -5,12 +5,25 @@
     "name": { "type": "string", "title": "账号状态" },
     "isActive": {
       "type": "boolean",
-      "enum": [0, 1],
-       "title": "账号状态"
+      "title": "账号状态"
     },
-    "roleId": {
-      "type": "integer",
-      "title": "角色"
+    "role": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "角色"
+        }
+      }
+    },
+    "company": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "title": "公司名称"
+        }
+      }
     },
     "fullname": {
       "type": "string",

@@ -24,6 +24,8 @@ import { RoleModule } from "@/modules/role/role.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
 
+import { CompanyModule } from "../company/company.module";
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -64,7 +66,8 @@ import { UserModule } from "@/modules/user/user.module";
     ProductModule,
     ProductCategoryModule,
     ProductUnitModule,
-    RoleModule
+    RoleModule,
+    CompanyModule
   ],
   providers: [
     {

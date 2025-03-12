@@ -9,9 +9,11 @@ import {
   ManyToOne,
   Unique,
   DeleteDateColumn,
+  JoinColumn,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { CompanyEntity } from "./Company";
 import type { MenuEntity } from "./Menu";
 import { RoleEntity } from "./Role";
 
@@ -27,8 +29,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column()
   fullname: string;
 
-  @Column()
-  company?: string;
+  @ManyToOne(() => CompanyEntity)
+  @JoinColumn()
+  company?: CompanyEntity;
 
   @IsEmail()
   @Column()
@@ -49,10 +52,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
   phone: string;
 
   @ManyToOne(() => RoleEntity)
-  role: RoleEntity;
-
-  @Column()
-  roleId: number;
+  role?: RoleEntity;
 
   @Column({ default: true })
   isActive: boolean;
