@@ -1,8 +1,7 @@
-import { faker } from "@faker-js/faker";
 import { Avatar, Col, Divider, Row, Tag } from "antd";
 import dayjs from "dayjs";
+import { faker } from "@faker-js/faker";
 
-import { fakeAvatars } from "@/_mock/utils";
 import Card from "@/components/card";
 import { IconButton, Iconify } from "@/components/icon";
 
@@ -13,7 +12,7 @@ export default function ProjectsTab() {
 			name: "Admin Template",
 			client: faker.person.fullName(),
 			desc: "Time is our most valuable asset, that is why we want to help you save it by creating…",
-			members: fakeAvatars(15),
+			members: [],
 			startDate: dayjs(faker.date.past({ years: 1 })),
 			deadline: dayjs(faker.date.future({ years: 1 })),
 			messages: 236,
@@ -26,7 +25,7 @@ export default function ProjectsTab() {
 			name: "App Design",
 			desc: "App design combines the user interface (UI) and user experience (UX).  ",
 			client: faker.person.fullName(),
-			members: fakeAvatars(27),
+			members:  [],
 			startDate: dayjs(faker.date.past({ years: 1 })),
 			deadline: dayjs(faker.date.future({ years: 1 })),
 			messages: 236,
@@ -39,7 +38,7 @@ export default function ProjectsTab() {
 			name: "Figma Dashboard",
 			desc: "Use this template to organize your design project. Some of the key features are… ",
 			client: faker.person.fullName(),
-			members: fakeAvatars(32),
+			members: [],
 			startDate: dayjs(faker.date.past({ years: 1 })),
 			deadline: dayjs(faker.date.future({ years: 1 })),
 			messages: 236,
@@ -52,7 +51,7 @@ export default function ProjectsTab() {
 			name: "Create Website",
 			desc: "Your domain name should reflect your products or services so that your...  ",
 			client: faker.person.fullName(),
-			members: fakeAvatars(221),
+			members:  [],
 			startDate: dayjs(faker.date.past({ years: 1 })),
 			deadline: dayjs(faker.date.future({ years: 1 })),
 			messages: 236,
@@ -65,7 +64,7 @@ export default function ProjectsTab() {
 			name: "Logo Design",
 			desc: "Premium logo designs created by top logo designers. Create the branding of business.  ",
 			client: faker.person.fullName(),
-			members: fakeAvatars(125),
+			members:  [],
 			startDate: dayjs(faker.date.past({ years: 1 })),
 			deadline: dayjs(faker.date.future({ years: 1 })),
 			messages: 232,

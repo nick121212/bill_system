@@ -11,7 +11,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 
 // mock api
-import worker from "./_mock";
+// import worker from "./_mock";
 // i18n
 import App from "./App";
 // css
@@ -38,4 +38,4 @@ root.render(
 );
 
 // 🥵 start service worker mock in development mode
-worker.start({ onUnhandledRequest: "bypass" });
+// worker.start({ onUnhandledRequest: "bypass" });

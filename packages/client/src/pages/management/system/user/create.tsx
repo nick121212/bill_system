@@ -27,7 +27,7 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   const { t } = useTranslation();
   const formRef = useRef();
-  const { rows, loading } = useData("role");
+  const { rows, loading } = useData<RoleEntity[]>("role");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);

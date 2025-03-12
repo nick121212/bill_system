@@ -1,9 +1,8 @@
-import { Alert, Button, Checkbox, Col, Divider, Form, Input, Row } from "antd";
 import { useState } from "react";
+import { Alert, Button, Checkbox, Col, Divider, Form, Input, Row } from "antd";
 import { useTranslation } from "react-i18next";
 import { AiFillGithub, AiFillGoogleCircle, AiFillWechat } from "react-icons/ai";
 
-import { DEFAULT_USER, TEST_USER } from "@/_mock/assets";
 import type { SignInReq } from "@/api/services/userService";
 import { useSignIn } from "@/store/userStore";
 
@@ -34,8 +33,8 @@ function LoginForm() {
 				size="large"
 				initialValues={{
 					remember: true,
-					username: DEFAULT_USER.username,
-					password: DEFAULT_USER.password,
+					username: "admin",
+					password: "demo1234",
 				}}
 				onFinish={handleFinish}
 			>
@@ -46,12 +45,12 @@ function LoginForm() {
 								<div className="flex">
 									<span className="flex-shrink-0 text-text-disabled">{t("sys.login.userName")}:</span>
 									<span className="ml-1 text-text-secondary">
-										{DEFAULT_USER.username} / {TEST_USER.username}
+										admin / demo1234
 									</span>
 								</div>
 								<div className="flex">
 									<span className="flex-shrink-0 text-text-disabled">{t("sys.login.password")}:</span>
-									<span className="ml-1 text-text-secondary">{DEFAULT_USER.password}</span>
+									<span className="ml-1 text-text-secondary">demo1234</span>
 								</div>
 							</div>
 						}
