@@ -148,7 +148,8 @@
     "product": {
       "list": "商品管理",
       "unit": "商品单位管理",
-      "template": "商品模板"
+      "template": "商品模板",
+	  "table":"商品列表"
     }
   }
 }
