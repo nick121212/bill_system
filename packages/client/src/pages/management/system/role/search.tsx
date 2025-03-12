@@ -1,21 +1,18 @@
 import { useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
+import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Form, Space } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { getBridge } from "@/uniforms/ajv";
 import {
-  AutoCompleteField,
   AutoForm,
   SelectField,
-  TreeSelect,
 } from "@/uniforms/fields";
-import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
 import schema from "./schemas/search.json";
 
 export type PermissionModalProps = {
-  onSuccess: (data: any) => void;
+  onSuccess: (data: unknown) => void;
   loading?: boolean;
 };
 
@@ -36,7 +33,7 @@ export default function PermissionModal({
       <AutoForm
         ref={formRef as any}
         showInlineError
-        schema={bridge as any}
+        schema={bridge}
         onSubmit={(formData) => {
           onSuccess?.(formData);
         }}

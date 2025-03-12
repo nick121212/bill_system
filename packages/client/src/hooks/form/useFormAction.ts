@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import type React from "react";
+import { useEffect, useMemo, useState } from "react";
 import { notification } from "antd";
-import { AxiosError, AxiosRequestConfig } from "axios";
+import type { AxiosRequestConfig } from "axios";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 
@@ -11,7 +12,7 @@ export default function useFormAction(
   axiosConfig: AxiosRequestConfig<any>,
   onSuccess?: VoidFunction
 ) {
-  const [{ data, loading: loadingAjax, error, response }, callAjax] = useAxios(
+  const [{ loading: loadingAjax, error, response }, callAjax] = useAxios(
     {
       ...axiosConfig,
     },

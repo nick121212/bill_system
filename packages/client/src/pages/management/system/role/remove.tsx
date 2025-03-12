@@ -6,13 +6,13 @@ import {
 } from "antd";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined } from "@ant-design/icons";
+import type { RoleEntity } from "@bill/database/esm";
 
 import useFormAction from "@/hooks/form/useFormAction";
 
-import type { Role } from "#/entity";
 
 export type RoleModalProps = {
-  formValue: Role;
+  formValue: RoleEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -27,8 +27,8 @@ export default function PermissionModal({
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
-  }, []);
-  const { onSubmit, showModal, setShowModal, onClose, callAjax, loadingAjax } =
+  }, [onSuccess]);
+  const { showModal, setShowModal, onClose, callAjax, loadingAjax } =
     useFormAction(
       formRef,
       {
@@ -48,7 +48,7 @@ export default function PermissionModal({
         onClick={() => {
           setShowModal(true);
         }}
-      ></Button>
+      />
 
       <Modal
         title={title}

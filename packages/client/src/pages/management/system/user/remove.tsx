@@ -2,13 +2,13 @@ import { useCallback, useRef } from "react";
 import { Button, Modal, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined } from "@ant-design/icons";
+import type { UserEntity } from "@bill/database/esm";
 
 import useFormAction from "@/hooks/form/useFormAction";
 
-import type { Permission, UserInfo } from "#/entity";
 
 export type UserModalProps = {
-  formValue: UserInfo;
+  formValue: UserEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -24,7 +24,7 @@ export default function PermissionModal({
     onSuccess?.();
     setShowModal(false);
   }, [onSuccess]);
-  const { onSubmit, showModal, setShowModal, onClose, callAjax, loadingAjax } =
+  const { showModal, setShowModal, onClose, callAjax, loadingAjax } =
     useFormAction(
       formRef,
       {

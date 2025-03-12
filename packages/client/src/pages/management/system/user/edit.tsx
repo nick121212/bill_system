@@ -3,6 +3,7 @@ import { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { EditOutlined } from "@ant-design/icons";
+import type { RoleEntity, UserEntity } from "@bill/database/esm";
 
 import useData from "@/hooks/data/useData";
 import useFormAction from "@/hooks/form/useFormAction";
@@ -15,10 +16,9 @@ import {
 } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
-import type { UserInfo } from "#/entity";
 
 export type UserModalProps = {
-  formValue?: UserInfo;
+  formValue?: UserEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -123,9 +123,7 @@ export default function PermissionModal({
               <SelectField
                 name="role"
                 loading={loading}
-                options={rows?.map((r: Role) => {
-                  console.log(r);
-
+                options={rows?.map((r: RoleEntity) => {
                   return {
                     label: r.name,
                     value: r.id,

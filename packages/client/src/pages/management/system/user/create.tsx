@@ -1,29 +1,23 @@
-import { LegacyRef, MutableRefObject, useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import { Button, Drawer, Form, Space, Spin, GetRef } from "antd";
+import { useCallback, useRef } from "react";
+import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
+import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { PlusOutlined } from "@ant-design/icons";
+import type { MenuEntity ,RoleEntity} from "@bill/database/esm";
 
 import useData from "@/hooks/data/useData";
-import usePermission from "@/hooks/data/usePermission";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
 import {
   AutoField,
-  AutoFields,
   AutoForm,
-  BaseForm,
-  ErrorsField,
   SelectField,
-  TextAreaField,
-  TreeField,
 } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
-import type { Permission, Role, UserInfo } from "#/entity";
 
 export type RoleModalProps = {
-  formValue?: Permission;
+  formValue?: MenuEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -122,9 +116,7 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
               <SelectField
                 name="role"
                 loading={loading}
-                options={rows?.map((r: Role) => {
-                  console.log(r);
-                  
+                options={rows?.map((r: RoleEntity) => {
                   return {
                     label: r.name,
                     value: r.id,

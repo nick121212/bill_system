@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
     "declaration": true,
-    "module": "CommonJS",
+    "module": "ES2015",
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "ES2015",
     "sourceMap": true,
-    "outDir": "./dist",
+    "moduleResolution": "node",
+    "outDir": "./esm",
     "noUnusedLocals": true,
     "baseUrl": "./",
     "incremental": true,
@@ -18,7 +19,6 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {
-    }
+    "paths": {}
   }
 }

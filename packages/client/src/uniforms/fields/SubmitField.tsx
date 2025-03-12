@@ -1,6 +1,6 @@
-import React, { Ref } from "react";
-import { Button, ButtonProps } from "antd";
-import { Override, useForm } from "uniforms";
+import type { Ref } from "react";
+import { Button, type ButtonProps } from "antd";
+import { type Override, useForm } from "uniforms";
 
 export type SubmitFieldProps = Override<
   ButtonProps,

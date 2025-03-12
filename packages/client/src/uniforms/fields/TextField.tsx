@@ -1,6 +1,6 @@
-import React, { Ref } from 'react';
-import  { Input, InputProps, InputRef } from 'antd';
-import { FieldProps, connectField, filterDOMProps } from 'uniforms';
+import type { Ref } from 'react';
+import  { Input, type InputProps, type InputRef } from 'antd';
+import { type FieldProps, connectField, filterDOMProps } from 'uniforms';
 
 import wrapField from './wrapField';
 

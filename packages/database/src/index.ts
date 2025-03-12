@@ -12,6 +12,8 @@ import {
 } from "./entities";
 
 export * from "./enums";
+export * from "./entities";
+
 export default [
   UserEntity,
   MenuEntity,

@@ -1,7 +1,7 @@
-import React, { Ref } from "react";
-import { DatePicker, DatePickerProps } from "antd";
+import  type { Ref } from "react";
+import { DatePicker, type DatePickerProps } from "antd";
 import dayjs from "dayjs";
-import { connectField, FieldProps, filterDOMProps } from "uniforms";
+import { connectField, type FieldProps, filterDOMProps } from "uniforms";
 
 import wrapField from "./wrapField";
 
@@ -14,7 +14,7 @@ export type DateFieldProps = FieldProps<
 
 const defaultStyle = { width: "100%" };
 
-function Date({
+function DateD({
   showTime = true,
   style = defaultStyle,
   ...props
@@ -41,4 +41,4 @@ function Date({
   );
 }
 
-export default connectField<DateFieldProps>(Date, { kind: "leaf" });
+export default connectField<DateFieldProps>(DateD, { kind: "leaf" });

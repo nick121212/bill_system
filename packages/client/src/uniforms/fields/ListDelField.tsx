@@ -1,9 +1,8 @@
-import React from 'react';
-import { Button, ButtonProps } from "antd";
+import { Button, type ButtonProps } from "antd";
 import {
-  ConnectedField,
+  type ConnectedField,
   connectField,
-  FieldProps,
+  type FieldProps,
   filterDOMProps,
   joinName,
   useField,
@@ -31,6 +30,7 @@ function ListDel({
     { absoluteName: true },
   )[0];
 
+  // biome-ignore lint/style/noNonNullAssertion: <explanation>
   disabled ||= readOnly || parent.minCount! >= parent.value!.length;
 
   return (
@@ -39,6 +39,7 @@ function ListDel({
       disabled={disabled}
       icon={icon}
       onClick={() => {
+        // biome-ignore lint/style/noNonNullAssertion: <explanation>
         const value = parent.value!.slice();
         value.splice(nameIndex, 1);
         parent.onChange(value);

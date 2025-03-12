@@ -1,10 +1,11 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback } from "react";
 import { Button, Space, Tag } from "antd";
-import { type ColumnsType } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { isNil } from "ramda";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
+import type { MenuEntity } from "@bill/database/esm";
 
 import { Iconify, SvgIcon } from "@/components/icon";
 import TablePage from "@/components/table";
@@ -12,24 +13,22 @@ import TablePage from "@/components/table";
 import Create from "./create";
 import Edit from "./edit";
 import Remove from "./remove";
-import type { Permission } from "#/entity";
 import { BasicStatus, PermissionType } from "#/enum";
 
 export default function PermissionPage() {
   const { t } = useTranslation();
-  const tableRef = useRef<any>();
-  const [{ data: rows, loading: loading }, refresh] = useAxios({
+  const [{ data: rows, loading }, refresh] = useAxios({
     url: "/menus",
   });
   const onSuccess = useCallback(
-    (formData?: any) => {
+    (formData?: unknown) => {
       refresh({
         params: formData,
       });
     },
-    [tableRef]
+    [refresh]
   );
-  const columns: ColumnsType<Permission> = [
+  const columns: ColumnsType<MenuEntity> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -94,34 +93,28 @@ export default function PermissionPage() {
 
   return (
     <TablePage
-      ref={tableRef}
       extra={
-        <>
-          <Space
-            direction="horizontal"
-            size="small"
-            style={{ display: "flex" }}
+        <Space direction="horizontal" size="small" style={{ display: "flex" }}>
+          <Create title="新建权限菜单" onSuccess={onSuccess} />
+          <Button
+            icon={<ReloadOutlined />}
+            type="text"
+            onClick={() => {
+              onSuccess();
+            }}
           >
-            <Create title="新建权限菜单" onSuccess={onSuccess} />
-            <Button
-              icon={<ReloadOutlined />}
-              type="text"
-              onClick={() => {
-                onSuccess();
-              }}
-            >
-              {t("common.redo")}
-            </Button>
-          </Space>
-        </>
+            {t("common.redo")}
+          </Button>
+        </Space>
       }
       tableProps={{
+        loading,
         size: "small",
         rowKey: "id",
         pagination: false,
         dataSource: rows,
         columns,
       }}
-    ></TablePage>
+    />
   );
 }

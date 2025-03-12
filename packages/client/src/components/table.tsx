@@ -1,6 +1,6 @@
-import { forwardRef, useMemo } from "react";
-import { BreadcrumbProps, Card, GetProp } from "antd";
-import Table, { TableProps, type ColumnsType } from "antd/es/table";
+import { useMemo } from "react";
+import { type BreadcrumbProps, Card, type GetProp } from "antd";
+import Table, { type TableProps } from "antd/es/table";
 import { useTranslation } from "react-i18next";
 import { useMatches } from "react-router";
 
@@ -16,8 +16,8 @@ export type TablePageProps = {
 
 type MenuItem = GetProp<BreadcrumbProps, "items">[number];
 
-function TablePage(props: React.PropsWithChildren<TablePageProps>, ref: any) {
-  const { title, extra, tableProps, children } = props;
+function TablePage(props: React.PropsWithChildren<TablePageProps>) {
+  const { extra, tableProps, children } = props;
   const { t } = useTranslation();
   const matches = useMatches();
   const flattenedRoutes = useFlattenedRoutes();
@@ -65,13 +65,10 @@ function TablePage(props: React.PropsWithChildren<TablePageProps>, ref: any) {
       </Card>
 
       <div className="flex-auto overflow-auto w-full">
-        <Table
-          {...tableProps}
-          loading={props.loading}
-        />
+        <Table {...tableProps} loading={props.loading} />
       </div>
     </div>
   );
 }
 
-export default forwardRef(TablePage);
+export default TablePage;

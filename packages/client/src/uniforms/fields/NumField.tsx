@@ -1,7 +1,6 @@
-/// <reference types="rc-input-number" />
-import React, { Ref } from 'react';
+import  type { Ref } from 'react';
 import  { InputNumber, type InputNumberProps } from 'antd';
-import { FieldProps, connectField, filterDOMProps } from 'uniforms';
+import { type FieldProps, connectField, filterDOMProps } from 'uniforms';
 
 import wrapField from './wrapField';
 
@@ -21,9 +20,9 @@ function Num(props: NumFieldProps) {
       min={props.min}
       name={props.name}
       onChange={event => {
-        const parse = props.decimal ? parseFloat : parseInt;
-        const value = parse('' + event);
-        props.onChange(isNaN(value) ? undefined : value);
+        const parse = props.decimal ? Number.parseFloat : Number.parseInt;
+        const value = parse(`${event}`);
+        props.onChange(Number.isNaN(value) ? undefined : value);
       }}
       placeholder={props.placeholder}
       readOnly={props.readOnly}

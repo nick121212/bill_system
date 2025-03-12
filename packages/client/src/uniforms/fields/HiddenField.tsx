@@ -1,5 +1,5 @@
-import React, { HTMLProps, Ref, useEffect } from 'react';
-import { Override, filterDOMProps, useField } from 'uniforms';
+import  { type HTMLProps, type Ref, useEffect } from 'react';
+import { type Override, filterDOMProps, useField } from 'uniforms';
 
 export type HiddenFieldProps = Override<
   HTMLProps<HTMLInputElement>,

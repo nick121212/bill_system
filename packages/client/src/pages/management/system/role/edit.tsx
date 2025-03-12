@@ -1,8 +1,9 @@
 import { useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
+import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { EditOutlined } from "@ant-design/icons";
+import type { RoleEntity } from "@bill/database/esm";
 
 import usePermission from "@/hooks/data/usePermission";
 import useFormAction from "@/hooks/form/useFormAction";
@@ -10,16 +11,14 @@ import { getBridge } from "@/uniforms/ajv";
 import {
   AutoFields,
   AutoForm,
-  ErrorsField,
   TextAreaField,
   TreeField,
 } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
-import type { Role } from "#/entity";
 
 export type RoleModalProps = {
-  formValue?: Role;
+  formValue?: RoleEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -37,7 +36,7 @@ export default function PermissionModal({
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
-  }, []);
+  }, [onSuccess]);
   const {
     onSubmit,
     showModal,
@@ -65,7 +64,7 @@ export default function PermissionModal({
         onClick={() => {
           setShowModal(true);
         }}
-      ></Button>
+      />
 
       <Drawer
         title={title}
@@ -100,7 +99,7 @@ export default function PermissionModal({
             <AutoForm
               ref={formRef as any}
               showInlineError
-              schema={bridge as any}
+              schema={bridge}
               model={formValue as any}
               onSubmit={(formData) => {
                 setFormData(formData);
@@ -116,6 +115,7 @@ export default function PermissionModal({
               <TreeField
                 name="menus"
                 checkable
+                loading={loading}
                 treeData={permissions}
                 fieldNames={{
                   key: "id",

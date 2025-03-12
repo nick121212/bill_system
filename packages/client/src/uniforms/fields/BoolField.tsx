@@ -1,6 +1,6 @@
-import React, { ReactNode, Ref } from "react";
-import { Checkbox, Switch, SwitchProps, CheckboxProps } from "antd";
-import { connectField, FieldProps, filterDOMProps } from "uniforms";
+import type { ReactNode, Ref } from "react";
+import { Checkbox, Switch, type SwitchProps, type CheckboxProps } from "antd";
+import { connectField, type FieldProps, filterDOMProps } from "uniforms";
 import CheckOutlined from "@ant-design/icons/CheckOutlined";
 import CloseOutlined from "@ant-design/icons/CloseOutlined";
 

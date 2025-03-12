@@ -9,6 +9,7 @@ import {
 } from "antd";
 import { useTranslation } from "react-i18next";
 import { PlusOutlined } from "@ant-design/icons";
+import type { MenuEntity } from "@bill/database/esm";
 
 import usePermission from "@/hooks/data/usePermission";
 import useFormAction from "@/hooks/form/useFormAction";
@@ -25,10 +26,9 @@ import {
 import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
 import schema from "./schemas/create.json";
-import type { Permission } from "#/entity";
 
 export type PermissionModalProps = {
-  formValue?: Permission;
+  formValue?: MenuEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -45,7 +45,7 @@ export default function PermissionModal({
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
-  }, []);
+  }, [onSuccess]);
   const {
     onSubmit,
     showModal,
@@ -109,7 +109,7 @@ export default function PermissionModal({
             <AutoForm
               ref={formRef as any}
               showInlineError
-              schema={bridge as any}
+              schema={bridge}
               onSubmit={(formData) => {
                 setFormData(formData);
                 callAjax({

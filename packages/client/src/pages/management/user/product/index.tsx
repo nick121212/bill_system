@@ -1,18 +1,14 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback } from "react";
 import { Button, Space, Tag } from "antd";
-import { type ColumnsType } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
+import type { RoleEntity, UserEntity } from "@bill/database/esm";
 
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
 
-// import Create from "./create";
-// import Edit from "./edit";
-// import Remove from "./remove";
-// import Search from "./search";
-import type { Role, UserInfo } from "#/entity";
 import { BasicStatus } from "#/enum";
 
 export default function PermissionPage() {
@@ -35,7 +31,7 @@ export default function PermissionPage() {
   );
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<UserInfo> = [
+  const columns: ColumnsType<UserEntity> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -64,7 +60,7 @@ export default function PermissionPage() {
       dataIndex: "role",
       align: "center",
       width: 120,
-      render: (role: Role) => <Tag color="cyan">{role?.name}</Tag>,
+      render: (role: RoleEntity) => <Tag color="cyan">{role?.name}</Tag>,
     },
     {
       title: "Status",
@@ -82,7 +78,7 @@ export default function PermissionPage() {
       key: "operation",
       align: "center",
       width: 100,
-      render: (_, record) => (
+      render: (_, _record) => (
         <div className="flex w-full justify-center text-gray">
           {/* <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
           <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} /> */}

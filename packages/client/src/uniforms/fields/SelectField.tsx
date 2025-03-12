@@ -1,13 +1,13 @@
-import React, { Ref } from "react";
+import type { Ref } from "react";
 import {
   Checkbox,
   Radio,
   Select as SelectAntD,
-  SelectProps as SelectAntDProps,
+  type SelectProps as SelectAntDProps,
 } from "antd";
-import { CheckboxGroupProps } from "antd/es/checkbox";
-import { RadioGroupProps } from "antd/lib/radio";
-import { FieldProps, connectField, filterDOMProps } from "uniforms";
+import type { CheckboxGroupProps } from "antd/es/checkbox";
+import type { RadioGroupProps } from "antd/lib/radio";
+import { type FieldProps, connectField, filterDOMProps } from "uniforms";
 
 import type { Option } from "./types";
 import wrapField from "./wrapField";
@@ -73,7 +73,7 @@ function Select(props: SelectFieldProps) {
         />
       </span>
     ) : (
-      <SelectAntD<any>
+      <SelectAntD<SelectFieldValue>
         allowClear={!props.required}
         disabled={props.disabled}
         mode={props.fieldType === Array ? "multiple" : undefined}

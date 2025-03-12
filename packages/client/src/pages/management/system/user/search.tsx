@@ -1,23 +1,21 @@
 import { useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
+import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Form, Space } from "antd";
 import { useTranslation } from "react-i18next";
+import type { RoleEntity } from "@bill/database/esm";
 
 import useRole from "@/hooks/data/useRole";
 import { getBridge } from "@/uniforms/ajv";
 import {
-  AutoCompleteField,
   AutoField,
   AutoForm,
   SelectField,
-  TreeSelect,
 } from "@/uniforms/fields";
 
 import schema from "./schemas/search.json";
-import { Role } from "#/entity";
 
 export type PermissionModalProps = {
-  onSuccess: (data: any) => void;
+  onSuccess: (data: unknown) => void;
   loading?: boolean;
 };
 
@@ -58,7 +56,7 @@ export default function PermissionModal({
           <SelectField
             name="roleId"
             loading={roleLoading}
-            options={roles?.rows?.map((r: Role) => {
+            options={roles?.rows?.map((r: RoleEntity) => {
               return { label: r.name, value: r.id };
             })}
           />

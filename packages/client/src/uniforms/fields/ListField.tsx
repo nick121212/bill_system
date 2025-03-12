@@ -1,13 +1,13 @@
-import React, {
+import  {
   Children,
   cloneElement,
   isValidElement,
-  ReactElement,
-  ReactNode,
+  type ReactElement,
+  type ReactNode,
 } from 'react';
 import {Tooltip} from 'antd';
 import classNames from 'classnames';
-import { connectField, filterDOMProps, HTMLFieldProps } from 'uniforms';
+import { connectField, filterDOMProps, type HTMLFieldProps } from 'uniforms';
 import QuestionCircleOutlined from '@ant-design/icons/QuestionCircleOutlined';
 
 import ListAddField from './ListAddField';
@@ -77,12 +77,12 @@ function List({
 
       {!!(error && showInlineError) && <div>{errorMessage}</div>}
 
-      {value?.map((item, itemIndex) =>
+      {value?.map((_item, itemIndex) =>
         Children.map(children, (child, childIndex) =>
           isValidElement(child)
             ? cloneElement(child as ReactElement, {
-                key: `${itemIndex}-${childIndex}`,
-                name: child.props.name?.replace('$', '' + itemIndex),
+                key: `${itemIndex}-${childIndex.toString()}`,
+                name: child.props.name?.replace('$', `${itemIndex}`),
                 labelCol,
                 wrapperCol,
                 ...itemProps,

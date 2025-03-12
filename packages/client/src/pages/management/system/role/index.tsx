@@ -1,9 +1,10 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback } from "react";
 import { Button, Space, Tag } from "antd";
-import { type ColumnsType } from "antd/es/table";
+import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
+import type { RoleEntity } from "@bill/database/esm";
 
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
@@ -12,24 +13,23 @@ import Create from "./create";
 import Edit from "./edit";
 import Remove from "./remove";
 import Search from "./search";
-import type { Role } from "#/entity";
 import { BasicStatus } from "#/enum";
 
 export default function PermissionPage() {
   const { t } = useTranslation();
-  const [{ data: rows, loading: loading }, refresh] = useAxios({
+  const [{ data: rows, loading }, refresh] = useAxios({
     url: "/roles",
   },{
     manual: true,
   });
-  const onSuccess = useCallback((formData?: any) => {
+  const onSuccess = useCallback((formData?: unknown) => {
     refresh({
       params: formData,
     });
-  }, []);
+  }, [refresh]);
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<Role> = [
+  const columns: ColumnsType<RoleEntity> = [
     {
       title: "Name",
       dataIndex: "name",
@@ -69,7 +69,6 @@ export default function PermissionPage() {
   return (
     <TablePage
       extra={
-        <>
           <Space
             direction="horizontal"
             size="small"
@@ -86,7 +85,6 @@ export default function PermissionPage() {
               {t("common.redo")}
             </Button>
           </Space>
-        </>
       }
       tableProps={{
         size: "small",

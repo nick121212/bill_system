@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
 import { Avatar, Col, Progress, Row, Space, Table, Tag, Timeline, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
+import { faker } from "@faker-js/faker";
 
 import { fakeAvatars } from "@/_mock/utils";
 import Card from "@/components/card";
@@ -20,12 +20,12 @@ interface DataType {
 }
 
 export default function ProfileTab() {
-	const { username } = useUserInfo();
+	const { fullname } = useUserInfo();
 	const AboutItems = [
 		{
 			icon: <Iconify icon="fa-solid:user" size={18} />,
 			label: "Full Name",
-			val: username,
+			val: fullname,
 		},
 		{
 			icon: <Iconify icon="eos-icons:role-binding" size={18} />,
@@ -50,7 +50,7 @@ export default function ProfileTab() {
 		{
 			icon: <Iconify icon="ic:baseline-email" size={18} />,
 			label: "Email",
-			val: username,
+			val: fullname,
 		},
 	];
 

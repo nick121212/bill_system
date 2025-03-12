@@ -1,8 +1,8 @@
-import React, { Ref } from 'react';
+import  type { Ref } from 'react';
 import  { Input } from 'antd';
-import { TextAreaProps } from 'antd/es/input';
-import { TextAreaRef } from 'antd/es/input/TextArea';
-import { FieldProps, connectField, filterDOMProps } from 'uniforms';
+import type { TextAreaProps } from 'antd/es/input';
+import type { TextAreaRef } from 'antd/es/input/TextArea';
+import { type FieldProps, connectField, filterDOMProps } from 'uniforms';
 
 import wrapField from './wrapField';
 

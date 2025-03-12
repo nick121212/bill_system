@@ -5,8 +5,6 @@ import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router";
 import { UserOutlined } from "@ant-design/icons";
 
-import businessman from "@/assets/icons/flat-color-icons--businessman.svg";
-import { IconButton } from "@/components/icon";
 import { useLoginStateContext } from "@/pages/sys/login/providers/LoginStateProvider";
 import { useRouter } from "@/router/hooks";
 import { useLogout, useUserActions, useUserInfo } from "@/store/userStore";
@@ -21,7 +19,7 @@ const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
  */
 export default function AccountDropdown() {
   const { replace } = useRouter();
-  const { username, email, avatar } = useUserInfo();
+  const { fullname, email } = useUserInfo();
   const { clearUserInfoAndToken } = useUserActions();
   const { backToLogin } = useLoginStateContext();
   const logoutAction = useLogout();
@@ -55,7 +53,7 @@ export default function AccountDropdown() {
   const dropdownRender: DropdownProps["dropdownRender"] = (menu) => (
     <div style={contentStyle}>
       <div className="flex flex-col items-start p-4">
-        <div>{username}</div>
+        <div>{fullname}</div>
         <div className="text-gray">{email}</div>
       </div>
       <Divider style={{ margin: 0 }} />

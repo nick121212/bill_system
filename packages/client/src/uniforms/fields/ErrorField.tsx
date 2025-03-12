@@ -1,9 +1,9 @@
-import React, { HTMLProps } from 'react';
-import { Override, connectField, filterDOMProps } from 'uniforms';
+import type { HTMLProps } from 'react';
+import { type Override, connectField, filterDOMProps } from 'uniforms';
 
 export type ErrorFieldProps = Override<
   Omit<HTMLProps<HTMLDivElement>, 'onChange'>,
-  { error?: any; errorMessage?: string }
+  { error?: unknown; errorMessage?: string }
 >;
 
 const defaultStyle = {
@@ -16,7 +16,7 @@ const defaultStyle = {
 
 const messageStyle = { margin: '3px' };
 
-function Error({
+function ErrorD({
   children,
   error,
   errorMessage,
@@ -30,7 +30,7 @@ function Error({
   );
 }
 
-export default connectField<ErrorFieldProps>(Error, {
+export default connectField<ErrorFieldProps>(ErrorD, {
   initialValue: false,
   kind: 'leaf',
 });

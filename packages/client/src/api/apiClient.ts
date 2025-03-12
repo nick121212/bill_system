@@ -1,12 +1,12 @@
-import axios, { AxiosRequestConfig, AxiosError, AxiosResponse } from "axios";
+import axios, { type AxiosRequestConfig, type AxiosError, type AxiosResponse } from "axios";
 import { configure } from "axios-hooks";
 import { toast } from "sonner";
+import { ApiStatusCode } from "@bill/database/esm";
 
 import { t } from "@/locales/i18n";
 import userStore from "@/store/userStore";
 
 import type { Result } from "#/api";
-import { ResultEnum } from "#/enum";
 
 // 创建 axios 实例
 const axiosInstance = axios.create({
@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
 
     // 在请求被发送之前做些什么
     config.headers.Authorization =
-      "Bearer " + userInfo.userToken?.accessToken || "";
+      `Bearer ${userInfo.userToken?.accessToken}` || "";
     return config;
   },
   (error) => {
@@ -38,7 +38,7 @@ axiosInstance.interceptors.response.use(
 
     const { code, data, message } = res.data;
     // 业务请求成功
-    const hasSuccess = data && code === ResultEnum.SUCCESS;
+    const hasSuccess = data && code === ApiStatusCode.SUCCESS;
     if (hasSuccess) {
       res.data = data;
       res.statusText = code;
@@ -69,26 +69,26 @@ axiosInstance.interceptors.response.use(
 configure({ axios: axiosInstance });
 
 class APIClient {
-  get<T = any>(config: AxiosRequestConfig): Promise<T> {
+  get<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     return this.request({ ...config, method: "GET" });
   }
 
-  post<T = any>(config: AxiosRequestConfig): Promise<T> {
+  post<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     return this.request({ ...config, method: "POST" });
   }
 
-  put<T = any>(config: AxiosRequestConfig): Promise<T> {
+  put<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     return this.request({ ...config, method: "PUT" });
   }
 
-  delete<T = any>(config: AxiosRequestConfig): Promise<T> {
+  delete<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     return this.request({ ...config, method: "DELETE" });
   }
 
-  request<T = any>(config: AxiosRequestConfig): Promise<T> {
+  request<T = unknown>(config: AxiosRequestConfig): Promise<T> {
     return new Promise((resolve, reject) => {
       axiosInstance
-        .request<any, AxiosResponse<Result>>(config)
+        .request<unknown, AxiosResponse<Result>>(config)
         .then((res: AxiosResponse<Result>) => {
           resolve(res as unknown as Promise<T>);
         })

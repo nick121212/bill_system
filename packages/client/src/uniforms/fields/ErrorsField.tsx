@@ -1,4 +1,4 @@
-import React, { HTMLProps } from 'react';
+import type { HTMLProps } from 'react';
 import { filterDOMProps, useForm } from 'uniforms';
 
 export type ErrorsFieldProps = HTMLProps<HTMLDivElement>;
@@ -25,7 +25,7 @@ function ErrorsField({
       {children}
       <ul>
         {schema.getErrorMessages(error).map((message, index) => (
-          <li key={index} style={rowStyle}>
+          <li key={index?.toString()} style={rowStyle}>
             {message}
           </li>
         ))}

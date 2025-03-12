@@ -2,21 +2,22 @@ import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import type { UserEntity } from "@bill/database/esm";
 import { useMutation } from "@tanstack/react-query";
 
-import userService, { SignInReq } from "@/api/services/userService";
+import userService, { type SignInReq } from "@/api/services/userService";
 
-import type { UserInfo, UserToken } from "#/entity";
+import type { UserToken } from "#/entity";
 import { StorageEnum } from "#/enum";
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
 type UserStore = {
-  userInfo: Partial<UserInfo>;
+  userInfo: Partial<UserEntity>;
   userToken: UserToken;
   // 使用 actions 命名空间来存放所有的 action
   actions: {
-    setUserInfo: (userInfo: UserInfo) => void;
+    setUserInfo: (userInfo: UserEntity) => void;
     setUserToken: (token: UserToken) => void;
     clearUserInfoAndToken: () => void;
   };

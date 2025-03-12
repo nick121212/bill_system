@@ -8,6 +8,7 @@ export type TreeSelectFieldProps = FieldProps<
   number[] | string[],
   Omit<TreeProps, "onReset">,
   {
+    loading?: boolean;
     inputRef?: Ref<typeof TreeD>;
     treeData: any;
     fieldNames?: { title: string; key: string; children: string };
@@ -19,6 +20,7 @@ function Tree(props: TreeSelectFieldProps) {
     props,
     <TreeD
       checkable
+      loading={props.loading}
       fieldNames={props.fieldNames}
       checkedKeys={props.value}
       disabled={props.disabled}

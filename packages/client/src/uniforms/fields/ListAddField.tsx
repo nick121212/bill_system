@@ -1,9 +1,8 @@
-import React from "react";
-import { Button, ButtonProps } from "antd";
+import { Button, type ButtonProps } from "antd";
 import cloneDeep from "lodash/cloneDeep";
 import {
-  ConnectedField,
-  FieldProps,
+  type ConnectedField,
+  type FieldProps,
   connectField,
   filterDOMProps,
   joinName,
@@ -35,6 +34,7 @@ function ListAdd({
   )[0];
 
   const limitNotReached =
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
     !disabled && !(parent.maxCount! <= parent.value!.length);
 
   return (
@@ -44,6 +44,7 @@ function ListAdd({
       icon={icon}
       onClick={() => {
         if (!readOnly) {
+          // biome-ignore lint/style/noNonNullAssertion: <explanation>
           parent.onChange(parent.value!.concat([cloneDeep(value)]));
         }
       }}

@@ -1,18 +1,13 @@
 import { useCallback, useRef } from "react";
-import {
-  Button,
-  Modal,
-  Space,
-} from "antd";
+import { Button, Modal, Space } from "antd";
 import { useTranslation } from "react-i18next";
 import { DeleteOutlined } from "@ant-design/icons";
+import type { MenuEntity } from "@bill/database/esm";
 
 import useFormAction from "@/hooks/form/useFormAction";
 
-import type { Permission } from "#/entity";
-
 export type PermissionModalProps = {
-  formValue: Permission;
+  formValue: MenuEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -27,8 +22,8 @@ export default function PermissionModal({
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
-  }, []);
-  const { onSubmit, showModal, setShowModal, onClose, callAjax, loadingAjax } =
+  }, [onSuccess]);
+  const { showModal, setShowModal, onClose, callAjax, loadingAjax } =
     useFormAction(
       formRef,
       {
@@ -48,7 +43,7 @@ export default function PermissionModal({
         onClick={() => {
           setShowModal(true);
         }}
-      ></Button>
+      />
 
       <Modal
         title={title}
