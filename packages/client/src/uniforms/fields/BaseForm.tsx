@@ -18,7 +18,7 @@ function AntD(parent: any) {
         ...props,
         className: classnames(
           'ant-form',
-          'ant-form-' + layout,
+          `ant-form-${layout}`,
           className as string,
         ),
       };

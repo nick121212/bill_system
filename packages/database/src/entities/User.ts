@@ -7,11 +7,12 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   ManyToOne,
-  PrimaryColumn,
   Unique,
+  DeleteDateColumn,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import type { MenuEntity } from "./Menu";
 import { RoleEntity } from "./Role";
 
 @Entity({
@@ -26,9 +27,8 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column()
   fullname: string;
 
-  @IsNotEmpty()
   @Column()
-  company: string;
+  company?: string;
 
   @IsEmail()
   @Column()
@@ -45,6 +45,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column()
   address: string;
 
+  @Column()
+  phone: string;
+
   @ManyToOne(() => RoleEntity)
   role: RoleEntity;
 
@@ -54,12 +57,17 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ type: "datetime", default: Date.now() })
-  validateDate: Date;
+  permissions?: MenuEntity[];
+
+  @Column({ default: 30 })
+  validateDate?: number;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
 
   @UpdateDateColumn({ type: "datetime", name: "update_time" })
   updateTime: Date;
+
+  @DeleteDateColumn()
+  deletedDate: Date;
 }

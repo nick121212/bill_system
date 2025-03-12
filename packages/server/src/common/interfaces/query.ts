@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 
-export class BaseQuery {
+export class BaseQuery<T = Record<string, unknown>> {
   @Type(() => Number)
   skip?: number;
 
@@ -8,5 +8,5 @@ export class BaseQuery {
   take?: number;
 
   @Type(() => Object)
-  where?: Record<string, any>;
+  where?: T;
 }

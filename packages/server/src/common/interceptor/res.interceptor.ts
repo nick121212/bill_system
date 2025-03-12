@@ -1,12 +1,12 @@
-import { catchError, map, Observable, throwError } from "rxjs";
+import { map, Observable } from "rxjs";
 import { ApiStatusCode } from "@bill/database";
 import { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/common";
 
 export class ResponseInterceptor implements NestInterceptor {
   intercept(
     context: ExecutionContext,
-    next: CallHandler<any>
-  ): Observable<any> | Promise<Observable<any>> {
+    next: CallHandler<unknown>
+  ): Observable<unknown> | Promise<Observable<unknown>> {
     // const ctx = context.switchToHttp();
 
     return next.handle().pipe(

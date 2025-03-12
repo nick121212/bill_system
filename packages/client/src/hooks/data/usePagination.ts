@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 
-export default function usePagination(onChange: (data: any) => void) {
+export default function usePagination(onChange: (data: unknown) => void) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [searchData, setSearchData] = useState({});
+  const [searchData, setSearchData] = useState<unknown>({});
 
   const refresh = useCallback(() => {
-    let skip = (page - 1) * pageSize;
+    const skip = (page - 1) * pageSize;
 
     onChange({
       where: searchData,

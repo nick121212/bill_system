@@ -37,10 +37,10 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync<any>(
-        token,
-        this.configService.get("jwt")
-      );
+      const payload = await this.jwtService.verifyAsync<{
+        id: string;
+        tokenId: string;
+      }>(token, this.configService.get("jwt"));
 
       const isValidToken = await this.redisService.validate(
         `user-${payload.id}`,
@@ -50,7 +50,7 @@ export class JwtAuthGuard implements CanActivate {
         throw new UnauthorizedException("Authorization token is not valid");
       }
 
-      request["user"] = payload;
+      request.user = payload;
     } catch (error) {
       throw new UnauthorizedException(error.message);
     }

@@ -1,24 +1,26 @@
-import * as crypto from "crypto";
-import { Repository } from "typeorm";
+import type { Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { UserEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import hashPwd from "@/common/utils/hash";
+import { RoleService } from "@/modules/role/role.service";
 
-import { RoleService } from "../role/role.service";
-import { UserQuery, UserRequest } from "./user.interface";
+import type { UserQuery, UserRequest } from "./user.interface";
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity) private repo: Repository<UserEntity>,
-    private roleService: RoleService
+    private configService: ConfigService,
+    private roleService: RoleService,
+    @InjectRepository(UserEntity) private repo: Repository<UserEntity>
   ) {}
 
   async all(query: UserQuery): Promise<{ rows: UserEntity[]; count: number }> {
-    const {  ...rest } = query?.where || {};
+    const { ...rest } = query?.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
@@ -31,7 +33,6 @@ export class UserService {
       withDeleted: false,
     });
 
-    
     return {
       rows,
       count,
@@ -54,7 +55,7 @@ export class UserService {
     return this.repo.findOne({
       where: {
         fullname: fullname,
-        password: crypto.hash("sha1", pass),
+        password: hashPwd(pass, this.configService.get("app").secret),
       },
       relations: {
         role: true,
@@ -63,9 +64,14 @@ export class UserService {
   }
 
   async create(body: UserRequest): Promise<UserEntity> {
-    const { ...rest } = body;
+    const { password, role, ...rest } = body;
     const user = new UserEntity().extend({
       ...rest,
+      password: hashPwd(
+        password ?? "123456789",
+        this.configService.get("app").secret
+      ),
+      role: await this.roleService.getById(role),
     });
 
     return await this.repo.save(user);
@@ -73,6 +79,7 @@ export class UserService {
 
   async update(id: number, body: UserRequest): Promise<UserEntity> {
     const user = await this.getById(id);
+    const { password, role, ...rest } = body;
 
     if (!user) {
       throw new ApiException(
@@ -82,7 +89,10 @@ export class UserService {
       );
     }
 
-    user.extend(body);
+    user.extend({
+      ...rest,
+      role: await this.roleService.getById(role),
+    });
 
     return this.repo.save(user);
   }

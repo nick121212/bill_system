@@ -10,9 +10,9 @@ export class Log4jsService implements LoggerService {
     private loggers: Map<string, Logger>;
     constructor(@Inject(LOG4JS_OPTION) options?: Configuration | string) {
         this.loggers = new Map();
-        if (typeof options == "string") {
+        if (typeof options === "string") {
             options = buildDefaultConfig(options);
-        } else if (typeof options == "undefined") {
+        } else if (typeof options === "undefined") {
             options = buildDefaultConfig("all");
         }
         configure(options);
@@ -27,25 +27,25 @@ export class Log4jsService implements LoggerService {
         return logger;
     }
 
-    log(message: any, context?: string) {
+    log(message: unknown, context?: string) {
         this.getLogger(context).info(message);
     }
 
-    error(message: any, trace?: string, context?: string) {
+    error(message: unknown, trace?: string, context?: string) {
         this.getLogger(context).error(message, trace);
     }
 
-    warn(message: any, context?: string) {
+    warn(message: unknown, context?: string) {
         this.getLogger(context).warn(message);
     }
 
-    debug(message: any, context?: string) {
+    debug(message: unknown, context?: string) {
         this.getLogger(context).debug(message);
     }
 
     flushall(cb?: () => void) {
         shutdown(() => {
-            cb && cb();
+            cb?.();
         });
     }
 }

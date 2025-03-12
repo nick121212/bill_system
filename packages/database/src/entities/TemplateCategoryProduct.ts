@@ -9,7 +9,6 @@ import {
 
 import { BaseEntity } from "./Base";
 import { ProductEntity } from "./Product";
-import { ProductCategoryEntity } from "./ProductCategory";
 import { TemplateCategoryEntity } from "./TemplateCategory";
 
 @Entity({

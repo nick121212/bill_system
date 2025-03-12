@@ -17,16 +17,5 @@ export class ProductUnitBodyRequest {
 
 export class ProductUnitQuery extends BaseQuery {
 
-  skip_c() {
-    return this.skip || 0;
-  }
-
-  take_c() {
-    return this.take || 10;
-  }
-
-  where_c() {
-    return this.where || {};
-  }
 }
 

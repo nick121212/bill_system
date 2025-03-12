@@ -7,6 +7,7 @@ import useRole from "@/hooks/data/useRole";
 import { getBridge } from "@/uniforms/ajv";
 import {
   AutoCompleteField,
+  AutoField,
   AutoForm,
   SelectField,
   TreeSelect,
@@ -36,16 +37,18 @@ export default function PermissionModal({
   return (
     <>
       <AutoForm
-        ref={formRef as any}
+        ref={formRef}
         showInlineError
-        schema={bridge as any}
+        schema={bridge}
         onSubmit={(formData) => {
           onSuccess?.(formData);
         }}
       >
         <Form preserve={false} layout="inline">
+          <AutoField name="fullname" />
+
           <SelectField
-            name="status"
+            name="isActive"
             options={[
               { label: "停用", value: 0 },
               { label: "启用", value: 1 },

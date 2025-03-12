@@ -6,9 +6,5 @@ export class BaseEntity<T> {
 
     return this;
   }
-
-  constructor(partial?: Partial<T>) {
-    // Object.assign(this, partial);
-  }
 }
 

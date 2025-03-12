@@ -1,12 +1,12 @@
-import * as crypto from "crypto";
-import { EntityManager } from "typeorm";
+import type { EntityManager } from "typeorm";
 import {
   MenuEntity,
   RoleEntity,
   UserEntity,
 } from "@bill/database/dist/entities";
 
-import { ROLE_LIST, USER_LIST, PERMISSION_LIST } from "./assets";
+import { ROLE_LIST, USER_LIST } from "./assets";
+import hashPwd from "./common/utils/hash";
 
 async function addRoleData(em: EntityManager) {
   const menus = await em.find(MenuEntity, {});
@@ -31,7 +31,7 @@ async function addRoleData(em: EntityManager) {
   );
 }
 
-async function addUserData(em: EntityManager) {
+async function addUserData(em: EntityManager, secret: string) {
   const role1 = await em.findOneBy(RoleEntity, {
     name: "Admin",
   });
@@ -47,9 +47,10 @@ async function addUserData(em: EntityManager) {
           avatar: r.avatar,
           email: r.email,
           address: "ceshi",
+          company: '',
           fullname: r.username,
-          password: crypto.hash("sha1", "demo1234"),
-          role: index % 2 === 0 ? role1! : role2!,
+          password: hashPwd("demo1234", secret),
+          role: index % 2 === 0 ? role1 ?? undefined : role2 ?? undefined,
         })
       );
     })
@@ -61,7 +62,7 @@ async function addPermission(
   root?: MenuEntity | MenuEntity[],
   parent?: MenuEntity
 ) {
-  if (root instanceof Array) {
+  if (Array.isArray(root)) {
     for (const element of root) {
       await addPermission(em, element, parent);
     }
@@ -83,12 +84,15 @@ async function addPermission(
   await em.save(MenuEntity, menu);
 
   if (root?.children) {
-    await addPermission(em, root.children as any, menu);
+    await addPermission(em, root.children, menu);
   }
 }
 
-export default async function migrationExecutor(em: EntityManager) {
+export default async function migrationExecutor(
+  em: EntityManager,
+  secret: string
+) {
   // await addPermission(em, PERMISSION_LIST as any);
   // await addRoleData(em);
-  // await addUserData(em);
+  // await addUserData(em, secret);
 }

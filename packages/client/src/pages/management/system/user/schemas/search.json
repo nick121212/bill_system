@@ -2,13 +2,19 @@
   "title": "User",
   "type": "object",
   "properties": {
-    "name": { "type": "string" },
-    "status": {
-      "type": "integer",
-      "enum": [0, 1]
+    "name": { "type": "string", "title": "账号状态" },
+    "isActive": {
+      "type": "boolean",
+      "enum": [0, 1],
+       "title": "账号状态"
     },
     "roleId": {
-      "type": "integer"
+      "type": "integer",
+      "title": "角色"
+    },
+    "fullname": {
+      "type": "string",
+      "title": "名称"
     }
   }
 }

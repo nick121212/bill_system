@@ -1,12 +1,6 @@
 import { randomUUID } from "crypto";
 import { UserEntity } from "@bill/database/dist/entities";
-import {
-  Get,
-  Injectable,
-  Req,
-  UnauthorizedException,
-  UseGuards,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 
@@ -28,7 +22,10 @@ export class AuthService {
     private configService: ConfigService
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(
+    email: string,
+    pass: string
+  ): Promise<Partial<UserEntity> | null> {
     const user = await this.usersService.findOne(email, pass);
 
     if (user) {
@@ -49,8 +46,8 @@ export class AuthService {
 
     const role = await this.roleService.getByIdWithPermission(user.role.id);
 
-    (user as any).permissions = PERMISSION_LIST;
-    (user as any).permissions = role.menus;
+    // user.permissions = PERMISSION_LIST;
+    user.permissions = role.menus;
 
     return await this.generateAccessToken(user);
   }

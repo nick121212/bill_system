@@ -11,6 +11,7 @@ export interface UserInfo {
 	username: string;
 	fullname: string;
 	password?: string;
+	phone?:string;
 	avatar?: string;
 	company?:string;
 	role?: Role;

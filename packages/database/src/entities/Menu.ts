@@ -2,8 +2,6 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  ManyToOne,
-  OneToMany,
   TreeChildren,
   TreeParent,
   CreateDateColumn,
@@ -11,7 +9,7 @@ import {
   Tree,
 } from "typeorm";
 
-import { PermissionType } from "../enums/PermissionType";
+import type { PermissionType } from "../enums/PermissionType";
 import { BaseEntity } from "./Base";
 
 @Entity({

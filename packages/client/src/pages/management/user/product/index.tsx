@@ -8,10 +8,10 @@ import { ReloadOutlined } from "@ant-design/icons";
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
 
-import Create from "./create";
-import Edit from "./edit";
-import Remove from "./remove";
-import Search from "./search";
+// import Create from "./create";
+// import Edit from "./edit";
+// import Remove from "./remove";
+// import Search from "./search";
 import type { Role, UserInfo } from "#/entity";
 import { BasicStatus } from "#/enum";
 
@@ -19,17 +19,20 @@ export default function PermissionPage() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: "/users",
+      url: "/products",
     },
     {
       manual: true,
     }
   );
-  const onSuccess = useCallback((formData?: unknown) => {
-    refresh({
-      params: formData,
-    });
-  }, [refresh]);
+  const onSuccess = useCallback(
+    (formData?: unknown) => {
+      refresh({
+        params: formData,
+      });
+    },
+    [refresh]
+  );
   const pag = usePagination(onSuccess);
 
   const columns: ColumnsType<UserInfo> = [
@@ -40,7 +43,6 @@ export default function PermissionPage() {
       render: (_, record) => {
         return (
           <div className="flex">
-            
             <div className="ml-2 flex flex-col">
               <span className="text-sm">{record.fullname}</span>
               <span className="text-xs text-text-secondary">
@@ -82,8 +84,8 @@ export default function PermissionPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
-          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} />
+          {/* <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
+          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} /> */}
         </div>
       ),
     },
@@ -93,7 +95,7 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          <Create title="新建用户" onSuccess={pag.refresh} />
+          {/* <Create title="新建用户" onSuccess={pag.refresh} /> */}
           <Button
             icon={<ReloadOutlined />}
             type="text"
@@ -112,24 +114,24 @@ export default function PermissionPage() {
           pageSize: pag.pageSize,
           current: pag.page,
           showSizeChanger: true,
-          // onShowSizeChange = { onShowSizeChange },
           onChange: (page, pageSize) => {
             pag.setPage(page);
             pag.setPageSize(pageSize);
           },
           total: rows?.count,
         },
+        loading,
         dataSource: rows?.rows || [],
         columns,
       }}
     >
-      <Search
+      {/* <Search
         loading={loading}
-        onSuccess={(searchData) => {
+        onSuccess={(searchData: unknown) => {
           pag.setPage(1);
           pag.setSearchData(searchData);
         }}
-      />
+      /> */}
     </TablePage>
   );
 }

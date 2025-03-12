@@ -31,7 +31,7 @@ export class RoleService {
       relations: {
         menus: true,
       },
-      loadRelationIds:true,
+      loadRelationIds: true,
       withDeleted: false,
     });
 
@@ -42,7 +42,7 @@ export class RoleService {
   }
 
   getValidMenus(menus: MenuEntity[], menuIds: number[], parentId = 0) {
-    const removeIds: { menus: Array<any>; removeId: number }[] = [];
+    const removeIds: { menus: Array<MenuEntity>; removeId: number }[] = [];
 
     for (const key in menus) {
       if (Object.prototype.hasOwnProperty.call(menus, key)) {
@@ -56,6 +56,7 @@ export class RoleService {
         } else {
           menu.parentId = parentId;
           menu.children?.length &&
+            // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
             (menu.children = this.getValidMenus(
               menu.children,
               menuIds,

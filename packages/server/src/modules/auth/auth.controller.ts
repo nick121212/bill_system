@@ -14,6 +14,10 @@ import { Public } from "@/common/decorators/public.decorator";
 import { AuthRequest } from "./auth.interface";
 import { AuthService } from "./auth.service";
 
+type RequestWithUser = Request & {
+  user: unknown;
+};
+
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -30,8 +34,8 @@ export class AuthController {
   profile(
     @ActiveUser("id") userId: string,
     @Request() req: Request
-  ): Promise<any> {
-    return req["user"];
+  ): Promise<unknown> {
+    return Promise.resolve((req as RequestWithUser).user);
   }
 
   @HttpCode(HttpStatus.OK)

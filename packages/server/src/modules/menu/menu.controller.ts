@@ -39,9 +39,4 @@ export class MenuController {
   async remote(@Param("id") id: number) {
     return this.menuService.remove(id);
   }
-
-  @Get("/test")
-  async test(@Request() req) {
-    return this.menuService.testData();
-  }
 }

@@ -1,30 +1,23 @@
-import { forkJoin } from "rxjs";
 import { EntityManager, Repository } from "typeorm";
-import { ApiStatusCode, PermissionType } from "@bill/database";
+import { ApiStatusCode } from "@bill/database";
 import {
   ProductCategoryEntity,
   ProductEntity,
   TemplateCategoryEntity,
   TemplateEntity,
 } from "@bill/database/dist/entities";
-import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
-import { Log4jsService } from "@/modules/log4js";
-import { ProductService } from "@/modules/product/product.service";
-import { ProductCategoryService } from "@/modules/productCategory/category.service";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
 
 @Injectable()
 export class TemplateService {
   constructor(
-    private logger: Log4jsService,
-    @InjectRepository(TemplateEntity) private repo: Repository<TemplateEntity>,
     private em: EntityManager,
-    private productCategoryService: ProductCategoryService,
-    private productService: ProductService
+    @InjectRepository(TemplateEntity) private repo: Repository<TemplateEntity>
   ) {}
 
   async all(query: TemplateQuery): Promise<{
@@ -58,15 +51,15 @@ export class TemplateService {
   }
 
   async create(body: TemplateBodyRequest): Promise<TemplateEntity> {
+    const { categories, ...rest } = body;
     const child = new TemplateEntity().extend({
-      ...body,
-      categories: [],
+      ...rest,
     });
 
     return await this.em.transaction(async (entityManager: EntityManager) => {
       const template = await entityManager.save(child);
-      const categories: Promise<unknown>[] = [],
-        products: Promise<unknown>[] = [];
+      const categories: Promise<unknown>[] = [];
+      const products: Promise<unknown>[] = [];
 
       for (const c of body.categories) {
         const productCategory =
@@ -92,7 +85,7 @@ export class TemplateService {
         const templateCategory = new TemplateCategoryEntity().extend({
           template: template,
           category: productCategory,
-        })
+        });
         categories.push(entityManager.save(templateCategory));
 
         for (const p of c.products) {

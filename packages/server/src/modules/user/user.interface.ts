@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   IsBoolean,
   isBoolean,
@@ -23,8 +24,27 @@ export class UserRequest {
   @IsString()
   address?: string;
 
+  @IsString()
+  company: string;
+
+  @IsString()
+  password: string;
+
+  @IsNumber()
+  validateDate?: number;
+
   @IsBoolean()
   isActive?: boolean;
+
+  @IsNumber()
+  role: number;
 }
 
-export class UserQuery extends BaseQuery {}
+class UserSearchModel {
+  @Type(() => Boolean)
+  isActive?: boolean;
+  @Type(() => Number)
+  roleId?: number;
+}
+
+export class UserQuery extends BaseQuery<UserSearchModel> {}

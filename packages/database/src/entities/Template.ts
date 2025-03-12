@@ -5,12 +5,9 @@ import {
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
-  OneToMany,
-  ManyToMany,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
-import { TemplateCategoryEntity } from "./TemplateCategory";
 
 @Entity({
   name: "template",

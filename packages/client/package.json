@@ -33,6 +33,7 @@
     "@vanilla-extract/vite-plugin": "^4.0.19",
     "@vercel/analytics": "^1.2.2",
     "@vitejs/plugin-react": "^4.1.0",
+    "ajv-formats": "^3.0.1",
     "antd": "^5.9.3",
     "antd-style": "^3.7.1",
     "apexcharts": "^4.5.0",
