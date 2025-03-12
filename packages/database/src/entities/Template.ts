@@ -28,8 +28,8 @@ export class TemplateEntity extends BaseEntity<TemplateEntity> {
   @Column()
   status: number;
 
-  @ManyToMany(() => TemplateCategoryEntity, (category) => category.template)
-  categories: TemplateCategoryEntity[];
+  // @ManyToMany(() => TemplateCategoryEntity, (category) => category.template)
+  // categories: TemplateCategoryEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

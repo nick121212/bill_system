@@ -3,9 +3,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  OneToOne,
   JoinColumn,
-  OneToMany,
   ManyToOne,
   ManyToMany,
 } from "typeorm";
@@ -21,7 +19,7 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToMany(() => TemplateEntity, (temp) => temp.categories)
+  @ManyToMany(() => TemplateEntity)
   @JoinColumn()
   template: TemplateEntity;
 

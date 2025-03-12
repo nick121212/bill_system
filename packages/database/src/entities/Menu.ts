@@ -11,8 +11,7 @@ import {
   Tree,
 } from "typeorm";
 
-import { PermissionType } from "@/enums/PermissionType";
-
+import { PermissionType } from "../enums/PermissionType";
 import { BaseEntity } from "./Base";
 
 @Entity({

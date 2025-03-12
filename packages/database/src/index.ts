@@ -9,9 +9,9 @@ import {
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
   TemplateEntity,
-} from "@/entities";
+} from "./entities";
 
-export * from "@/enums/index";
+export * from "./enums";
 export default [
   UserEntity,
   MenuEntity,

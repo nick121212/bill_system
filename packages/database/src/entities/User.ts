@@ -54,6 +54,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ type: "datetime", default: Date.now() })
+  validateDate: Date;
+
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
 

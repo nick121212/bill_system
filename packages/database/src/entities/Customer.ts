@@ -6,8 +6,7 @@ import {
   CreateDateColumn,
 } from "typeorm";
 
-import { DeliverType } from "@/enums/DeliverType";
-
+import { DeliverType } from "../enums/DeliverType";
 import { BaseEntity } from "./Base";
 
 @Entity({
