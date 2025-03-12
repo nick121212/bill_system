@@ -32,7 +32,7 @@ export default function PermissionModal({
 }: UserModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const { rows, loading } = useData("role");
+  const { rows, loading } = useData<RoleEntity[]>("role");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
