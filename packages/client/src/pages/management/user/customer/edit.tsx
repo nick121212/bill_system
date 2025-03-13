@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin } from 'antd';
+import { Button, Drawer, Form, SliderSingleProps, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { EditOutlined } from '@ant-design/icons';
 import type { CustomerEntity, ProductCategoryEntity } from '@bill/database/esm';
@@ -8,9 +8,11 @@ import type { CustomerEntity, ProductCategoryEntity } from '@bill/database/esm';
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
+  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,
+  SliderField,
   TextAreaField,
 } from '@/uniforms/fields';
 
@@ -51,6 +53,9 @@ export default function CategoryEditModal({
     },
     onSuccessCall,
   );
+  const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (
+    value,
+  ) => `${(value ?? 0) / 10}折`;
 
   return (
     <>
@@ -109,6 +114,14 @@ export default function CategoryEditModal({
               <ErrorsField />
 
               <AutoFields fields={['fullname', 'phone', 'email']} />
+              <SliderField
+                tooltip={{ formatter, open: true, placement:"right" }}
+                step={1}
+                min={10}
+                max={100}
+                marks={{ 10: 10, 50: 50, 100: 100 }}
+                name="discount"
+              />
 
               <TextAreaField name="desc" />
             </AutoForm>

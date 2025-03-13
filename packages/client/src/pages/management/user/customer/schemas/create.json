@@ -27,6 +27,7 @@
     "discount": {
       "type": "number",
       "title": "客户折扣",
+      "description": "折扣率从10-100",
       "default": 100,
       "minimum": 10,
       "maximum": 100

@@ -1,15 +1,17 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin } from 'antd';
+import { Button, Drawer, Form, SliderSingleProps, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
+  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,
+  SliderField,
   TextAreaField,
 } from '@/uniforms/fields';
 
@@ -48,6 +50,9 @@ export default function UnitCreateModal({
     },
     onSuccessCall,
   );
+  const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (
+    value,
+  ) => `${(value ?? 0) / 10}折`;
 
   return (
     <>
@@ -106,6 +111,15 @@ export default function UnitCreateModal({
               <ErrorsField />
 
               <AutoFields fields={['fullname', 'phone', 'email', 'address']} />
+
+              <SliderField
+                tooltip={{ formatter, open: true, placement:"right" }}
+                step={1}
+                min={10}
+                max={100}
+                marks={{ 10: 10, 50: 50, 100: 100 }}
+                name="discount"
+              />
 
               <TextAreaField name="desc" />
             </AutoForm>

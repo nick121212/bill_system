@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { CustomerEntity, ProductUnitEntity } from '@bill/database/esm';
@@ -11,9 +11,9 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
-import Edit from "./edit";
-import Remove from "./remove";
-import Search from "./search";
+import Edit from './edit';
+import Remove from './remove';
+import Search from './search';
 
 export default function ProductUnit() {
   const { t } = useTranslation();
@@ -41,7 +41,26 @@ export default function ProductUnit() {
       dataIndex: 'fullname',
       align: 'center',
     },
-   
+    {
+      title: '客户邮箱',
+      dataIndex: 'email',
+      align: 'center',
+    },
+    {
+      title: '客户手机',
+      dataIndex: 'phone',
+      align: 'center',
+    },
+    {
+      title: '客户地址',
+      dataIndex: 'address',
+      align: 'center',
+    },
+    {
+      title: '客户简介',
+      dataIndex: 'desc',
+      align: 'center',
+    },
     {
       title: '创建时间',
       dataIndex: 'createTime',
