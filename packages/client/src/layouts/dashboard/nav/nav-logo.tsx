@@ -26,7 +26,7 @@ export default function NavLogo({ collapsed, onToggle }: Props) {
       <div className={cn("flex items-center", {})}>
         <Logo />
         {themeLayout !== ThemeLayout.Mini && (
-          <span className="ml-2 text-xl font-bold text-primary">{company}</span>
+          <span className="ml-2 text-xl font-bold text-primary">{company?.name}</span>
         )}
       </div>
       <div

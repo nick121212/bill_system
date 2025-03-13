@@ -147,10 +147,16 @@
     },
     "product": {
       "list": "商品管理",
-      "unit": "商品单位管理",
+      "unit": "商品单位",
       "template": "商品模板",
       "table": "商品列表",
       "category": "商品分类"
+    },
+    "customer": {
+      "title": "客户"
+    },
+    "company": {
+      "title": "公司管理"
     }
   }
 }

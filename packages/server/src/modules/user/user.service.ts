@@ -68,6 +68,7 @@ export class UserService {
       },
       relations: {
         role: true,
+        company: true,
       },
     });
   }

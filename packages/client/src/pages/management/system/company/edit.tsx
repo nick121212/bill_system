@@ -3,22 +3,20 @@ import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
 import { Button, Drawer, Form, Space, Spin } from "antd";
 import { useTranslation } from "react-i18next";
 import { EditOutlined } from "@ant-design/icons";
-import type { CompanyEntity, RoleEntity, UserEntity } from "@bill/database/esm";
+import type { CompanyEntity } from "@bill/database/esm";
 
-import useData from "@/hooks/data/useData";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
 import {
   AutoField,
   AutoForm,
   ErrorsField,
-  SelectField,
 } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
 
 export type UserModalProps = {
-  formValue?: Partial<UserEntity>;
+  formValue?: Partial<CompanyEntity>;
   title: string;
   onSuccess: () => void;
 };
@@ -32,9 +30,6 @@ export default function PermissionModal({
 }: UserModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const { rows: company, loading: comLoad } =
-    useData<CompanyEntity[]>("companies");
-  const { rows, loading } = useData<RoleEntity[]>("roles");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
@@ -50,14 +45,11 @@ export default function PermissionModal({
   } = useFormAction(
     formRef,
     {
-      url: `/users/${formValue?.id}`,
+      url: `/companies/${formValue?.id}`,
       method: "PUT",
     },
     onSuccessCall
   );
-
-  console.log(formValue);
-  
 
   return (
     <>
@@ -115,35 +107,10 @@ export default function PermissionModal({
             >
               <ErrorsField />
 
-              <AutoField name="fullname" />
-              <AutoField name="email" />
-              <AutoField name="avatar" />
+              <AutoField name="name" />
               <AutoField name="address" />
-              <SelectField
-                name="company"
-                loading={comLoad}
-                options={company?.map((r: CompanyEntity) => {
-                  return {
-                    label: r.name,
-                    value: r.id,
-                  };
-                })}
-              />
-              {/* <AutoField name="password" /> */}
               <AutoField name="phone" />
-              <AutoField name="validateDate" />
-              <AutoField name="isActive" />
 
-              <SelectField
-                name="role"
-                loading={loading}
-                options={rows?.map((r: RoleEntity) => {
-                  return {
-                    label: r.name,
-                    value: r.id,
-                  };
-                })}
-              />
             </AutoForm>
           </Spin>
         </Form>
