@@ -59,7 +59,6 @@ async function addUserData(em: EntityManager, secret: string) {
           phone: "",
           fullname: r.username,
           password: hashPwd("demo1234", secret),
-          phone: '12345678901',
           role: index % 2 === 0 ? role1 ?? undefined : role2 ?? undefined,
         })
       );
