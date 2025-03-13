@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  DeleteDateColumn,
 } from "typeorm";
 
 import { DeliverType } from "../enums/DeliverType";
@@ -54,4 +55,7 @@ export class CustomerEntity extends BaseEntity<CustomerEntity> {
 
   @UpdateDateColumn({ type: "datetime", name: "update_time" })
   updateTime: Date;
+
+  @DeleteDateColumn()
+  deletedDate: Date;
 }

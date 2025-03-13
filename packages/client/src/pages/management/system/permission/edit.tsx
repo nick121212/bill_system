@@ -21,7 +21,7 @@ import { PAGE_SELECT_OPTIONS } from "@/utils/compnent";
 
 import schema from "./schemas/create.json";
 
-export type PermissionModalProps = {
+export type ModalProps = {
   formValue?: MenuEntity;
   title: string;
   onSuccess: () => void;
@@ -33,7 +33,7 @@ export default function PermissionModal({
   title,
   formValue,
   onSuccess,
-}: PermissionModalProps) {
+}: ModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { permissions, loading } = usePermission();

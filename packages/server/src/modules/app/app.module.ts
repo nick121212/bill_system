@@ -14,6 +14,8 @@ import jwtConfig from "@/config/jwt.config";
 import redisConfig from "@/config/redis.config";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { JwtAuthGuard } from "@/modules/auth/guards/jwt-auth.guard";
+import { CompanyModule } from "@/modules/company/company.module";
+import { CustomerModule } from "@/modules/customer/customer.module";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
 import { ProductModule } from "@/modules/product/product.module";
@@ -23,8 +25,6 @@ import { RedisModule } from "@/modules/redis/redis.module";
 import { RoleModule } from "@/modules/role/role.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
-
-import { CompanyModule } from "../company/company.module";
 
 @Module({
   imports: [
@@ -67,7 +67,8 @@ import { CompanyModule } from "../company/company.module";
     ProductCategoryModule,
     ProductUnitModule,
     RoleModule,
-    CompanyModule
+    CompanyModule,
+    CustomerModule
   ],
   providers: [
     {

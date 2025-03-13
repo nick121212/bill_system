@@ -19,4 +19,5 @@ export class MenuBodyRequest {
   @Min(0)
   order: number;
   parentId?: number;
+  component?: string;
 }

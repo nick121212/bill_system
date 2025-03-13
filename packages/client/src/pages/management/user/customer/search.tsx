@@ -1,27 +1,21 @@
-import { useCallback, useRef } from "react";
-import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import { Button, Form, Space } from "antd";
-import { useTranslation } from "react-i18next";
+import { useCallback, useRef } from 'react';
+import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
+import { Button, Form, Space } from 'antd';
+import { useTranslation } from 'react-i18next';
 
-import { getBridge } from "@/uniforms/ajv";
-import {
-  AutoField,
-  AutoForm,
-} from "@/uniforms/fields";
+import { getBridge } from '@/uniforms/ajv';
+import { AutoForm, AutoFields } from '@/uniforms/fields';
 
-import schema from "./schemas/search.json";
+import schema from './schemas/search.json';
 
-export type ModalProps = {
+export type SearchFormProps = {
   onSuccess: (data: unknown) => void;
   loading?: boolean;
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function PermissionModal({
-  onSuccess,
-  loading,
-}: ModalProps) {
+export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const onSuccessCall = useCallback(() => {
@@ -31,19 +25,24 @@ export default function PermissionModal({
   return (
     <>
       <AutoForm
-        ref={formRef}
+        ref={formRef as any}
         showInlineError
         schema={bridge}
         onSubmit={(formData) => {
+          for (const key in formData) {
+            if (formData[key] === '') {
+              delete formData[key];
+            }
+          }
           onSuccess?.(formData);
         }}
       >
         <Form preserve={false} layout="inline">
-          <AutoField name="name" />
+          <AutoFields fields={['fullname', 'phone']} />
 
-          <Space size={"small"} align="start">
+          <Space size={'small'} align="start">
             <Button type="link" loading={loading} onClick={onSuccessCall}>
-              {t("crud.search")}
+              {t('crud.search')}
             </Button>
             <Button
               type="text"
@@ -53,7 +52,7 @@ export default function PermissionModal({
                 onSuccessCall();
               }}
             >
-              {t("crud.reset")}
+              {t('crud.reset')}
             </Button>
           </Space>
         </Form>

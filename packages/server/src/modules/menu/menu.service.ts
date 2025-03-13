@@ -76,6 +76,7 @@ export class MenuService {
     child.order = body.order;
     child.route = body.route;
     child.type = body.type;
+    child.component = body.component;
 
     child.parent = undefined;
 

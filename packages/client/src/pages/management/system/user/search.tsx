@@ -14,7 +14,7 @@ import {
 
 import schema from "./schemas/search.json";
 
-export type PermissionModalProps = {
+export type ModalProps = {
   onSuccess: (data: unknown) => void;
   loading?: boolean;
 };
@@ -24,7 +24,7 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function PermissionModal({
   onSuccess,
   loading,
-}: PermissionModalProps) {
+}: ModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { roles, loading: roleLoading } = useRole();

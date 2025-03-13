@@ -1,0 +1,44 @@
+{
+  "title": "ProductUnit",
+  "type": "object",
+  "properties": {
+    "fullname": { "type": "string", "title": "客户名称" },
+    "contact": { "type": "string", "title": "客户联系人", "default": "" },
+    "address": { "type": "string", "title": "地址" },
+    "email": { "type": "string", "title": "邮箱", "format": "email" },
+    "desc": { "type": "string", "title": "客户描述", "default": "" },
+    "phone": {
+      "type": "string",
+      "format": "regex",
+      "pattern": "^1[3-9]\\d{9}$",
+      "title": "手机号"
+    },
+    "deliver": {
+      "type": "number",
+      "enum": [0, 1],
+      "default": 0,
+      "title": "配送方式"
+    },
+    "level": {
+      "type": "number",
+      "title": "客户等级",
+      "default": 1
+    },
+    "discount": {
+      "type": "number",
+      "title": "客户折扣",
+      "default": 100,
+      "minimum": 10,
+      "maximum": 100
+    },
+    "template": {
+      "type": "number",
+      "default": 1
+    },
+    "no": {
+      "type": "string",
+      "default": "0"
+    }
+  },
+  "required": ["fullname", "address", "email", "phone"]
+}

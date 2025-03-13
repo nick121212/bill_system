@@ -6,7 +6,7 @@ import type { ProductCategoryEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 
-export type PermissionModalProps = {
+export type ModalProps = {
   record: ProductCategoryEntity;
   title: string;
   onSuccess: () => void;
@@ -16,7 +16,7 @@ export default function PermissionModal({
   title,
   record,
   onSuccess,
-}: PermissionModalProps) {
+}: ModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const onSuccessCall = useCallback(() => {
