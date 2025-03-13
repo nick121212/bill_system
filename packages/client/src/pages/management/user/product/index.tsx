@@ -9,11 +9,10 @@ import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
 import type { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 
-import TablePage from '@/components/table';
-import usePagination from '@/hooks/data/usePagination';
-
 import { getCategory } from '@/api/services/prodCatServer';
 import { getUnit } from '@/api/services/proUnitServer';
+import TablePage from '@/components/table';
+import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
 import Edit from './edit';
@@ -182,8 +181,6 @@ export default function PermissionPage() {
           pag.setPage(1);
           pag.setSearchData(searchData);
         }}
-        units={units}
-        categories={categories}
       />
     </TablePage>
   );

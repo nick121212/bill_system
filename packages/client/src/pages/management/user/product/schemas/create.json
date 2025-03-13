@@ -3,10 +3,10 @@
   "type": "object",
   "properties": {
     "name": { "type": "string", "title": "名称" },
-    "label": { "type": "string", "title": "标签" },
+    "label": { "type": "string", "title": "标签", "default": "" },
     "price": { "type": "number", "title": "价格" },
     "cost": { "type": "number", "title": "成本" },
-    "desc": { "type": "string", "title": "介绍" },
+    "desc": { "type": "string", "title": "介绍", "default": "" },
     "categoryId": {
       "type": "number",
       "title": "分类"
@@ -16,5 +16,5 @@
       "title": "单位"
     }
   },
-  "required": ["name", "price", "cost", "unitId"]
+  "required": ["name", "price", "cost", "unitId", "categoryId"]
 }

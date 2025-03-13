@@ -23,9 +23,9 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   const { t } = useTranslation();
   const formRef = useRef();
-  const { rows, loading } = useData<RoleEntity[]>("role");
+  const { rows, loading } = useData<RoleEntity[]>("roles");
   const { rows: company, loading: comLoad } =
-    useData<CompanyEntity[]>("companie");
+    useData<CompanyEntity[]>("companies");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
@@ -105,12 +105,6 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
               <AutoField name="email" />
               <AutoField name="avatar" />
               <AutoField name="address" />
-              <AutoField name="company" />
-              <AutoField name="password" />
-              <AutoField name="phone" />
-              <AutoField name="validateDate" />
-              <AutoField name="isActive" />
-
               <SelectField
                 name="company"
                 loading={comLoad}
@@ -120,7 +114,12 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
                     value: r.id,
                   };
                 })}
-              />
+              />              <AutoField name="password" />
+              <AutoField name="phone" />
+              <AutoField name="validateDate" />
+              <AutoField name="isActive" />
+
+
 
               <SelectField
                 name="role"

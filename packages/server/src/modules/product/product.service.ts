@@ -35,6 +35,7 @@ export class ProductService {
       },
       relations: {
         category: true,
+        unit: true
       },
       withDeleted: false,
     });

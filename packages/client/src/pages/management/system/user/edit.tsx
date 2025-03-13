@@ -33,8 +33,8 @@ export default function PermissionModal({
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { rows: company, loading: comLoad } =
-    useData<CompanyEntity[]>("companie");
-  const { rows, loading } = useData<RoleEntity[]>("role");
+    useData<CompanyEntity[]>("companies");
+  const { rows, loading } = useData<RoleEntity[]>("roles");
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);

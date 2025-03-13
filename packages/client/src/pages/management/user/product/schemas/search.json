@@ -6,13 +6,20 @@
     "label": { "type": "string", "title": "标签" },
     "price": { "type": "number", "title": "价格" },
     "cost": { "type": "number", "title": "成本" },
-    "categoryId": {
-      "type": "number",
-      "title": "分类"
+    "category": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "number", "title": "分类" }
+      }
     },
-    "unitId": {
-      "type": "number",
-      "title": "单位"
+    "unit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "number",
+          "title": "单位"
+        }
+      }
     }
   }
 }

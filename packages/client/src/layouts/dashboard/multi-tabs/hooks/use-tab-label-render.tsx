@@ -8,7 +8,7 @@ import type { KeepAliveTab } from "../types";
 
 export function useTabLabelRender() {
   const { t } = useTranslation();
-  const { rows } = useData<UserEntity[]>("user");
+  const { rows } = useData<UserEntity[]>("users");
 
   const specialTabRenderMap = useMemo<
     Record<string, (tab: KeepAliveTab) => React.ReactNode>

@@ -3,9 +3,16 @@ import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Form, Space } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useTranslation } from 'react-i18next';
+import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 
+import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';
-import { AutoForm, AutoFields, AutoField } from '@/uniforms/fields';
+import {
+  AutoForm,
+  AutoFields,
+  AutoField,
+  SelectField,
+} from '@/uniforms/fields';
 
 import schema from './schemas/search.json';
 
@@ -18,14 +25,13 @@ export type SearchFormProps = {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function SearchForm({
-  onSuccess,
-  loading,
-  units = [],
-  categories = [],
-}: SearchFormProps) {
+export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
+  const { rows: categories, loading: cateLoad } =
+    useData<ProductCategoryEntity[]>('product/categories');
+  const { rows: units, loading: unitLoad } =
+    useData<ProductUnitEntity[]>('product/units');
   const onSuccessCall = useCallback(() => {
     formRef.current?.submit();
   }, []);
@@ -44,15 +50,33 @@ export default function SearchForm({
           }
           console.log(11122, formData);
           const res = onSuccess?.(formData);
-          console.log(222, res)
+          console.log(222, res);
         }}
       >
         <Form preserve={false} layout="inline">
           <AutoFields fields={['name', 'label', 'price', 'cost']} />
 
-          <AutoField name="unitId" options={units} />
+          <SelectField
+            loading={unitLoad}
+            name="unit.id"
+            options={units?.map((c) => {
+              return {
+                label: c.name,
+                value: c.id,
+              };
+            })}
+          />
 
-          <AutoField name="categoryId" options={categories} />
+          <SelectField
+            loading={cateLoad}
+            name="category.id"
+            options={categories?.map((c) => {
+              return {
+                label: c.name,
+                value: c.id,
+              };
+            })}
+          />
 
           <Space size={'small'} align="start">
             <Button type="link" loading={loading} onClick={onSuccessCall}>
