@@ -1,32 +1,28 @@
 import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ProductEntity } from '@bill/database/esm';
+import { EditOutlined } from "@ant-design/icons";
+import type { ProductCategoryEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
-import { AutoFields, AutoForm, ErrorsField, TextAreaField, AutoField } from '@/uniforms/fields';
+import { AutoFields, AutoForm, ErrorsField, TextAreaField } from '@/uniforms/fields';
 
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
-  formValue?: ProductEntity;
+  record: ProductCategoryEntity;
   title: string;
   onSuccess: () => void;
-  units: DefaultOptionType[];
-  categories: DefaultOptionType[];
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function ProductCreateModal({
+export default function CategoryEditModal({
+  record,
   title,
   onSuccess,
-  units,
-  categories
 }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
@@ -38,8 +34,8 @@ export default function ProductCreateModal({
     useFormAction(
       formRef,
       {
-        url: '/products',
-        method: 'POST'
+        url: `/product/units/${record.id}`,
+        method: 'PUT'
       },
       onSuccessCall
     );
@@ -47,15 +43,14 @@ export default function ProductCreateModal({
   return (
     <>
       <Button
+        type="text"
+        shape="circle"
         loading={loadingAjax}
-        type="link"
-        icon={<PlusOutlined />}
+        icon={<EditOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
-      >
-        {t('crud.create.buttonText')}
-      </Button>
+      />
 
       <Drawer
         title={title}
@@ -91,6 +86,7 @@ export default function ProductCreateModal({
               ref={formRef as any}
               showInlineError
               schema={bridge}
+              model={record as any}
               onSubmit={(formData) => {
                 setFormData(formData);
                 callAjax({
@@ -100,11 +96,7 @@ export default function ProductCreateModal({
             >
               <ErrorsField />
 
-              <AutoFields fields={['name', 'label', 'price', 'cost']} />
-
-              <AutoField name="unitId" options={units} />
-
-              <AutoField name="categoryId" options={categories} />
+              <AutoFields fields={['name', 'label']} />
 
               <TextAreaField name="desc" />
             </AutoForm>

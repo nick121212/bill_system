@@ -9,11 +9,16 @@ export enum ProductCategoryApi {
   DELETE = '/product/categories/:id'
 }
 
+interface ProductCategoryList {
+  rows: ProductCategoryEntity[];
+  count: number;
+}
+
 /**
  * 获取商品分类
  */
-export const getCategory = () =>
-  apiClient.get<Result<ProductCategoryEntity[]>>({ url: ProductCategoryApi.LIST });
+export const getCategory = (): Promise<Result<ProductCategoryList>> =>
+  apiClient.get({ url: ProductCategoryApi.LIST });
 
 /**
  * 新增

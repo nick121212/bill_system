@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
-import type { ProductUnitEntity } from '@bill/database/esm';
+import type { ProductCategoryEntity } from '@bill/database/esm';
 import dayjs from "dayjs";
 
 import TablePage from '@/components/table';
@@ -14,11 +14,11 @@ import Remove from "./remove";
 import Search from "./search";
 import usePagination from '@/hooks/data/usePagination';
 
-export default function ProductUnit() {
+export default function ProductCategory() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: '/product/units',
+      url: '/product/categories',
     },
     {
       manual: true,
@@ -34,9 +34,9 @@ export default function ProductUnit() {
   );
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<ProductUnitEntity> = [
+  const columns: ColumnsType<ProductCategoryEntity> = [
     {
-      title: '单位名称',
+      title: '分类名称',
       dataIndex: 'name',
       align: 'center',
     },
@@ -64,7 +64,7 @@ export default function ProductUnit() {
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Edit title="编辑" record={record} onSuccess={pag.refresh} />
+          <Edit title="编辑商品分类" formValue={record} onSuccess={pag.refresh} />
           <Remove title="删除" record={record} onSuccess={pag.refresh} />
         </Space>
       ),
@@ -75,7 +75,7 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title="新建商品单位" onSuccess={pag.refresh} />
+          <Create title="新建商品分类" onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

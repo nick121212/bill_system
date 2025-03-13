@@ -3,17 +3,23 @@ import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
 import type { DefaultOptionType } from 'antd/es/select';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
-import { AutoFields, AutoForm, ErrorsField, TextAreaField, AutoField } from '@/uniforms/fields';
+import {
+  AutoFields,
+  AutoForm,
+  ErrorsField,
+  TextAreaField,
+  AutoField,
+} from '@/uniforms/fields';
 
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
-  formValue?: ProductEntity;
+  record: ProductEntity;
   title: string;
   onSuccess: () => void;
   units: DefaultOptionType[];
@@ -22,40 +28,52 @@ export type ProductModalProps = {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function ProductCreateModal({
+export default function ProductEditModal({
+  record,
   title,
   onSuccess,
   units,
-  categories
+  categories,
 }: ProductModalProps) {
+  const processedRecord = {
+    ...record,
+    categoryId: record.category?.id,
+    unitId: record.unit?.id,
+  };
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
   }, [onSuccess]);
-  const { onSubmit, showModal, setShowModal, setFormData, onClose, callAjax, loadingAjax } =
-    useFormAction(
-      formRef,
-      {
-        url: '/products',
-        method: 'POST'
-      },
-      onSuccessCall
-    );
+  const {
+    onSubmit,
+    showModal,
+    setShowModal,
+    setFormData,
+    onClose,
+    callAjax,
+    loadingAjax,
+  } = useFormAction(
+    formRef,
+    {
+      url: `/products/${record.id}`,
+      method: 'PUT',
+    },
+    onSuccessCall,
+  );
 
   return (
     <>
       <Button
+        type="text"
+        shape="circle"
         loading={loadingAjax}
-        type="link"
-        icon={<PlusOutlined />}
+        icon={<EditOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
-      >
-        {t('crud.create.buttonText')}
-      </Button>
+      />
 
       <Drawer
         title={title}
@@ -65,8 +83,8 @@ export default function ProductCreateModal({
         open={showModal}
         styles={{
           body: {
-            paddingBottom: 80
-          }
+            paddingBottom: 80,
+          },
         }}
         extra={
           <Space>
@@ -91,10 +109,11 @@ export default function ProductCreateModal({
               ref={formRef as any}
               showInlineError
               schema={bridge}
+              model={processedRecord as any}
               onSubmit={(formData) => {
                 setFormData(formData);
                 callAjax({
-                  data: formData
+                  data: formData,
                 });
               }}
             >

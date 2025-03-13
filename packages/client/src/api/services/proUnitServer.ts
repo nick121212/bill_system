@@ -6,14 +6,19 @@ export enum ProductUnitApi {
   LIST = '/product/units',
   ADD = '/product/units',
   UPDATE = '/product/units/:id',
-  DELETE = '/product/units/:id'
+  DELETE = '/product/units/:id',
+}
+
+interface ProductUnitList {
+  rows: ProductUnitEntity[];
+  count: number;
 }
 
 /**
  * 获取商品单位
  */
-export const getUnit = () =>
-  apiClient.get<Result<ProductUnitEntity[]>>({ url: ProductUnitApi.LIST });
+export const getUnit = (): Promise<Result<ProductUnitList>> =>
+  apiClient.get({ url: ProductUnitApi.LIST });
 
 /**
  * 新增

@@ -2,12 +2,12 @@ import { useCallback, useRef } from 'react';
 import { Button, Modal, Space, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { DeleteOutlined } from '@ant-design/icons';
-import type { ProductEntity } from '@bill/database/esm';
+import type { ProductCategoryEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 
 export type PermissionModalProps = {
-  record: ProductEntity;
+  record: ProductCategoryEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -27,7 +27,7 @@ export default function PermissionModal({
     useFormAction(
       formRef,
       {
-        url: `/products/${record.id}`,
+        url: `/product/units/${record.id}`,
         method: 'DELETE',
       },
       onSuccessCall,
@@ -68,10 +68,10 @@ export default function PermissionModal({
         }
       >
         确定要删除
-        <Tag bordered={false} color="red" style={{ fontSize: 14 }}>
+        <Tag bordered={false} color="red" style={{fontSize: 14}}>
           {record.name}
-        </Tag>
-        产品吗？
+        </Tag>{' '}
+        单位吗？
       </Modal>
     </>
   );

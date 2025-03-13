@@ -1,58 +1,36 @@
-import { useCallback, useState, useEffect } from "react";
-import { Button, Space, Tag } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import useAxios from "axios-hooks";
-import { useTranslation } from "react-i18next";
-import { ReloadOutlined } from "@ant-design/icons";
-import type { ProductEntity } from "@bill/database/esm";
+import { useCallback, useState, useEffect } from 'react';
+import { Button, Space, message } from 'antd';
+import type { DefaultOptionType } from 'antd/es/select';
+import type { ColumnsType } from 'antd/es/table';
+import useAxios from 'axios-hooks';
+import dayjs from "dayjs";
+import { useTranslation } from 'react-i18next';
+import { ReloadOutlined } from '@ant-design/icons';
+import type { ProductEntity } from '@bill/database/esm';
+import type { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 
-import TablePage from "@/components/table";
-import usePagination from "@/hooks/data/usePagination";
+import TablePage from '@/components/table';
+import usePagination from '@/hooks/data/usePagination';
 
 import { getCategory } from '@/api/services/prodCatServer';
 import { getUnit } from '@/api/services/proUnitServer';
 
-import Create from "./create";
-import Remove from "./remove";
-import Search from "./search";
+import Create from './create';
+import Edit from './edit';
+import Remove from './remove';
+import Search from './search';
 
 export default function PermissionPage() {
-  const [categories, setCategories] = useState([
-    {
-      label: '分类1',
-      value: 1
-    },
-    {
-      label: '分类2',
-      value: 2
-    },
-    {
-      label: '分类3',
-      value: 3
-    }
-  ]);
-  const [units, setUnits] = useState([
-    {
-      label: '千克',
-      value: 0
-    },
-    {
-      label: '斤',
-      value: 1
-    },
-    {
-      label: '个',
-      value: 2
-    }
-  ]);
+  const [categories, setCategories] = useState<DefaultOptionType[]>([]);
+  const [units, setUnits] = useState<DefaultOptionType[]>([]);
   const { t } = useTranslation();
-  const [{ data: rows, loading }, refresh] = useAxios(
+  const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
     {
-      url: "/products",
+      url: '/products',
     },
     {
       manual: true,
-    }
+    },
   );
   const onSuccess = useCallback(
     (formData?: unknown) => {
@@ -60,62 +38,71 @@ export default function PermissionPage() {
         params: formData,
       });
     },
-    [refresh]
+    [refresh],
   );
   const pag = usePagination(onSuccess);
 
   const columns: ColumnsType<ProductEntity> = [
     {
-      title: "名称",
-      dataIndex: "name",
-      align: "center",
+      title: '名称',
+      dataIndex: 'name',
+      align: 'center',
     },
     {
-      title: "标签",
-      dataIndex: "label",
-      align: "center",
+      title: '标签',
+      dataIndex: 'label',
+      align: 'center',
     },
     {
-      title: "价格",
-      dataIndex: "price",
-      align: "center",
+      title: '价格',
+      dataIndex: 'price',
+      align: 'center',
     },
     {
-      title: "成本",
-      dataIndex: "cost",
-      align: "center",
+      title: '成本',
+      dataIndex: 'cost',
+      align: 'center',
     },
     {
-      title: "单位",
-      dataIndex: "unit",
-      align: "center",
+      title: '单位',
+      dataIndex: 'unit',
+      align: 'center',
+      render: (obj: ProductUnitEntity) => obj?.name,
     },
     {
-      title: "分类",
-      dataIndex: "category",
-      align: "center",
+      title: '分类',
+      dataIndex: 'category',
+      align: 'center',
+      render: (obj: ProductCategoryEntity) => obj?.name,
     },
     {
-      title: "介绍",
-      dataIndex: "desc",
-      align: "center",
+      title: '介绍',
+      dataIndex: 'desc',
+      align: 'center',
     },
     {
-      title: "创建时间",
-      dataIndex: "createTime",
-      align: "center",
+      title: '创建时间',
+      dataIndex: 'createTime',
+      align: 'center',
+      render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: "操作",
-      key: "operation",
-      align: "center",
+      title: '操作',
+      key: 'operation',
+      align: 'center',
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-end text-gray">
-          <Create title="编辑产品" formValue={record} onSuccess={onSuccess} />
+          <Edit
+            title="编辑产品"
+            record={record}
+            onSuccess={onSuccess}
+            units={units}
+            categories={categories}
+          />
           <Remove
-            title="删除权限菜单"
-            formValue={record}
+            title="删除商品"
+            record={record}
             onSuccess={onSuccess}
           />
         </div>
@@ -124,24 +111,42 @@ export default function PermissionPage() {
   ];
 
   useEffect(() => {
-    console.log('test')
     getCategory().then((res) => {
       const { data } = res;
-      console.log('Category: ', data);
-      // setCategories(data.map((item: any) => ({ label: item.name, value: item.id })));
+      setCategories(
+        data?.rows?.map((item: any) => ({
+          label: item.name,
+          value: item.id,
+        })) || [],
+      );
     });
     getUnit().then((res) => {
       const { data } = res;
-      console.log('Unit: ', data);
-      // setUnits(data.map((item: any) => ({ label: item.name, value: item.id })));
+      setUnits(
+        data?.rows?.map((item: any) => ({
+          label: item.name,
+          value: item.id,
+        })) || [],
+      );
     });
   }, []);
+
+  useEffect(() => {
+    if (apiError) {
+      message.error(apiError?.message);
+    }
+  }, [apiError]);
 
   return (
     <TablePage
       extra={
-        <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          <Create title="新建产品" onSuccess={pag.refresh} units={units} categories={categories} />
+        <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
+          <Create
+            title="新建产品"
+            onSuccess={pag.refresh}
+            units={units}
+            categories={categories}
+          />
           <Button
             icon={<ReloadOutlined />}
             type="text"
@@ -149,13 +154,13 @@ export default function PermissionPage() {
               pag.refresh();
             }}
           >
-            {t("common.redo")}
+            {t('common.redo')}
           </Button>
         </Space>
       }
       tableProps={{
-        size: "small",
-        rowKey: "id",
+        size: 'small',
+        rowKey: 'id',
         pagination: {
           pageSize: pag.pageSize,
           current: pag.page,
