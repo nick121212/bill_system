@@ -1,11 +1,9 @@
-import { EntityManager, Repository } from "typeorm";
-import { ApiStatusCode, PermissionType } from "@bill/database";
+import { Like, Repository } from "typeorm";
+import { ApiStatusCode } from "@bill/database";
 import {
-  MenuEntity,
   ProductEntity,
-  UserEntity,
 } from "@bill/database/dist/entities";
-import { HttpCode, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
@@ -27,15 +25,17 @@ export class ProductService {
   async all(
     query: ProductQuery
   ): Promise<{ rows: ProductEntity[]; count: number }> {
+    const { name } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...query.where,
+        name: Like(`%${name}%`)
       },
       relations: {
         category: true,
-        unit: true
+        unit: true,
       },
       withDeleted: false,
     });

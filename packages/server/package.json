@@ -22,6 +22,7 @@
     "doc": "npx @compodoc/compodoc -p tsconfig.json -s"
   },
   "dependencies": {
+    "18": "^0.0.0",
     "@bill/database": "^1.0.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.0",
