@@ -1,4 +1,4 @@
-import { EntityManager, Repository } from "typeorm";
+import { EntityManager, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   ProductUnitEntity,
@@ -22,11 +22,13 @@ export class ProductUnitService {
   async all(
     query: ProductUnitQuery
   ): Promise<{ rows: ProductUnitEntity[]; count: number }> {
+    const { name } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...query.where,
+        ...(name ? { name: Like(`%${name}%`) } : {}),
       },
     });
 

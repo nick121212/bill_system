@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Form, Space } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import { Button, Form, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
+import debounce from 'lodash/debounce';
 
 import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';
@@ -19,8 +19,6 @@ import schema from './schemas/search.json';
 export type SearchFormProps = {
   onSuccess: (data: unknown) => void;
   loading?: boolean;
-  units: DefaultOptionType[];
-  categories: DefaultOptionType[];
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
@@ -28,13 +26,26 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const { rows: categories, loading: cateLoad } =
-    useData<ProductCategoryEntity[]>('product/categories');
-  const { rows: units, loading: unitLoad } =
-    useData<ProductUnitEntity[]>('product/units');
+  const {
+    rows: categories,
+    loading: cateLoad,
+    onSearch: onCateSearch,
+  } = useData<ProductCategoryEntity[]>('product/categories');
+  const {
+    rows: units,
+    loading: unitLoad,
+    onSearch: onUnitLoad,
+  } = useData<ProductUnitEntity[]>('product/units');
   const onSuccessCall = useCallback(() => {
     formRef.current?.submit();
   }, []);
+  const debouncedOnCateSearch = debounce((val) => {
+    onCateSearch({ name: val });
+  }, 800);
+
+  const debouncedOnUnitSearch = debounce((val) => {
+    onUnitLoad({ name: val });
+  }, 800);
 
   return (
     <>
@@ -48,34 +59,48 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
               delete formData[key];
             }
           }
-          console.log(11122, formData);
-          const res = onSuccess?.(formData);
-          console.log(222, res);
+          onSuccess?.(formData);
         }}
       >
         <Form preserve={false} layout="inline">
-          <AutoFields fields={['name', 'label', 'price', 'cost']} />
+          <AutoFields fields={['name']} />
 
           <SelectField
             loading={unitLoad}
             name="unit.id"
-            options={units?.map((c) => {
-              return {
-                label: c.name,
-                value: c.id,
-              };
-            })}
+            options={
+              unitLoad
+                ? []
+                : units?.map((c) => {
+                    return {
+                      label: c.name,
+                      value: c.id,
+                    };
+                  })
+            }
+            showSearch
+            filterOption={false}
+            notFoundContent={!cateLoad ? <Spin size="small" /> : null}
+            onSearch={debouncedOnUnitSearch}
           />
 
           <SelectField
             loading={cateLoad}
             name="category.id"
-            options={categories?.map((c) => {
-              return {
-                label: c.name,
-                value: c.id,
-              };
-            })}
+            options={
+              cateLoad
+                ? []
+                : categories?.map((c) => {
+                    return {
+                      label: c.name,
+                      value: c.id,
+                    };
+                  })
+            }
+            showSearch
+            filterOption={false}
+            notFoundContent={!cateLoad ? <Spin size="small" /> : null}
+            onSearch={debouncedOnCateSearch}
           />
 
           <Space size={'small'} align="start">

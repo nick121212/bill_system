@@ -1,4 +1,4 @@
-import { EntityManager, Repository } from "typeorm";
+import { EntityManager, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { ProductCategoryEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
@@ -24,11 +24,13 @@ export class ProductCategoryService {
   async all(
     query: ProductCategoryQuery
   ): Promise<{ rows: ProductCategoryEntity[]; count: number }> {
+    const { name } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...query.where,
+        ...(name ? { name: Like(`%${name}%`) } : {}),
       },
     });
 

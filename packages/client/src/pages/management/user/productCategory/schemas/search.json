@@ -2,7 +2,6 @@
   "title": "ProductUnit",
   "type": "object",
   "properties": {
-    "name": { "type": "string", "title": "分类名称" },
-    "label": { "type": "string", "title": "标签" }
+    "name": { "type": "string", "title": "分类名称" }
   }
 }

@@ -31,7 +31,7 @@ export class ProductService {
       take: query.take,
       where: {
         ...query.where,
-        name: Like(`%${name}%`)
+        ...(name ? { name: Like(`%${name}%`) } : {}),
       },
       relations: {
         category: true,
@@ -60,7 +60,7 @@ export class ProductService {
 
   async create(body: ProductBodyRequest): Promise<ProductEntity> {
     const { unitId, categoryId, id, ...rest } = body;
-    const unit = await this.productCategoryService.getById(unitId);
+    const unit = await this.productUnitService.getById(unitId);
     const category = await this.productCategoryService.getById(categoryId);
     const child = new ProductEntity().extend({
       ...rest,

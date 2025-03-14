@@ -78,11 +78,14 @@ export default function PermissionPage() {
       title: '介绍',
       dataIndex: 'desc',
       align: 'center',
+      width: "15%",
+      ellipsis: true,
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       align: 'center',
+      width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
@@ -91,7 +94,7 @@ export default function PermissionPage() {
       align: 'center',
       width: 100,
       render: (_, record) => (
-        <div className="flex w-full justify-end text-gray">
+        <div className="flex w-full justify-center text-gray">
           <Edit
             title="编辑产品"
             record={record}
@@ -173,6 +176,7 @@ export default function PermissionPage() {
         loading,
         dataSource: rows?.rows || [],
         columns,
+        scroll: { x: 1200 },
       }}
     >
       <Search

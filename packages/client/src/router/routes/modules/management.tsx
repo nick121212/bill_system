@@ -16,7 +16,7 @@ const PermissioPage = lazy(
 	() => import("@/pages/management/system/permission"),
 );
 
-const Blog = lazy(() => import("@/pages/management/blog"));
+// const Blog = lazy(() => import("@/pages/management/blog"));
 
 const management: AppRouteObject = {
 	order: 2,
@@ -86,11 +86,11 @@ const management: AppRouteObject = {
 				},
 			],
 		},
-		{
-			path: "blog",
-			element: <Blog />,
-			meta: { label: "sys.menu.blog", key: "/management/blog" },
-		},
+		// {
+		// 	path: "blog",
+		// 	element: <Blog />,
+		// 	meta: { label: "sys.menu.blog", key: "/management/blog" },
+		// },
 	],
 };
 
