@@ -1,7 +1,6 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Form, Space, Spin } from 'antd';
-import debounce from 'lodash/debounce';
+import { Button, Form, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 
@@ -10,7 +9,6 @@ import { getBridge } from '@/uniforms/ajv';
 import {
   AutoForm,
   AutoFields,
-  AutoField,
   SelectField,
 } from '@/uniforms/fields';
 

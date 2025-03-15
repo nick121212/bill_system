@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
-import type { CustomerEntity, ProductUnitEntity } from '@bill/database/esm';
+import type { CustomerEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';

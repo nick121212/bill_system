@@ -3,12 +3,11 @@ import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, SliderSingleProps, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { EditOutlined } from '@ant-design/icons';
-import type { CustomerEntity, ProductCategoryEntity } from '@bill/database/esm';
+import type { CustomerEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
-  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,

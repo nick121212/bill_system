@@ -1,13 +1,12 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, SliderSingleProps, Space, Spin } from 'antd';
+import { Button, Drawer, Form, type SliderSingleProps, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
-  AutoField,
   AutoFields,
   AutoForm,
   ErrorsField,

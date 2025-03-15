@@ -1,10 +1,10 @@
 import { useCallback } from "react";
-import { Button, Space, Tag } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { RoleEntity, CompanyEntity } from "@bill/database/esm";
+import type { CompanyEntity } from "@bill/database/esm";
 
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
@@ -13,7 +13,6 @@ import Create from "./create";
 import Edit from "./edit";
 import Remove from "./remove";
 import Search from "./search";
-import { BasicStatus } from "#/enum";
 
 export default function PermissionPage() {
   const { t } = useTranslation();

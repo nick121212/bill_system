@@ -13,8 +13,6 @@ import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
 import { ProductEntity } from "./Product";
 
-// import { ProductEntity } from "./Product";
-
 @Entity({
   name: "product_price",
 })
@@ -32,7 +30,7 @@ export class ProductPriceEntity extends BaseEntity<ProductPriceEntity> {
 
   @ManyToOne(() => ProductEntity)
   @JoinColumn()
-  product: ProductEntity;
+  product: object;
 
   @ManyToOne(() => CustomerEntity)
   @JoinColumn()

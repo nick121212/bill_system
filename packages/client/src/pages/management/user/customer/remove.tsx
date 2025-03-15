@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react';
 import { Button, Modal, Space, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { DeleteOutlined } from '@ant-design/icons';
-import type { CustomerEntity, ProductCategoryEntity } from '@bill/database/esm';
+import type { CustomerEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 

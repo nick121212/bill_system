@@ -7,7 +7,7 @@ import type { CompanyEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
-import { AutoField, AutoForm, ErrorsField, SelectField } from '@/uniforms/fields';
+import { AutoField, AutoForm, ErrorsField } from '@/uniforms/fields';
 
 import schema from './schemas/create.json';
 
