@@ -9,6 +9,8 @@ import type { RoleEntity, UserEntity } from "@bill/database/esm";
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
 
+import Create from './create';
+
 import { BasicStatus } from "#/enum";
 
 export default function PermissionPage() {
@@ -33,45 +35,16 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<UserEntity> = [
     {
-      title: "Name",
-      dataIndex: "name",
-      width: 300,
-      render: (_, record) => {
-        return (
-          <div className="flex">
-            <div className="ml-2 flex flex-col">
-              <span className="text-sm">{record.fullname}</span>
-              <span className="text-xs text-text-secondary">
-                {record.email} - {record.phone}
-              </span>
-            </div>
-          </div>
-        );
-      },
+      title: '分类',
+      dataIndex: 'name',
+      align: 'center',
+      width: 200,
     },
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "商品",
+      dataIndex: "products",
       align: "center",
-      width: 120,
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      align: "center",
-      width: 120,
-      render: (role: RoleEntity) => <Tag color="cyan">{role?.name}</Tag>,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      align: "center",
-      width: 120,
-      render: (status) => (
-        <Tag color={status === BasicStatus.DISABLE ? "error" : "success"}>
-          {status === BasicStatus.DISABLE ? "Disable" : "Enable"}
-        </Tag>
-      ),
+      render: () => <Tag color="cyan">a</Tag>,
     },
     {
       title: "Action",
@@ -91,7 +64,7 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          {/* <Create title="新建用户" onSuccess={pag.refresh} /> */}
+          <Create title="新建模板" onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

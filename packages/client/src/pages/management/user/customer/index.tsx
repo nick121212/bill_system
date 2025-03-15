@@ -4,11 +4,12 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined, EyeOutlined } from '@ant-design/icons';
 import type { CustomerEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
+import { useRouter } from '@/router/hooks';
 
 import Create from './create';
 import Edit from './edit';
@@ -16,6 +17,7 @@ import Remove from './remove';
 import Search from './search';
 
 export default function ProductUnit() {
+  const { push: routerPush } = useRouter();
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
@@ -76,6 +78,14 @@ export default function ProductUnit() {
       render: (_, record) => (
         <Space size="middle">
           <Edit title="编辑" record={record} onSuccess={pag.refresh} />
+          <Button
+            type="text"
+            shape="circle"
+            icon={<EyeOutlined />}
+            onClick={() => {
+              routerPush(`/customer/detail/${record.id}`);
+            }}
+          />
           <Remove title="删除" record={record} onSuccess={pag.refresh} />
         </Space>
       ),

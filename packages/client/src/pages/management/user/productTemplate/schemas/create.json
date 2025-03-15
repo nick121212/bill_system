@@ -1,0 +1,17 @@
+{
+  "title": "ProductUnit",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "title": "模板名称" },
+    "categoryId": {
+      "type": "number",
+      "title": "分类"
+    },
+    "desc": { "type": "string", "title": "描述" },
+    "product": {
+      "type": "array",
+      "title": "商品"
+    }
+  },
+  "required": ["categoryId"]
+}

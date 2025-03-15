@@ -5,7 +5,10 @@ import type { DefaultOptionType } from 'antd/es/select';
 import { useTranslation } from 'react-i18next';
 import { EditOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
+import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
+import debounce from 'lodash/debounce';
 
+import useData from '@/hooks/data/useData';
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
@@ -22,8 +25,6 @@ export type ProductModalProps = {
   record: ProductEntity;
   title: string;
   onSuccess: () => void;
-  units: DefaultOptionType[];
-  categories: DefaultOptionType[];
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
@@ -32,8 +33,6 @@ export default function ProductEditModal({
   record,
   title,
   onSuccess,
-  units,
-  categories,
 }: ProductModalProps) {
   const processedRecord = {
     ...record,
@@ -62,6 +61,25 @@ export default function ProductEditModal({
     },
     onSuccessCall,
   );
+
+  const {
+    rows: categories,
+    loading: cateLoad,
+    onSearch: onCateSearch,
+  } = useData<ProductCategoryEntity[]>('product/categories');
+  const {
+    rows: units,
+    loading: unitLoad,
+    onSearch: onUnitLoad,
+  } = useData<ProductUnitEntity[]>('product/units');
+
+  const debouncedOnCateSearch = debounce((val) => {
+    onCateSearch({ name: val });
+  }, 800);
+
+  const debouncedOnUnitSearch = debounce((val) => {
+    onUnitLoad({ name: val });
+  }, 800);
 
   return (
     <>
@@ -121,9 +139,35 @@ export default function ProductEditModal({
 
               <AutoFields fields={['name', 'label', 'price', 'cost']} />
 
-              <AutoField name="unitId" options={units} />
+              <AutoField
+                name="unitId"
+                options={
+                  unitLoad
+                    ? []
+                    : units?.map((c) => {
+                        return {
+                          label: c.name,
+                          value: c.id,
+                        };
+                      })
+                }
+                onSearch={debouncedOnUnitSearch}
+              />
 
-              <AutoField name="categoryId" options={categories} />
+              <AutoField
+                name="categoryId"
+                options={
+                  cateLoad
+                    ? []
+                    : categories?.map((c) => {
+                        return {
+                          label: c.name,
+                          value: c.id,
+                        };
+                      })
+                }
+                onSearch={debouncedOnCateSearch}
+              />
 
               <TextAreaField name="desc" />
             </AutoForm>

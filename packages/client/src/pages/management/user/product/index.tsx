@@ -1,6 +1,5 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Button, Space, message } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from "dayjs";
@@ -9,8 +8,6 @@ import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
 import type { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 
-import { getCategory } from '@/api/services/prodCatServer';
-import { getUnit } from '@/api/services/proUnitServer';
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
@@ -20,8 +17,6 @@ import Remove from './remove';
 import Search from './search';
 
 export default function PermissionPage() {
-  const [categories, setCategories] = useState<DefaultOptionType[]>([]);
-  const [units, setUnits] = useState<DefaultOptionType[]>([]);
   const { t } = useTranslation();
   const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
     {
@@ -99,8 +94,6 @@ export default function PermissionPage() {
             title="编辑产品"
             record={record}
             onSuccess={onSuccess}
-            units={units}
-            categories={categories}
           />
           <Remove
             title="删除商品"
@@ -111,27 +104,6 @@ export default function PermissionPage() {
       ),
     },
   ];
-
-  useEffect(() => {
-    getCategory().then((res) => {
-      const { data } = res;
-      setCategories(
-        data?.rows?.map((item: any) => ({
-          label: item.name,
-          value: item.id,
-        })) || [],
-      );
-    });
-    getUnit().then((res) => {
-      const { data } = res;
-      setUnits(
-        data?.rows?.map((item: any) => ({
-          label: item.name,
-          value: item.id,
-        })) || [],
-      );
-    });
-  }, []);
 
   useEffect(() => {
     if (apiError) {
@@ -146,8 +118,6 @@ export default function PermissionPage() {
           <Create
             title="新建产品"
             onSuccess={pag.refresh}
-            units={units}
-            categories={categories}
           />
           <Button
             icon={<ReloadOutlined />}
