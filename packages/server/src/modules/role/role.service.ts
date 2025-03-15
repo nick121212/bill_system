@@ -89,42 +89,6 @@ export class RoleService {
     this.removeUselessMenu(menus);
 
     return menus;
-
-    // const removeIds: { menus: Array<MenuEntity>; removeId: number }[] = [];
-
-    // for (const key in menus) {
-    //   if (Object.prototype.hasOwnProperty.call(menus, key)) {
-    //     const menu = menus[key];
-
-    //     if (menuIds.indexOf(menu.id) < 0) {
-    //       // _.remove(menus, function (n, i) {
-    //       //   return i.toString() === key;
-    //       // });
-    //       removeIds.push({ menus, removeId: menu.id });
-    //     } else {
-    //       menu.parentId = parentId;
-    //       menu.children?.length &&
-    //         // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-    //         (menu.children = this.getValidMenus(
-    //           menu.children,
-    //           menuIds,
-    //           menu.id
-    //         ));
-    //     }
-    //   }
-    // }
-
-    // for (const key in removeIds) {
-    //   if (Object.prototype.hasOwnProperty.call(removeIds, key)) {
-    //     const remove = removeIds[key];
-
-    //     _.remove(remove.menus, (m) => {
-    //       return m.id === remove.removeId;
-    //     });
-    //   }
-    // }
-
-    // return menus;
   }
 
   async getByIdWithPermission(id: number): Promise<RoleEntity> {
@@ -143,9 +107,7 @@ export class RoleService {
       );
     }
 
-    const menuIds = data.menus;
-
-    data.menus = this.getValidMenus(menuTree, menuIds as any);
+    data.menus = this.getValidMenus(menuTree, data.menus as any);
 
     return data;
   }
