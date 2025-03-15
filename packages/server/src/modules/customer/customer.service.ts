@@ -1,17 +1,33 @@
-import { Repository } from "typeorm";
+import { Repository, Not, Equal, IsNull, EntityManager } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import { CustomerEntity } from "@bill/database/dist/entities";
+import {
+  CustomerEntity,
+  ProductCategoryEntity,
+  ProductEntity,
+  ProductPriceEntity,
+  ProductUnitEntity,
+} from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ProductService } from "@/modules/product/product.service";
 
-import { CustomerQuery, CustomerRequest } from "./customer.interface";
+import {
+  CustomerPriceRequest,
+  CustomerQuery,
+  CustomerRequest,
+} from "./customer.interface";
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(CustomerEntity) private repo: Repository<CustomerEntity>,
+    @InjectRepository(ProductEntity)
+    private repoForProduct: Repository<ProductEntity>,
+    @InjectRepository(ProductPriceEntity)
+    private repoForPrice: Repository<ProductPriceEntity>,
+    private productService: ProductService
   ) {}
 
   async all(
@@ -23,9 +39,6 @@ export class CustomerService {
       take: query.take,
       where: {
         ...query.where,
-      },
-      relations: {
-        // menus: true,
       },
       loadRelationIds: true,
       withDeleted: false,
@@ -41,10 +54,6 @@ export class CustomerService {
     id?: number,
     loadRelationIds = false
   ): Promise<CustomerEntity | undefined> {
-    if (!id) {
-      return undefined;
-    }
-
     const data = await this.repo.findOne({
       where: {
         id,
@@ -55,24 +64,8 @@ export class CustomerService {
     return data || undefined;
   }
 
-  async create(body: CustomerRequest): Promise<CustomerEntity> {
-    const { ...rest } = body;
-    const customer = new CustomerEntity().extend({
-      ...rest,
-    });
-
-    // role.menus = await this.repo.manager.find(MenuEntity, {
-    //   where: {
-    //     id: In(menus || []),
-    //   },
-    // });
-
-    return await this.repo.save(customer);
-  }
-
-  async update(id: number, body: CustomerRequest): Promise<CustomerEntity> {
+  async getPriceById(id?: number) {
     const customer = await this.getById(id);
-    const {  ...rest } = body;
 
     if (!customer) {
       throw new ApiException(
@@ -81,7 +74,93 @@ export class CustomerService {
         HttpStatus.OK,
         {
           id: id,
-          entity: "RoleEntity",
+          entity: "CustomerEntity",
+        }
+      );
+    }
+
+    return this.repoForProduct
+      .createQueryBuilder("product")
+      .where({
+        deletedDate: IsNull(),
+      })
+      .innerJoinAndSelect("product.unit", "unit")
+      .innerJoinAndSelect("product.category", "category")
+      .leftJoinAndSelect(
+        "product.customerPrices",
+        "prices",
+        "prices.customerId = :customerId",
+        { customerId: id }
+      )
+      .getManyAndCount();
+  }
+
+  async savePrices(id: number, body: CustomerPriceRequest) {
+    const customer = await this.getById(id);
+
+    if (!customer) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          entity: "CustomerEntity",
+        }
+      );
+    }
+
+    return this.repo.manager.transaction(
+      async (entityManager: EntityManager) => {
+        const pricesEntities: ProductPriceEntity[] = [];
+
+        await this.repoForPrice
+          .createQueryBuilder()
+          .delete()
+          .where({
+            customer: {
+              id,
+            },
+          })
+          .execute();
+
+        for (const element of body.prices) {
+          pricesEntities.push(
+            new ProductPriceEntity().extend({
+              customer,
+              discount: element.discount,
+              price: element.price,
+              product: await this.productService.getById(element.productId),
+            })
+          );
+        }
+
+        return await entityManager.save(pricesEntities);
+      }
+    );
+  }
+
+  async create(body: CustomerRequest): Promise<CustomerEntity> {
+    const { ...rest } = body;
+    const customer = new CustomerEntity().extend({
+      ...rest,
+    });
+
+    return await this.repo.save(customer);
+  }
+
+  async update(id: number, body: CustomerRequest): Promise<CustomerEntity> {
+    const customer = await this.getById(id);
+    const { ...rest } = body;
+
+    if (!customer) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          entity: "CustomerEntity",
         }
       );
     }

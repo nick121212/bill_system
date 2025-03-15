@@ -1,4 +1,4 @@
-import { EntityManager, Like, Repository } from "typeorm";
+import { EntityManager, ILike, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { ProductCategoryEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
@@ -24,13 +24,13 @@ export class ProductCategoryService {
   async all(
     query: ProductCategoryQuery
   ): Promise<{ rows: ProductCategoryEntity[]; count: number }> {
-    const { name } = query.where || {};
+    const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
-        ...(name ? { name: Like(`%${name}%`) } : {}),
+        ...rest,
+        ...(name ? { name: ILike(`%${name}%`) } : {}),
       },
     });
 
@@ -61,23 +61,26 @@ export class ProductCategoryService {
     return await this.repo.save(category);
   }
 
-  async update(id: number, body: ProductCategoryRequest): Promise<ProductCategoryEntity> {
-      const category = await this.getById(id);
-  
-      if (!category) {
-        throw new ApiException(
-          "can not find recoed",
-          ApiStatusCode.KEY_NOT_EXIST,
-          HttpStatus.OK
-        );
-      }
+  async update(
+    id: number,
+    body: ProductCategoryRequest
+  ): Promise<ProductCategoryEntity> {
+    const category = await this.getById(id);
 
-      category.extend({
-        ...body
-      });
-  
-      return this.repo.save(category);
+    if (!category) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK
+      );
     }
+
+    category.extend({
+      ...body,
+    });
+
+    return this.repo.save(category);
+  }
 
   async remove(id: number) {
     const data = await this.getById(id);

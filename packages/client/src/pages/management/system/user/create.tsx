@@ -23,7 +23,7 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   const { t } = useTranslation();
   const formRef = useRef();
-  const { rows, loading } = useData<RoleEntity[]>("roles");
+  const { rows, loading, onSearch } = useData<RoleEntity[]>("roles");
   const { rows: company, loading: comLoad } =
     useData<CompanyEntity[]>("companies");
   const onSuccessCall = useCallback(() => {
@@ -108,6 +108,7 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
               <SelectField
                 name="company"
                 loading={comLoad}
+                onSearch={onSearch}
                 options={company?.map((r: CompanyEntity) => {
                   return {
                     label: r.name,

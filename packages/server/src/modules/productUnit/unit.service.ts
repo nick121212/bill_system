@@ -22,12 +22,12 @@ export class ProductUnitService {
   async all(
     query: ProductUnitQuery
   ): Promise<{ rows: ProductUnitEntity[]; count: number }> {
-    const { name } = query.where || {};
+    const { name,...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
+        ...rest,
         ...(name ? { name: Like(`%${name}%`) } : {}),
       },
     });

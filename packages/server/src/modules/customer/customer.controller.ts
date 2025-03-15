@@ -12,7 +12,7 @@ import {
 
 import { Public } from "@/common/decorators/public.decorator";
 
-import { CustomerQuery, CustomerRequest } from "./customer.interface";
+import { CustomerPriceRequest, CustomerQuery, CustomerRequest } from "./customer.interface";
 import { CustomerService } from "./customer.service";
 
 @Controller({
@@ -20,9 +20,7 @@ import { CustomerService } from "./customer.service";
 })
 @Public()
 export class CustomerController {
-  constructor(
-    private customerService: CustomerService,
-  ) {}
+  constructor(private customerService: CustomerService) {}
 
   @Get("/")
   async all(@Query() query: CustomerQuery) {
@@ -42,6 +40,16 @@ export class CustomerController {
   @Put("/:id")
   async update(@Param("id") id: number, @Body() body: CustomerRequest) {
     return this.customerService.update(id, body);
+  }
+
+  @Get("/:id/products")
+  async products(@Param("id") id: number) {
+    return this.customerService.getPriceById(id);
+  }
+
+  @Post("/:id/products")
+  async saveProducts(@Param("id") id: number, @Body() body: CustomerPriceRequest) {
+    return this.customerService.savePrices(id, body);
   }
 
   @Delete("/:id")

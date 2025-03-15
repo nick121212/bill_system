@@ -3,15 +3,17 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
   JoinColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
 import { ProductEntity } from "./Product";
+
+// import { ProductEntity } from "./Product";
 
 @Entity({
   name: "product_price",
@@ -28,11 +30,11 @@ export class ProductPriceEntity extends BaseEntity<ProductPriceEntity> {
   @Column({ default: 100 })
   discount: number;
 
-  @OneToOne(() => ProductEntity)
+  @ManyToOne(() => ProductEntity)
   @JoinColumn()
   product: ProductEntity;
 
-  @OneToOne(() => CustomerEntity)
+  @ManyToOne(() => CustomerEntity)
   @JoinColumn()
   customer: CustomerEntity;
 

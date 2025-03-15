@@ -7,10 +7,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   ManyToOne,
+  OneToMany,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
 import { ProductCategoryEntity } from "./ProductCategory";
+import { ProductPriceEntity } from "./ProductPrice";
 import { ProductUnitEntity } from "./ProductUnit";
 
 @Entity({
@@ -42,6 +44,10 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   @ManyToOne(() => ProductUnitEntity)
   @JoinColumn()
   unit: ProductUnitEntity;
+
+  @OneToMany(() => ProductPriceEntity, (photo) => photo.product)
+  @JoinColumn()
+  customerPrices?: ProductPriceEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

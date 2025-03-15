@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Form, Space, Spin } from 'antd';
+import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
-import debounce from 'lodash/debounce';
 
 import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';
@@ -29,23 +29,16 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
   const {
     rows: categories,
     loading: cateLoad,
-    onSearch: onCateSearch,
+    onSearch: debouncedOnCateSearch,
   } = useData<ProductCategoryEntity[]>('product/categories');
   const {
     rows: units,
     loading: unitLoad,
-    onSearch: onUnitLoad,
+    onSearch: debouncedOnUnitSearch,
   } = useData<ProductUnitEntity[]>('product/units');
   const onSuccessCall = useCallback(() => {
     formRef.current?.submit();
   }, []);
-  const debouncedOnCateSearch = debounce((val) => {
-    onCateSearch({ name: val });
-  }, 800);
-
-  const debouncedOnUnitSearch = debounce((val) => {
-    onUnitLoad({ name: val });
-  }, 800);
 
   return (
     <>
@@ -68,38 +61,28 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
           <SelectField
             loading={unitLoad}
             name="unit.id"
-            options={
-              unitLoad
-                ? []
-                : units?.map((c) => {
-                    return {
-                      label: c.name,
-                      value: c.id,
-                    };
-                  })
-            }
+            options={units?.map((c) => {
+              return {
+                label: c.name,
+                value: c.id,
+              };
+            })??[]}
             showSearch
             filterOption={false}
-            notFoundContent={!cateLoad ? <Spin size="small" /> : null}
             onSearch={debouncedOnUnitSearch}
           />
 
           <SelectField
             loading={cateLoad}
             name="category.id"
-            options={
-              cateLoad
-                ? []
-                : categories?.map((c) => {
-                    return {
-                      label: c.name,
-                      value: c.id,
-                    };
-                  })
-            }
+            options={categories?.map((c) => {
+              return {
+                label: c.name,
+                value: c.id,
+              };
+            })??[]}
             showSearch
             filterOption={false}
-            notFoundContent={!cateLoad ? <Spin size="small" /> : null}
             onSearch={debouncedOnCateSearch}
           />
 
