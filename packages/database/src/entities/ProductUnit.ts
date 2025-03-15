@@ -24,6 +24,16 @@ export class ProductUnitEntity extends BaseEntity<ProductUnitEntity> {
   @Column()
   desc: string;
 
+  @Column({
+    nullable: true,
+  })
+  companyId?: number;
+
+  @Column({
+    nullable: true,
+  })
+  userId?: number;
+
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
 

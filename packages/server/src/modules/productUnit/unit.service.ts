@@ -1,12 +1,11 @@
 import { EntityManager, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import {
-  ProductUnitEntity,
-} from "@bill/database/dist/entities";
+import { ProductUnitEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
 import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
@@ -15,20 +14,24 @@ import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
 export class ProductUnitService {
   constructor(
     private logger: Log4jsService,
-    @InjectRepository(ProductUnitEntity) private repo: Repository<ProductUnitEntity>,
+    @InjectRepository(ProductUnitEntity)
+    private repo: Repository<ProductUnitEntity>,
     private em: EntityManager
   ) {}
 
   async all(
-    query: ProductUnitQuery
+    query: ProductUnitQuery,
+    user?: ActiveUserData
   ): Promise<{ rows: ProductUnitEntity[]; count: number }> {
-    const { name,...rest } = query.where || {};
+    const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...rest,
         ...(name ? { name: Like(`%${name}%`) } : {}),
+        companyId: user?.companyId,
+        userId: user?.id,
       },
     });
 
@@ -50,17 +53,25 @@ export class ProductUnitService {
     return data || undefined;
   }
 
-  async create(body: ProductUnitBodyRequest): Promise<ProductUnitEntity> {
+  async create(
+    body: ProductUnitBodyRequest,
+    user?: ActiveUserData
+  ): Promise<ProductUnitEntity> {
     const { ...rest } = body;
 
     const child = new ProductUnitEntity().extend({
       ...rest,
+      companyId: user?.companyId,
+      userId: user?.id,
     });
 
     return await this.repo.save(child);
   }
 
-  async update(id: number, body: ProductUnitBodyRequest): Promise<ProductUnitEntity> {
+  async update(
+    id: number,
+    body: ProductUnitBodyRequest
+  ): Promise<ProductUnitEntity> {
     const child = await this.getById(id);
 
     if (!child) {

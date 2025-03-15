@@ -1,12 +1,11 @@
 import { Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import {
-  ProductEntity,
-} from "@bill/database/dist/entities";
+import { ProductEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 import { ProductCategoryService } from "@/modules/productCategory/category.service";
 import { ProductUnitService } from "@/modules/productUnit/unit.service";
@@ -23,7 +22,8 @@ export class ProductService {
   ) {}
 
   async all(
-    query: ProductQuery
+    query: ProductQuery,
+    user: ActiveUserData
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const { name } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -32,6 +32,8 @@ export class ProductService {
       where: {
         ...query.where,
         ...(name ? { name: Like(`%${name}%`) } : {}),
+        companyId: user?.companyId,
+        userId: user.id,
       },
       relations: {
         category: true,
@@ -58,12 +60,17 @@ export class ProductService {
     return data || undefined;
   }
 
-  async create(body: ProductBodyRequest): Promise<ProductEntity> {
+  async create(
+    body: ProductBodyRequest,
+    user?: ActiveUserData
+  ): Promise<ProductEntity> {
     const { unitId, categoryId, id, ...rest } = body;
     const unit = await this.productUnitService.getById(unitId);
     const category = await this.productCategoryService.getById(categoryId);
     const child = new ProductEntity().extend({
       ...rest,
+      companyId: user?.companyId,
+      userId: user?.id,
     });
 
     if (!unit || !category) {

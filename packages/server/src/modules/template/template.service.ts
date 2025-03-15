@@ -10,6 +10,7 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
 
@@ -20,7 +21,10 @@ export class TemplateService {
     @InjectRepository(TemplateEntity) private repo: Repository<TemplateEntity>
   ) {}
 
-  async all(query: TemplateQuery): Promise<{
+  async all(
+    query: TemplateQuery,
+    user?: ActiveUserData
+  ): Promise<{
     count: number;
     rows: TemplateEntity[];
   }> {
@@ -29,6 +33,8 @@ export class TemplateService {
       take: query.take,
       where: {
         ...query.where,
+        companyId: user?.companyId,
+        userId: user?.id,
       },
     });
 
@@ -50,10 +56,15 @@ export class TemplateService {
     return data || undefined;
   }
 
-  async create(body: TemplateBodyRequest): Promise<TemplateEntity> {
+  async create(
+    body: TemplateBodyRequest,
+    user?: ActiveUserData
+  ): Promise<TemplateEntity> {
     const { categories, ...rest } = body;
     const child = new TemplateEntity().extend({
       ...rest,
+      companyId: user?.companyId,
+      userId: user?.id,
     });
 
     return await this.em.transaction(async (entityManager: EntityManager) => {

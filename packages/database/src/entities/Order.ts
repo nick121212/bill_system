@@ -31,6 +31,16 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   @Column()
   price: number;
 
+  @Column({
+    nullable: true,
+  })
+  companyId?: number;
+
+  @Column({
+    nullable: true,
+  })
+  userId?: number;
+
   @OneToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;

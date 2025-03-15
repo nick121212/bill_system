@@ -10,7 +10,9 @@ import {
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { ProductService } from "@/modules/product/product.service";
 
 import {
@@ -32,13 +34,15 @@ export class CustomerService {
 
   async all(
     query: CustomerQuery,
-    withRelation = false
+    user: ActiveUserData
   ): Promise<{ rows: CustomerEntity[]; count: number }> {
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...query.where,
+        companyId: user?.companyId,
+        userId: user.id,
       },
       loadRelationIds: true,
       withDeleted: false,
@@ -140,7 +144,10 @@ export class CustomerService {
     );
   }
 
-  async create(body: CustomerRequest): Promise<CustomerEntity> {
+  async create(
+    body: CustomerRequest,
+    user: ActiveUserData
+  ): Promise<CustomerEntity> {
     const { ...rest } = body;
     const customer = new CustomerEntity().extend({
       ...rest,

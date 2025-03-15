@@ -1,5 +1,17 @@
-import { Controller, Request, Get, Post, Body, Param, Put, Delete, Query } from "@nestjs/common";
+import {
+  Controller,
+  Request,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+} from "@nestjs/common";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
@@ -9,13 +21,14 @@ import { TemplateService } from "./template.service";
   path: ["templates"],
 })
 export class MenuController {
-  constructor(private templateService: TemplateService, private readonly log4jService: Log4jsService) {
-    
-  }
+  constructor(
+    private templateService: TemplateService,
+    private readonly log4jService: Log4jsService
+  ) {}
 
   @Get("/")
-  async all(@Query() query: TemplateQuery) {
-    return this.templateService.all(query);
+  async all(@Query() query: TemplateQuery, @ActiveUser() user: ActiveUserData) {
+    return this.templateService.all(query, user);
   }
 
   @Get("/:id")
@@ -24,8 +37,11 @@ export class MenuController {
   }
 
   @Post("/")
-  async create(@Body() body: TemplateBodyRequest) {
-    return this.templateService.create(body);
+  async create(
+    @Body() body: TemplateBodyRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.templateService.create(body, user);
   }
 
   @Put("/:id")

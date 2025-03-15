@@ -8,23 +8,30 @@ import {
   Put,
   Delete,
   Query,
+  Req,
+  Res,
 } from "@nestjs/common";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { Public } from "@/common/decorators/public.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
-import { CustomerPriceRequest, CustomerQuery, CustomerRequest } from "./customer.interface";
+import {
+  CustomerPriceRequest,
+  CustomerQuery,
+  CustomerRequest,
+} from "./customer.interface";
 import { CustomerService } from "./customer.service";
 
 @Controller({
   path: ["customers"],
 })
-@Public()
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
   @Get("/")
-  async all(@Query() query: CustomerQuery) {
-    return this.customerService.all(query);
+  async all(@Query() query: CustomerQuery, @ActiveUser() user: ActiveUserData) {
+    return this.customerService.all(query, user);
   }
 
   @Get("/:id")
@@ -33,12 +40,19 @@ export class CustomerController {
   }
 
   @Post("/")
-  async create(@Body() body: CustomerRequest) {
-    return this.customerService.create(body);
+  async create(
+    @Body() body: CustomerRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.customerService.create(body, user);
   }
 
   @Put("/:id")
-  async update(@Param("id") id: number, @Body() body: CustomerRequest) {
+  async update(
+    @Param("id") id: number,
+    @Body() body: CustomerRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
     return this.customerService.update(id, body);
   }
 
@@ -48,7 +62,10 @@ export class CustomerController {
   }
 
   @Post("/:id/products")
-  async saveProducts(@Param("id") id: number, @Body() body: CustomerPriceRequest) {
+  async saveProducts(
+    @Param("id") id: number,
+    @Body() body: CustomerPriceRequest
+  ) {
     return this.customerService.savePrices(id, body);
   }
 
