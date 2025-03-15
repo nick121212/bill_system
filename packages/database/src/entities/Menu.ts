@@ -49,6 +49,8 @@ export class MenuEntity extends BaseEntity<MenuEntity> {
 
   parentId?: number;
 
+  showed?: boolean;
+
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
 
