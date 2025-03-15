@@ -1,15 +1,14 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import { Button, Drawer, Form, Space, Spin, Flex } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ProductEntity } from '@bill/database/esm';
-import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
 import debounce from 'lodash/debounce';
+import { PlusOutlined } from '@ant-design/icons';
+import type { ProductCategoryEntity } from '@bill/database/esm';
+import useAxios from 'axios-hooks';
 
-import useData from '@/hooks/data/useData';
 import useFormAction from '@/hooks/form/useFormAction';
+import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';
 import {
   AutoFields,
@@ -17,23 +16,24 @@ import {
   ErrorsField,
   TextAreaField,
   AutoField,
+  SelectField,
 } from '@/uniforms/fields';
 
 import schema from './schemas/create.json';
+import { where } from 'ramda';
 
 export type ProductModalProps = {
-  formValue?: ProductEntity;
+  formValue?: ProductCategoryEntity;
   title: string;
   onSuccess: () => void;
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function ProductCreateModal({
+export default function TemplateCreateModal({
+  formValue,
   title,
   onSuccess,
-  // units,
-  // categories
 }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
@@ -52,7 +52,7 @@ export default function ProductCreateModal({
   } = useFormAction(
     formRef,
     {
-      url: '/products',
+      url: '/product/templates',
       method: 'POST',
     },
     onSuccessCall,
@@ -62,19 +62,23 @@ export default function ProductCreateModal({
     loading: cateLoad,
     onSearch: onCateSearch,
   } = useData<ProductCategoryEntity[]>('product/categories');
-  const {
-    rows: units,
-    loading: unitLoad,
-    onSearch: onUnitLoad,
-  } = useData<ProductUnitEntity[]>('product/units');
 
   const debouncedOnCateSearch = debounce((val) => {
     onCateSearch({ name: val });
   }, 800);
 
-  const debouncedOnUnitSearch = debounce((val) => {
-    onUnitLoad({ name: val });
-  }, 800);
+  const [{ data: productList }, productFetch] = useAxios(
+    {
+      url: `products`,
+    },
+    {
+      manual: true,
+    },
+  );
+
+  useEffect(() => {
+    console.log(111666, productList);
+  }, [productList]);
 
   return (
     <>
@@ -123,6 +127,7 @@ export default function ProductCreateModal({
               ref={formRef as any}
               showInlineError
               schema={bridge}
+              model={formValue as any}
               onSubmit={(formData) => {
                 setFormData(formData);
                 callAjax({
@@ -132,24 +137,10 @@ export default function ProductCreateModal({
             >
               <ErrorsField />
 
-              <AutoFields fields={['name', 'label', 'price', 'cost']} />
+              <AutoFields fields={['name']} />
 
-              <AutoField
-                name="unitId"
-                options={
-                  unitLoad
-                    ? []
-                    : units?.map((c) => {
-                        return {
-                          label: c.name,
-                          value: c.id,
-                        };
-                      })
-                }
-                onSearch={debouncedOnUnitSearch}
-              />
-
-              <AutoField
+              <SelectField
+                loading={cateLoad}
                 name="categoryId"
                 options={
                   cateLoad
@@ -161,9 +152,30 @@ export default function ProductCreateModal({
                         };
                       })
                 }
+                showSearch
+                filterOption={false}
+                notFoundContent={!cateLoad ? <Spin size="small" /> : null}
                 onSearch={debouncedOnCateSearch}
+                onChange={(val) => {
+                  if (!val) return;
+                  productFetch({
+                    params: {
+                      skip: 0,
+                      take: 99,
+                      where: {
+                        category: {
+                          id: val,
+                        },
+                      },
+                    },
+                  });
+                }}
               />
 
+              {
+                // categoryId有值时，product字段才会显示
+                // !!productList?.count && <ListItemField name="product" />
+              }
               <TextAreaField name="desc" />
             </AutoForm>
           </Spin>
