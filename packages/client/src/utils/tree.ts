@@ -6,10 +6,16 @@ import { chain } from "ramda";
  * @returns {T[]} - Flattened array
  */
 export function flattenTrees<T extends { children?: T[] }>(
-	trees: T[] = [],
+  trees: T[] = [],
+  sort: ((a: T, b: T) => number) | null = null
 ): T[] {
-	return chain((node) => {
-		const children = node.children || [];
-		return [node, ...flattenTrees(children)];
-	}, trees);
+  return chain((node) => {
+    let children = node.children || [];
+
+    if (sort) {
+      children = children.sort(sort);
+    }
+
+    return [node, ...flattenTrees(children)];
+  }, trees);
 }

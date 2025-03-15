@@ -170,14 +170,14 @@ export function usePermissionRoutes() {
   }
 
   const permissions = useUserPermission();
+
   return useMemo(() => {
     if (!permissions) return [];
 
-    const flattenedPermissions = flattenTrees(permissions);
+    const flattenedPermissions = flattenTrees(permissions, (a, b) => {
+      return a.order - b.order;
+    });
 
-    return transformPermissionsToRoutes(
-      permissions,
-      flattenedPermissions as any,
-    );
+    return transformPermissionsToRoutes(permissions, flattenedPermissions);
   }, [permissions]);
 }
