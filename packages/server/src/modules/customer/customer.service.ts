@@ -151,6 +151,8 @@ export class CustomerService {
     const { ...rest } = body;
     const customer = new CustomerEntity().extend({
       ...rest,
+      companyId: user.companyId,
+      userId: user.id,
     });
 
     return await this.repo.save(customer);
