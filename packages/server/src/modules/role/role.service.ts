@@ -41,40 +41,52 @@ export class RoleService {
     };
   }
 
-  getValidMenus(menus: MenuEntity[], menuIds: number[], parentId = 0) {
-    const removeIds: { menus: Array<MenuEntity>; removeId: number }[] = [];
+  shouldHideMenu(menu: MenuEntity, checkIds: number[]) {
+    if (checkIds.indexOf(menu.id) >= 0) {
+      return true;
+    }
+
+    if (!menu.children?.length) {
+      return false;
+    }
+
+    for (const key in menu.children) {
+      const child = menu.children[key];
+
+      child.showed = this.shouldHideMenu(child, checkIds);
+    }
+
+    return (
+      menu.children?.filter((c) => {
+        return c.showed;
+      }).length > 0
+    );
+  }
+
+  removeUselessMenu(menus: MenuEntity[]) {
+    _.remove(menus, (m) => {
+      return m.showed === false;
+    });
 
     for (const key in menus) {
-      if (Object.prototype.hasOwnProperty.call(menus, key)) {
-        const menu = menus[key];
+      const element = menus[key];
 
-        if (menuIds.indexOf(menu.id) < 0) {
-          // _.remove(menus, function (n, i) {
-          //   return i.toString() === key;
-          // });
-          removeIds.push({ menus, removeId: menu.id });
-        } else {
-          menu.parentId = parentId;
-          menu.children?.length &&
-            // biome-ignore lint/suspicious/noAssignInExpressions: <explanation>
-            (menu.children = this.getValidMenus(
-              menu.children,
-              menuIds,
-              menu.id
-            ));
-        }
+      if (element.children?.length) {
+        this.removeUselessMenu(element.children);
       }
     }
+  }
 
-    for (const key in removeIds) {
-      if (Object.prototype.hasOwnProperty.call(removeIds, key)) {
-        const remove = removeIds[key];
+  getValidMenus(menus: MenuEntity[], menuIds: number[], parentId = 0) {
+    this.shouldHideMenu(
+      new MenuEntity().extend({
+        id: -1,
+        children: menus,
+      }),
+      menuIds
+    );
 
-        _.remove(remove.menus, (m) => {
-          return m.id === remove.removeId;
-        });
-      }
-    }
+    this.removeUselessMenu(menus);
 
     return menus;
   }
@@ -95,9 +107,7 @@ export class RoleService {
       );
     }
 
-    const menuIds = data.menus;
-
-    data.menus = this.getValidMenus(menuTree, menuIds as any);
+    data.menus = this.getValidMenus(menuTree, data.menus as any);
 
     return data;
   }

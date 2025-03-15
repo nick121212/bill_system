@@ -10,10 +10,15 @@ import {
   Query,
 } from "@nestjs/common";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
-import { ProductCategoryRequest, ProductCategoryQuery } from "./category.interface";
-import { ProductCategoryService} from "./category.service";
+import {
+  ProductCategoryRequest,
+  ProductCategoryQuery,
+} from "./category.interface";
+import { ProductCategoryService } from "./category.service";
 
 @Controller({
   path: ["product/categories"],
@@ -25,8 +30,11 @@ export class ProductCategoryController {
   ) {}
 
   @Get("/")
-  async all(@Query() query: ProductCategoryQuery) {
-    return this.productCategoryService.all(query);
+  async all(
+    @Query() query: ProductCategoryQuery,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.productCategoryService.all(query, user);
   }
 
   @Get("/:id")
@@ -35,8 +43,11 @@ export class ProductCategoryController {
   }
 
   @Post("/")
-  async create(@Body() body: ProductCategoryRequest) {
-    return this.productCategoryService.create(body);
+  async create(
+    @Body() body: ProductCategoryRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.productCategoryService.create(body, user);
   }
 
   @Put("/:id")

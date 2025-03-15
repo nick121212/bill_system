@@ -10,6 +10,8 @@ import {
   Query,
 } from "@nestjs/common";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
 import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
@@ -25,8 +27,11 @@ export class ProductUnitController {
   ) {}
 
   @Get("/")
-  async all(@Query() query: ProductUnitQuery) {
-    return this.ProductUnitService.all(query);
+  async all(
+    @Query() query: ProductUnitQuery,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.ProductUnitService.all(query, user);
   }
 
   @Get("/:id")
@@ -35,7 +40,10 @@ export class ProductUnitController {
   }
 
   @Post("/")
-  async create(@Body() body: ProductUnitBodyRequest) {
+  async create(
+    @Body() body: ProductUnitBodyRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
     return this.ProductUnitService.create(body);
   }
 

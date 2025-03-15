@@ -115,6 +115,7 @@ export default function PermissionModal({
               <TreeField
                 name="menus"
                 checkable
+                defaultExpandAll
                 loading={loading}
                 treeData={permissions}
                 fieldNames={{

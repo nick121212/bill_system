@@ -139,6 +139,7 @@ export default function PermissionModal({
                 name="parentId"
                 treeData={permissions}
                 loading={loading}
+                treeDefaultExpandAll
                 fieldNames={{
                   label: "name",
                   value: "id",

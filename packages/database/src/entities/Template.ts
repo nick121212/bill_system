@@ -25,6 +25,16 @@ export class TemplateEntity extends BaseEntity<TemplateEntity> {
   @Column()
   status: number;
 
+  @Column({
+    nullable: true,
+  })
+  companyId?: number;
+
+  @Column({
+    nullable: true,
+  })
+  userId?: number;
+
   // @ManyToMany(() => TemplateCategoryEntity, (category) => category.template)
   // categories: TemplateCategoryEntity[];
 

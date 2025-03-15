@@ -5,6 +5,7 @@ import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
 import {
@@ -22,7 +23,8 @@ export class ProductCategoryService {
   ) {}
 
   async all(
-    query: ProductCategoryQuery
+    query: ProductCategoryQuery,
+    user?: ActiveUserData
   ): Promise<{ rows: ProductCategoryEntity[]; count: number }> {
     const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -31,6 +33,8 @@ export class ProductCategoryService {
       where: {
         ...rest,
         ...(name ? { name: ILike(`%${name}%`) } : {}),
+        companyId: user?.companyId,
+        userId: user?.id,
       },
     });
 
@@ -52,10 +56,15 @@ export class ProductCategoryService {
     return data || undefined;
   }
 
-  async create(body: ProductCategoryRequest): Promise<ProductCategoryEntity> {
+  async create(
+    body: ProductCategoryRequest,
+    user?: ActiveUserData
+  ): Promise<ProductCategoryEntity> {
     const { ...rest } = body;
     const category = new ProductCategoryEntity().extend({
       ...rest,
+      companyId: user?.companyId,
+      userId: user?.id,
     });
 
     return await this.repo.save(category);

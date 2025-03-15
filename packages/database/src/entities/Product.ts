@@ -37,6 +37,16 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   @Column()
   cost: number;
 
+  @Column({
+    nullable: true,
+  })
+  companyId?: number;
+
+  @Column({
+    nullable: true,
+  })
+  userId?: number;
+
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;

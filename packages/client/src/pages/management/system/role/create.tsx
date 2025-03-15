@@ -1,22 +1,22 @@
-import { useCallback, useRef } from "react";
-import { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import { Button, Drawer, Form, Space, Spin } from "antd";
-import { useTranslation } from "react-i18next";
-import { PlusOutlined } from "@ant-design/icons";
-import type { RoleEntity } from "@bill/database/esm";
+import { useCallback, useRef } from 'react';
+import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
+import { Button, Drawer, Form, Space, Spin } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { PlusOutlined } from '@ant-design/icons';
+import type { RoleEntity } from '@bill/database/esm';
 
-import usePermission from "@/hooks/data/usePermission";
-import useFormAction from "@/hooks/form/useFormAction";
-import { getBridge } from "@/uniforms/ajv";
+import usePermission from '@/hooks/data/usePermission';
+import useFormAction from '@/hooks/form/useFormAction';
+import { getBridge } from '@/uniforms/ajv';
 import {
   AutoFields,
   AutoForm,
   ErrorsField,
   TextAreaField,
   TreeField,
-} from "@/uniforms/fields";
+} from '@/uniforms/fields';
 
-import schema from "./schemas/create.json";
+import schema from './schemas/create.json';
 
 export type RoleModalProps = {
   formValue?: RoleEntity;
@@ -45,10 +45,10 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
   } = useFormAction(
     formRef,
     {
-      url: "/roles",
-      method: "POST",
+      url: '/roles',
+      method: 'POST',
     },
-    onSuccessCall
+    onSuccessCall,
   );
 
   return (
@@ -61,7 +61,7 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
           setShowModal(true);
         }}
       >
-        {t("crud.create.buttonText")}
+        {t('crud.create.buttonText')}
       </Button>
 
       <Drawer
@@ -78,10 +78,10 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
         extra={
           <Space>
             <Button loading={loadingAjax} onClick={onClose}>
-              {t("crud.cancel")}
+              {t('crud.cancel')}
             </Button>
             <Button loading={loadingAjax} onClick={onSubmit} type="primary">
-              {t("crud.confirm")}
+              {t('crud.confirm')}
             </Button>
           </Space>
         }
@@ -107,18 +107,19 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
             >
               <ErrorsField />
 
-              <AutoFields fields={["label", "name"]} />
+              <AutoFields fields={['label', 'name']} />
 
               <TextAreaField name="desc" />
 
               <TreeField
+                defaultExpandAll
                 name="menus"
                 checkable
                 treeData={permissions}
                 fieldNames={{
-                  key: "id",
-                  children: "children",
-                  title: "name",
+                  key: 'id',
+                  children: 'children',
+                  title: 'name',
                 }}
               />
             </AutoForm>

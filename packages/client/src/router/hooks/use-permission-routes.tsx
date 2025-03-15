@@ -1,19 +1,19 @@
-import { Suspense, lazy, useMemo } from "react";
-import { Tag } from "antd";
-import { isEmpty } from "ramda";
-import { Navigate, Outlet } from "react-router";
-import { PermissionType, type MenuEntity } from "@bill/database/esm";
+import { Suspense, lazy, useMemo } from 'react';
+import { Tag } from 'antd';
+import { isEmpty } from 'ramda';
+import { Navigate, Outlet } from 'react-router';
+import { PermissionType, type MenuEntity } from '@bill/database/esm';
 
-import { Iconify } from "@/components/icon";
-import { CircleLoading } from "@/components/loading";
-import { useUserPermission } from "@/store/userStore";
-import { flattenTrees } from "@/utils/tree";
+import { Iconify } from '@/components/icon';
+import { CircleLoading } from '@/components/loading';
+import { useUserPermission } from '@/store/userStore';
+import { flattenTrees } from '@/utils/tree';
 
-import { getRoutesFromModules } from "../utils";
-import type { AppRouteObject } from "#/router";
+import { getRoutesFromModules } from '../utils';
+import type { AppRouteObject } from '#/router';
 
-const ENTRY_PATH = "/src/pages";
-const PAGES = import.meta.glob("/src/pages/**/*.tsx");
+const ENTRY_PATH = '/src/pages';
+const PAGES = import.meta.glob('/src/pages/**/*.tsx');
 const loadComponentFromPath = (path: string) => PAGES[`${ENTRY_PATH}${path}`];
 
 /**
@@ -26,21 +26,23 @@ const loadComponentFromPath = (path: string) => PAGES[`${ENTRY_PATH}${path}`];
 function buildCompleteRoute(
   permission: MenuEntity,
   flattenedPermissions: MenuEntity[],
-  segments: string[] = []
+  segments: string[] = [],
 ): string {
   // Add current route segment
   segments.unshift(permission.route);
 
   // Base case: reached root permission
-  if (!permission.parentId) {
-    return `/${segments.join("/")}`;
+  if (!permission.parent) {
+    return `/${segments.join('/')}`;
   }
+
+  permission.parentId = permission.parent.id;
 
   // Find parent and continue recursion
   const parent = flattenedPermissions.find((p) => p.id === permission.parentId);
   if (!parent) {
     console.warn(`Parent permission not found for ID: ${permission.parentId}`);
-    return `/${segments.join("/")}`;
+    return `/${segments.join('/')}`;
   }
 
   return buildCompleteRoute(parent, flattenedPermissions, segments);
@@ -61,7 +63,7 @@ export function NewFeatureTag() {
 // Route Transformers
 const createBaseRoute = (
   permission: MenuEntity,
-  completeRoute: string
+  completeRoute: string,
 ): AppRouteObject => {
   const { route, label, icon, order } = permission;
 
@@ -88,11 +90,11 @@ const createBaseRoute = (
 
 const createCatalogueRoute = (
   permission: MenuEntity,
-  flattenedPermissions: MenuEntity[]
+  flattenedPermissions: MenuEntity[],
 ): AppRouteObject => {
   const baseRoute = createBaseRoute(
     permission,
-    buildCompleteRoute(permission, flattenedPermissions)
+    buildCompleteRoute(permission, flattenedPermissions),
   );
 
   if (baseRoute.meta) {
@@ -110,7 +112,7 @@ const createCatalogueRoute = (
 
   baseRoute.children = transformPermissionsToRoutes(
     children,
-    flattenedPermissions
+    flattenedPermissions,
   );
 
   if (!isEmpty(children)) {
@@ -125,11 +127,11 @@ const createCatalogueRoute = (
 
 const createMenuRoute = (
   permission: MenuEntity,
-  flattenedPermissions: MenuEntity[]
+  flattenedPermissions: MenuEntity[],
 ): AppRouteObject => {
   const baseRoute = createBaseRoute(
     permission,
-    buildCompleteRoute(permission, flattenedPermissions)
+    buildCompleteRoute(permission, flattenedPermissions),
   );
 
   if (permission.component) {
@@ -151,7 +153,7 @@ const createMenuRoute = (
 
 function transformPermissionsToRoutes(
   permissions: MenuEntity[],
-  flattenedPermissions: MenuEntity[]
+  flattenedPermissions: MenuEntity[],
 ): AppRouteObject[] {
   return permissions.map((permission) => {
     if (permission.type === PermissionType.CATALOGUE) {
@@ -163,7 +165,7 @@ function transformPermissionsToRoutes(
 
 const ROUTE_MODE = import.meta.env.VITE_APP_ROUTER_MODE;
 export function usePermissionRoutes() {
-  if (ROUTE_MODE === "module") {
+  if (ROUTE_MODE === 'module') {
     return getRoutesFromModules();
   }
 
@@ -173,6 +175,9 @@ export function usePermissionRoutes() {
 
     const flattenedPermissions = flattenTrees(permissions);
 
-    return transformPermissionsToRoutes(permissions, flattenedPermissions as any);
+    return transformPermissionsToRoutes(
+      permissions,
+      flattenedPermissions as any,
+    );
   }, [permissions]);
 }
