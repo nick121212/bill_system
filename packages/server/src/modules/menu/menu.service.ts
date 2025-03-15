@@ -20,7 +20,9 @@ export class MenuService {
   async all(): Promise<MenuEntity[]> {
     const trees = await this.repo.manager
       .getTreeRepository(MenuEntity)
-      .findTrees();
+      .findTrees({
+        relations: ["parent"],
+      });
 
     return trees;
   }
