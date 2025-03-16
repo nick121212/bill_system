@@ -40,7 +40,7 @@ export default function PermissionPage() {
       width: 200,
     },
     {
-      title: t('cls.proTemp.desc'),
+      title: t('cls.com.desc'),
       dataIndex: "desc",
       align: "center",
     },
@@ -55,7 +55,7 @@ export default function PermissionPage() {
       align: "center",
     },
     {
-      title: t('common.operation'),
+      title: t('cls.com.operation'),
       key: "operation",
       align: "center",
       width: 100,
