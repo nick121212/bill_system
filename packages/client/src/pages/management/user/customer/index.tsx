@@ -96,7 +96,7 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title="新建商品单位" onSuccess={pag.refresh} />
+          <Create title="新建客户" onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

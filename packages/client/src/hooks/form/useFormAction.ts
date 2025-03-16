@@ -39,11 +39,6 @@ export default function useFormAction(
   }, []);
 
   useEffect(() => {
-    // formRef.current
-    console.log(formRef.current);
-  }, [formRef.current]);
-
-  useEffect(() => {
     if (!error) {
       return;
     }
