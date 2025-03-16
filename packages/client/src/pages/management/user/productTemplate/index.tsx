@@ -1,23 +1,22 @@
 import { useCallback } from "react";
-import { Button, Space, Tag } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { RoleEntity, UserEntity } from "@bill/database/esm";
+import type { TemplateEntity } from "@bill/database/esm";
 
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
 
 import Create from './create';
-
-import { BasicStatus } from "#/enum";
+import Remove from './remove';
 
 export default function PermissionPage() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: "/products",
+      url: "/templates",
     },
     {
       manual: true,
@@ -33,28 +32,37 @@ export default function PermissionPage() {
   );
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<UserEntity> = [
+  const columns: ColumnsType<TemplateEntity> = [
     {
-      title: '分类',
+      title: '名称',
       dataIndex: 'name',
       align: 'center',
       width: 200,
     },
     {
-      title: "商品",
-      dataIndex: "products",
+      title: "描述",
+      dataIndex: "desc",
       align: "center",
-      render: () => <Tag color="cyan">a</Tag>,
     },
     {
-      title: "Action",
+      title: "状态",
+      dataIndex: "status",
+      align: "center",
+    },
+    {
+      title: "分类",
+      dataIndex: "categories",
+      align: "center",
+    },
+    {
+      title: "操作",
       key: "operation",
       align: "center",
       width: 100,
-      render: (_, _record) => (
+      render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          {/* <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
-          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} /> */}
+          <Create title="编辑模板" formValue={record} onSuccess={pag.refresh} />
+          <Remove title="删除角色" record={record} onSuccess={pag.refresh} />
         </div>
       ),
     },

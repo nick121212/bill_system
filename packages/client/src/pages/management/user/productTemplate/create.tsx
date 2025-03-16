@@ -1,29 +1,19 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin, Flex } from 'antd';
+import { Button, Drawer, Form, Space, Spin, Card, Input } from 'antd';
+
 import { useTranslation } from 'react-i18next';
-import debounce from 'lodash/debounce';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ProductCategoryEntity } from '@bill/database/esm';
-import useAxios from 'axios-hooks';
+import { PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+import type { TemplateEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
-import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';
-import {
-  AutoFields,
-  AutoForm,
-  ErrorsField,
-  TextAreaField,
-  AutoField,
-  SelectField,
-} from '@/uniforms/fields';
 
 import schema from './schemas/create.json';
-import { where } from 'ramda';
+import CatProd from './catProd';
 
 export type ProductModalProps = {
-  formValue?: ProductCategoryEntity;
+  formValue?: TemplateEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -52,51 +42,41 @@ export default function TemplateCreateModal({
   } = useFormAction(
     formRef,
     {
-      url: '/product/templates',
-      method: 'POST',
+      url: '/templates',
+      method: formValue?.id ? 'PUT' : 'POST',
     },
     onSuccessCall,
   );
-  const {
-    rows: categories,
-    loading: cateLoad,
-    onSearch: onCateSearch,
-  } = useData<ProductCategoryEntity[]>('product/categories');
-
-  const debouncedOnCateSearch = debounce((val) => {
-    onCateSearch({ name: val });
-  }, 800);
-
-  const [{ data: productList }, productFetch] = useAxios(
-    {
-      url: `products`,
-    },
-    {
-      manual: true,
-    },
-  );
-
-  useEffect(() => {
-    console.log(111666, productList);
-  }, [productList]);
 
   return (
     <>
-      <Button
+      {formValue?.id ? (
+        <Button
+        type="text"
+        shape="circle"
         loading={loadingAjax}
-        type="link"
-        icon={<PlusOutlined />}
+        icon={<EditOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
-      >
-        {t('crud.create.buttonText')}
-      </Button>
+      />
+      ) : (
+        <Button
+          loading={loadingAjax}
+          type="link"
+          icon={<PlusOutlined />}
+          onClick={() => {
+            setShowModal(true);
+          }}
+        >
+          {t('crud.create.buttonText')}
+        </Button>
+      )}
 
       <Drawer
         title={title}
         destroyOnClose
-        width={720}
+        width={'100%'}
         onClose={onClose}
         open={showModal}
         styles={{
@@ -109,7 +89,17 @@ export default function TemplateCreateModal({
             <Button loading={loadingAjax} onClick={onClose}>
               {t('crud.cancel')}
             </Button>
-            <Button loading={loadingAjax} onClick={onSubmit} type="primary">
+            <Button
+              loading={loadingAjax}
+              onClick={async () => {
+                const res = await formRef.current.validateFields();
+                callAjax({
+                  data: { ...res, status: 1 },
+                });
+                onSubmit();
+              }}
+              type="primary"
+            >
               {t('crud.confirm')}
             </Button>
           </Space>
@@ -121,63 +111,52 @@ export default function TemplateCreateModal({
           preserve={false}
           layout="horizontal"
           labelAlign="right"
+          ref={formRef}
         >
           <Spin spinning={loadingAjax}>
-            <AutoForm
-              ref={formRef as any}
-              showInlineError
-              schema={bridge}
-              model={formValue as any}
-              onSubmit={(formData) => {
-                setFormData(formData);
-                callAjax({
-                  data: formData,
-                });
-              }}
-            >
-              <ErrorsField />
-
-              <AutoFields fields={['name']} />
-
-              <SelectField
-                loading={cateLoad}
-                name="categoryId"
-                options={
-                  cateLoad
-                    ? []
-                    : categories?.map((c) => {
-                        return {
-                          label: c.name,
-                          value: c.id,
-                        };
-                      })
-                }
-                showSearch
-                filterOption={false}
-                notFoundContent={!cateLoad ? <Spin size="small" /> : null}
-                onSearch={debouncedOnCateSearch}
-                onChange={(val) => {
-                  if (!val) return;
-                  productFetch({
-                    params: {
-                      skip: 0,
-                      take: 99,
-                      where: {
-                        category: {
-                          id: val,
-                        },
-                      },
-                    },
-                  });
-                }}
-              />
-
-              {
-                // categoryId有值时，product字段才会显示
-                // !!productList?.count && <ListItemField name="product" />
-              }
-              <TextAreaField name="desc" />
-            </AutoForm>
+            <Form.Item label="模板名称" name="name">
+              <Input />
+            </Form.Item>
+            <Form.Item label="描述" name="desc">
+              <Input.TextArea />
+            </Form.Item>
+            <Form.List name="categories">
+              {(fields, { add, remove }) => (
+                <Form.Item label="产品">
+                  <Space size={10} direction="vertical">
+                    {fields.map((field, index) => (
+                      <Card
+                        key={field.key}
+                        title={`分类${index + 1}`}
+                        extra={
+                          fields.length > 1 && (
+                            <Button
+                              type="text"
+                              icon={<CloseOutlined />}
+                              onClick={() => remove(field.name)}
+                            />
+                          )
+                        }
+                      >
+                        <Form.Item key={field.key} name={[field.name]}>
+                          <CatProd />
+                        </Form.Item>
+                      </Card>
+                    ))}
+                  </Space>
+                  <Form.Item>
+                    <Button
+                      type="dashed"
+                      onClick={() => add()}
+                      style={{ width: '100%', marginTop: 10 }}
+                      icon={<PlusOutlined />}
+                    >
+                      新增
+                    </Button>
+                  </Form.Item>
+                </Form.Item>
+              )}
+            </Form.List>
           </Spin>
         </Form>
       </Drawer>
