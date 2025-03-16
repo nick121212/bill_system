@@ -154,7 +154,8 @@
     },
     "customer": {
       "title": "客户",
-      "list": "客户管理"
+      "list": "客户管理",
+      "detail": "客户详情"
     },
     "company": {
       "title": "公司管理"

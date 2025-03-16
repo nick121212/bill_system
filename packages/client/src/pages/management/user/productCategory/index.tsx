@@ -5,13 +5,13 @@ import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductCategoryEntity } from '@bill/database/esm';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 import TablePage from '@/components/table';
 import Create from './create';
-import Edit from "./edit";
-import Remove from "./remove";
-import Search from "./search";
+import Edit from './edit';
+import Remove from './remove';
+import Search from './search';
 import usePagination from '@/hooks/data/usePagination';
 
 export default function ProductCategory() {
@@ -36,36 +36,44 @@ export default function ProductCategory() {
 
   const columns: ColumnsType<ProductCategoryEntity> = [
     {
-      title: '分类名称',
+      title: t('cls.proCategory.name'),
       dataIndex: 'name',
       align: 'center',
     },
     {
-      title: '标签',
+      title: t('cls.proCategory.label'),
       dataIndex: 'label',
       align: 'center',
     },
     {
-      title: '描述',
+      title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
     },
     {
-      title: '创建时间',
+      title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
       width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '操作',
+      title: t('cls.com.operation'),
       key: 'operation',
       align: 'center',
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Edit title="编辑商品分类" formValue={record} onSuccess={pag.refresh} />
-          <Remove title="删除" record={record} onSuccess={pag.refresh} />
+          <Edit
+            title={t('cls.proCategory.modal.eTitle')}
+            formValue={record}
+            onSuccess={pag.refresh}
+          />
+          <Remove
+            title={t('cls.proCategory.modal.dTitle')}
+            record={record}
+            onSuccess={pag.refresh}
+          />
         </Space>
       ),
     },
@@ -75,7 +83,10 @@ export default function ProductCategory() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title="新建商品分类" onSuccess={pag.refresh} />
+          <Create
+            title={t('cls.proCategory.modal.cTitle')}
+            onSuccess={pag.refresh}
+          />
           <Button
             icon={<ReloadOutlined />}
             type="text"

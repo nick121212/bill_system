@@ -1,23 +1,22 @@
 import { useCallback } from "react";
-import { Button, Space, Tag } from "antd";
+import { Button, Space } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import useAxios from "axios-hooks";
 import { useTranslation } from "react-i18next";
 import { ReloadOutlined } from "@ant-design/icons";
-import type { RoleEntity, UserEntity } from "@bill/database/esm";
+import type { TemplateEntity } from "@bill/database/esm";
 
 import TablePage from "@/components/table";
 import usePagination from "@/hooks/data/usePagination";
 
 import Create from './create';
-
-import { BasicStatus } from "#/enum";
+import Remove from './remove';
 
 export default function PermissionPage() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: "/products",
+      url: "/templates",
     },
     {
       manual: true,
@@ -33,28 +32,37 @@ export default function PermissionPage() {
   );
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<UserEntity> = [
+  const columns: ColumnsType<TemplateEntity> = [
     {
-      title: '分类',
+      title: t('cls.proTemp.name'),
       dataIndex: 'name',
       align: 'center',
       width: 200,
     },
     {
-      title: "商品",
-      dataIndex: "products",
+      title: t('cls.com.desc'),
+      dataIndex: "desc",
       align: "center",
-      render: () => <Tag color="cyan">a</Tag>,
     },
     {
-      title: "Action",
+      title: t('cls.proTemp.status'),
+      dataIndex: "status",
+      align: "center",
+    },
+    {
+      title: t('cls.proTemp.categories'),
+      dataIndex: "categories",
+      align: "center",
+    },
+    {
+      title: t('cls.com.operation'),
       key: "operation",
       align: "center",
       width: 100,
-      render: (_, _record) => (
+      render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          {/* <Edit title="编辑角色" formValue={record} onSuccess={pag.refresh} />
-          <Remove title="删除角色" formValue={record} onSuccess={pag.refresh} /> */}
+          <Create title={t('cls.proTemp.modal.eTitle')} formValue={record} onSuccess={pag.refresh} />
+          <Remove title={t('cls.proTemp.modal.dTitle')} record={record} onSuccess={pag.refresh} />
         </div>
       ),
     },
@@ -64,7 +72,7 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          <Create title="新建模板" onSuccess={pag.refresh} />
+          <Create title={t('cls.proTemp.modal.cTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"
