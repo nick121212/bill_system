@@ -7,26 +7,34 @@ import {
   Card,
   Typography,
   InputNumber,
+  Drawer,
+  Table,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined } from '@ant-design/icons';
-import type { ProductCategoryEntity, ProductUnitEntity, ProductEntity } from '@bill/database/esm';
-import { useParams } from '@/router/hooks';
+import { EyeOutlined } from '@ant-design/icons';
+import type {
+  ProductCategoryEntity,
+  ProductUnitEntity,
+  ProductEntity,
+} from '@bill/database/esm';
 
-import TablePage from '@/components/table';
-import Remove from './remove';
 
 const { Title } = Typography;
+
+interface IProps {
+  id: number;
+  title: string;
+}
 
 interface IDataSource extends ProductEntity {
   discount: number;
 }
 
-export default function PermissionPage() {
-  const { id } = useParams();
+export default function CustomerDetail({ id, title }: IProps) {
   const { t } = useTranslation();
+  const [showModal, setShowModal] = useState(false);
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
   const [{ data: rows, loading, error: apiError }, refresh] = useAxios({
     url: `/customers/${id}/products`,
@@ -60,6 +68,7 @@ export default function PermissionPage() {
   useEffect(() => {
     if (postData) {
       message.success('保存成功');
+      setShowModal(false);
       refresh();
     }
   }, [postData]);
@@ -84,7 +93,7 @@ export default function PermissionPage() {
   const handleChangeDiscount = (proId: number, value: number) => {
     const updatedRows = dataSource.map((item) => {
       if (item.id === proId) {
-       item.customerPrices![0].discount = value;
+        item.customerPrices![0].discount = value;
       }
       return item;
     });
@@ -165,88 +174,103 @@ export default function PermissionPage() {
   ];
 
   return (
-    <TablePage
-      extra={
-        <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Button
-            loading={saveLoad}
-            type="primary"
-            onClick={() => {
-              const res = dataSource.map((item) => {
-                return {
-                  productId: item.id,
-                  price: item.customerPrices?.[0]?.price,
-                  discount: item.customerPrices?.[0]?.discount,
-                };
-              });
-              executePost({
-                data: {
-                  prices: res,
+    <>
+      <Button
+        type="text"
+        shape="circle"
+        icon={<EyeOutlined />}
+        onClick={() => {
+          setShowModal(true);
+        }}
+      />
+
+      <Drawer
+        title={title}
+        destroyOnClose
+        width={'100%'}
+        onClose={() => setShowModal(false)}
+        open={showModal}
+        styles={{
+          body: {
+            paddingBottom: 20,
+          },
+        }}
+        extra={
+          <Space>
+            <Button onClick={() => setShowModal(false)}>
+              {t('crud.cancel')}
+            </Button>
+            <Button
+              loading={saveLoad}
+              onClick={() => {
+                const res = dataSource.map((item) => {
+                  return {
+                    productId: item.id,
+                    price: item.customerPrices?.[0]?.price,
+                    discount: item.customerPrices?.[0]?.discount,
+                  };
+                });
+                executePost({
+                  data: {
+                    prices: res,
+                  },
+                });
+              }}
+              type="primary"
+            >
+              {t('crud.save')}
+            </Button>
+          </Space>
+        }
+      >
+        <Space size={10} direction="vertical">
+          <Card variant="borderless">
+            <Descriptions
+              items={[
+                {
+                  key: '1',
+                  label: '客户名称',
+                  children: info?.fullname,
                 },
-              });
-            }}
-          >
-            保存
-          </Button>
-          <Button
-            icon={<ReloadOutlined />}
-            type="text"
-            onClick={() => {
-              refresh();
-            }}
-          >
-            {t('common.redo')}
-          </Button>
+                {
+                  key: '2',
+                  label: '客户邮箱',
+                  children: info?.email,
+                },
+                {
+                  key: '3',
+                  label: '客户手机',
+                  children: info?.phone,
+                },
+                {
+                  key: '4',
+                  label: '客户地址',
+                  children: info?.address,
+                },
+                {
+                  key: '5',
+                  label: '客户折扣',
+                  children: info?.discount,
+                },
+                {
+                  key: '5',
+                  label: '客户简介',
+                  children: info?.desc,
+                },
+              ]}
+            />
+          </Card>
+          <Table
+            title={() => <Title level={5}>商品列表</Title>}
+            rowKey="id"
+            loading={loading}
+            dataSource={dataSource || []}
+            columns={columns}
+            pagination={false}
+            scroll={{ x: 1200 }}
+          />
         </Space>
-      }
-      tableProps={{
-        title: () => <Title level={5}>商品列表</Title>,
-        size: 'small',
-        rowKey: 'id',
-        loading,
-        pagination: false,
-        dataSource,
-        columns,
-        scroll: { x: 1200 },
-        style: { padding: '0 24px' },
-      }}
-    >
-      <Card title="客户信息" variant="borderless">
-        <Descriptions
-          items={[
-            {
-              key: '1',
-              label: '客户名称',
-              children: info?.fullname,
-            },
-            {
-              key: '2',
-              label: '客户邮箱',
-              children: info?.email,
-            },
-            {
-              key: '3',
-              label: '客户手机',
-              children: info?.phone,
-            },
-            {
-              key: '4',
-              label: '客户地址',
-              children: info?.address,
-            },
-            {
-              key: '5',
-              label: '客户折扣',
-              children: info?.discount,
-            },
-            {
-              key: '5',
-              label: '客户简介',
-              children: info?.desc,
-            },
-          ]}
-        />
-      </Card>
-    </TablePage>
+      </Drawer>
+    </>
   );
 }
