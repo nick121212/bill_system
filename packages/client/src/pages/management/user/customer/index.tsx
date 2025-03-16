@@ -39,45 +39,49 @@ export default function ProductUnit() {
 
   const columns: ColumnsType<CustomerEntity> = [
     {
-      title: '客户名称',
+      title: t('cls.customer.name'),
       dataIndex: 'fullname',
       align: 'center',
     },
     {
-      title: '客户邮箱',
+      title: t('cls.customer.email'),
       dataIndex: 'email',
       align: 'center',
     },
     {
-      title: '客户手机',
+      title: t('cls.customer.phone'),
       dataIndex: 'phone',
       align: 'center',
     },
     {
-      title: '客户地址',
+      title: t('cls.customer.address'),
       dataIndex: 'address',
       align: 'center',
     },
     {
-      title: '客户简介',
+      title: t('cls.customer.desc'),
       dataIndex: 'desc',
       align: 'center',
     },
     {
-      title: '创建时间',
+      title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
       width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '操作',
+      title: t('cls.com.operation'),
       key: 'operation',
       align: 'center',
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Edit title="编辑" record={record} onSuccess={pag.refresh} />
+          <Edit
+            title={t('cls.customer.modal.eTitle')}
+            record={record}
+            onSuccess={pag.refresh}
+          />
           <Button
             type="text"
             shape="circle"
@@ -86,7 +90,11 @@ export default function ProductUnit() {
               routerPush(`/customer/detail/${record.id}`);
             }}
           />
-          <Remove title="删除" record={record} onSuccess={pag.refresh} />
+          <Remove
+            title={t('cls.customer.modal.dTitle')}
+            record={record}
+            onSuccess={pag.refresh}
+          />
         </Space>
       ),
     },
@@ -96,7 +104,7 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title="新建商品单位" onSuccess={pag.refresh} />
+          <Create title={t('cls.customer.modal.cTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

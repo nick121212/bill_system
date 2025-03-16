@@ -34,35 +34,35 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<TemplateEntity> = [
     {
-      title: '名称',
+      title: t('cls.proTemp.name'),
       dataIndex: 'name',
       align: 'center',
       width: 200,
     },
     {
-      title: "描述",
+      title: t('cls.proTemp.desc'),
       dataIndex: "desc",
       align: "center",
     },
     {
-      title: "状态",
+      title: t('cls.proTemp.status'),
       dataIndex: "status",
       align: "center",
     },
     {
-      title: "分类",
+      title: t('cls.proTemp.categories'),
       dataIndex: "categories",
       align: "center",
     },
     {
-      title: "操作",
+      title: t('common.operation'),
       key: "operation",
       align: "center",
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Create title="编辑模板" formValue={record} onSuccess={pag.refresh} />
-          <Remove title="删除角色" record={record} onSuccess={pag.refresh} />
+          <Create title={t('cls.proTemp.modal.eTitle')} formValue={record} onSuccess={pag.refresh} />
+          <Remove title={t('cls.proTemp.modal.dTitle')} record={record} onSuccess={pag.refresh} />
         </div>
       ),
     },
@@ -72,7 +72,7 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          <Create title="新建模板" onSuccess={pag.refresh} />
+          <Create title={t('cls.proTemp.modal.cTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

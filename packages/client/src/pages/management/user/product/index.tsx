@@ -38,65 +38,65 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<ProductEntity> = [
     {
-      title: '名称',
+      title: t('cls.product.name'),
       dataIndex: 'name',
       align: 'center',
     },
     {
-      title: '标签',
+      title: t('cls.product.label'),
       dataIndex: 'label',
       align: 'center',
     },
     {
-      title: '价格',
+      title: t('cls.product.price'),
       dataIndex: 'price',
       align: 'center',
     },
     {
-      title: '成本',
+      title: t('cls.product.cost'),
       dataIndex: 'cost',
       align: 'center',
     },
     {
-      title: '单位',
+      title: t('cls.product.unit'),
       dataIndex: 'unit',
       align: 'center',
       render: (obj: ProductUnitEntity) => obj?.name,
     },
     {
-      title: '分类',
+      title: t('cls.product.category'),
       dataIndex: 'category',
       align: 'center',
       render: (obj: ProductCategoryEntity) => obj?.name,
     },
     {
-      title: '介绍',
+      title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
       width: "15%",
       ellipsis: true,
     },
     {
-      title: '创建时间',
+      title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
       width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '操作',
+      title: t('cls.com.operation'),
       key: 'operation',
       align: 'center',
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
           <Edit
-            title="编辑产品"
+            title={t('cls.product.modal.eTitle')}
             record={record}
             onSuccess={onSuccess}
           />
           <Remove
-            title="删除商品"
+            title={t('cls.product.modal.dTitle')}
             record={record}
             onSuccess={onSuccess}
           />
@@ -116,7 +116,7 @@ export default function PermissionPage() {
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
           <Create
-            title="新建产品"
+            title={t('cls.product.modal.cTitle')}
             onSuccess={pag.refresh}
           />
           <Button

@@ -36,36 +36,36 @@ export default function ProductUnit() {
 
   const columns: ColumnsType<ProductUnitEntity> = [
     {
-      title: '单位名称',
+      title: t('cls.proUnit.name'),
       dataIndex: 'name',
       align: 'center',
     },
     {
-      title: '标签',
+      title: t('cls.proUnit.label'),
       dataIndex: 'label',
       align: 'center',
     },
     {
-      title: '描述',
+      title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
     },
     {
-      title: '创建时间',
+      title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
       width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
-      title: '操作',
+      title: t('cls.com.operation'),
       key: 'operation',
       align: 'center',
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Edit title="编辑" record={record} onSuccess={pag.refresh} />
-          <Remove title="删除" record={record} onSuccess={pag.refresh} />
+          <Edit title={t('cls.proUnit.modal.editTitle')} record={record} onSuccess={pag.refresh} />
+          <Remove title={t('cls.proUnit.modal.deleteTitle')} record={record} onSuccess={pag.refresh} />
         </Space>
       ),
     },
@@ -75,7 +75,7 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title="新建商品单位" onSuccess={pag.refresh} />
+          <Create title={t('cls.proUnit.modal.createTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"
