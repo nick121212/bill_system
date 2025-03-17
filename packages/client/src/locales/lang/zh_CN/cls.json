@@ -15,7 +15,8 @@
       "modal": {
         "cTitle": "新建客户",
         "eTitle": "编辑客户",
-        "dTitle": "删除客户"
+        "dTitle": "删除客户",
+        "iTitle": "客户详情"
       }
     },
     "product": {

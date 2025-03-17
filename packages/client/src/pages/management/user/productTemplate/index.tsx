@@ -1,13 +1,13 @@
-import { useCallback } from "react";
-import { Button, Space } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import useAxios from "axios-hooks";
-import { useTranslation } from "react-i18next";
-import { ReloadOutlined } from "@ant-design/icons";
-import type { TemplateEntity } from "@bill/database/esm";
+import { useCallback } from 'react';
+import { Button, Space } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import useAxios from 'axios-hooks';
+import { useTranslation } from 'react-i18next';
+import { ReloadOutlined } from '@ant-design/icons';
+import type { TemplateEntity } from '@bill/database/esm';
 
-import TablePage from "@/components/table";
-import usePagination from "@/hooks/data/usePagination";
+import TablePage from '@/components/table';
+import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
 import Remove from './remove';
@@ -16,11 +16,11 @@ export default function PermissionPage() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: "/templates",
+      url: '/templates',
     },
     {
       manual: true,
-    }
+    },
   );
   const onSuccess = useCallback(
     (formData?: unknown) => {
@@ -28,7 +28,7 @@ export default function PermissionPage() {
         params: formData,
       });
     },
-    [refresh]
+    [refresh],
   );
   const pag = usePagination(onSuccess);
 
@@ -41,28 +41,36 @@ export default function PermissionPage() {
     },
     {
       title: t('cls.com.desc'),
-      dataIndex: "desc",
-      align: "center",
+      dataIndex: 'desc',
+      align: 'center',
     },
     {
       title: t('cls.proTemp.status'),
-      dataIndex: "status",
-      align: "center",
+      dataIndex: 'status',
+      align: 'center',
     },
     {
       title: t('cls.proTemp.categories'),
-      dataIndex: "categories",
-      align: "center",
+      dataIndex: 'categories',
+      align: 'center',
     },
     {
       title: t('cls.com.operation'),
-      key: "operation",
-      align: "center",
+      key: 'operation',
+      align: 'center',
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Create title={t('cls.proTemp.modal.eTitle')} formValue={record} onSuccess={pag.refresh} />
-          <Remove title={t('cls.proTemp.modal.dTitle')} record={record} onSuccess={pag.refresh} />
+          <Create
+            title={t('cls.proTemp.modal.eTitle')}
+            formValue={record}
+            onSuccess={pag.refresh}
+          />
+          <Remove
+            title={t('cls.proTemp.modal.dTitle')}
+            record={record}
+            onSuccess={pag.refresh}
+          />
         </div>
       ),
     },
@@ -71,8 +79,11 @@ export default function PermissionPage() {
   return (
     <TablePage
       extra={
-        <Space direction="horizontal" size="small" style={{ display: "flex" }}>
-          <Create title={t('cls.proTemp.modal.cTitle')} onSuccess={pag.refresh} />
+        <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
+          <Create
+            title={t('cls.proTemp.modal.cTitle')}
+            onSuccess={pag.refresh}
+          />
           <Button
             icon={<ReloadOutlined />}
             type="text"
@@ -80,13 +91,13 @@ export default function PermissionPage() {
               pag.refresh();
             }}
           >
-            {t("common.redo")}
+            {t('common.redo')}
           </Button>
         </Space>
       }
       tableProps={{
-        size: "small",
-        rowKey: "id",
+        size: 'small',
+        rowKey: 'id',
         pagination: {
           pageSize: pag.pageSize,
           current: pag.page,

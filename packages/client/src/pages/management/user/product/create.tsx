@@ -32,8 +32,6 @@ const bridge = getBridge(schema as SomeJSONSchema);
 export default function ProductCreateModal({
   title,
   onSuccess,
-  // units,
-  // categories
 }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
