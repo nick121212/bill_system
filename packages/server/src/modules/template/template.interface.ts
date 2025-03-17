@@ -7,12 +7,25 @@ import {
 
 import { BaseQuery } from "@/common/interfaces/query";
 
+export class TemplateCategoryProduct {
+  @IsNumber()
+  productId: number;
+  @IsNumber()
+  price: number;
+  @IsNumber()
+  count: number;
+}
+
 export class TemplateCategory {
+  @IsString()
+  name: string;
+
   @IsNumber()
   productCategoryId: number;
+
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
-  products: number[];
+  products: TemplateCategoryProduct[];
 }
 
 export class TemplateBodyRequest {

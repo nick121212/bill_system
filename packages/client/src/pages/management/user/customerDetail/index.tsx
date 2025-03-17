@@ -13,9 +13,10 @@ import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductCategoryEntity, ProductUnitEntity, ProductEntity } from '@bill/database/esm';
-import { useParams } from '@/router/hooks';
 
 import TablePage from '@/components/table';
+import { useParams } from '@/router/hooks';
+
 import Remove from './remove';
 
 const { Title } = Typography;
@@ -175,8 +176,8 @@ export default function PermissionPage() {
               const res = dataSource.map((item) => {
                 return {
                   productId: item.id,
-                  price: item.price,
-                  discount: item.discount,
+                  price: item.customerPrices?.[0].price,
+                  discount: item.customerPrices?.[0].discount
                 };
               });
               executePost({

@@ -4,6 +4,7 @@ import {
   ProductCategoryEntity,
   ProductEntity,
   TemplateCategoryEntity,
+  TemplateCategoryProductEntity,
   TemplateEntity,
 } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
@@ -62,7 +63,9 @@ export class TemplateService {
   ): Promise<TemplateEntity> {
     const { categories, ...rest } = body;
     const child = new TemplateEntity().extend({
-      ...rest,
+      // ...rest,
+      name: rest.name,
+      desc: rest.desc,
       companyId: user?.companyId,
       userId: user?.id,
     });
@@ -96,12 +99,13 @@ export class TemplateService {
         const templateCategory = new TemplateCategoryEntity().extend({
           template: template,
           category: productCategory,
+          name: c.name
         });
         categories.push(entityManager.save(templateCategory));
 
         for (const p of c.products) {
           const product = await entityManager.findOneBy(ProductEntity, {
-            id: p,
+            id: p.productId,
           });
 
           if (!product) {
@@ -116,12 +120,19 @@ export class TemplateService {
             );
           }
 
-          products.push(entityManager.save(product));
+          products.push(
+            entityManager.save(
+              new TemplateCategoryProductEntity().extend({
+                product: product,
+                price: p.price,
+                count: p.count,
+              })
+            )
+          );
         }
       }
 
       await Promise.all([...categories, ...products]).catch((e) => {
-        console.log(e);
         throw e;
       });
 

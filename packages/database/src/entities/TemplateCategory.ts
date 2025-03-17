@@ -6,6 +6,7 @@ import {
   JoinColumn,
   ManyToOne,
   ManyToMany,
+  Column,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
@@ -18,6 +19,11 @@ import { TemplateEntity } from "./Template";
 export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    default: "",
+  })
+  name: string;
 
   @ManyToMany(() => TemplateEntity)
   @JoinColumn()
