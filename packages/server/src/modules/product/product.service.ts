@@ -33,7 +33,7 @@ export class ProductService {
         ...query.where,
         ...(name ? { name: Like(`%${name}%`) } : {}),
         companyId: user?.companyId,
-        userId: user.id,
+        // userId: user.id,
       },
       relations: {
         category: true,

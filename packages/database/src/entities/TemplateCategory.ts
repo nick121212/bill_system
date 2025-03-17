@@ -5,13 +5,16 @@ import {
   CreateDateColumn,
   JoinColumn,
   ManyToOne,
-  ManyToMany,
   Column,
+  // OneToMany,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
 import { ProductCategoryEntity } from "./ProductCategory";
-import { TemplateEntity } from "./Template";
+
+// import { TemplateEntity } from "./Template";
+
+// import { TemplateEntity } from "./Template";
 
 @Entity({
   name: "template_category",
@@ -25,13 +28,18 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
   })
   name: string;
 
-  @ManyToMany(() => TemplateEntity)
-  @JoinColumn()
-  template: TemplateEntity;
+  @Column({
+    nullable: true,
+  })
+  templateId?: number;
 
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;
+
+  // @ManyToMany(() => TemplateCategoryProductEntity)
+  // @JoinColumn()
+  // categoryProducts: TemplateCategoryProductEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

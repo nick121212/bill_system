@@ -36,6 +36,11 @@ export class MenuController {
     return this.templateService.getById(id);
   }
 
+  @Get("/:id/categories")
+  async oneWithCategories(@Param("id") id: number) {
+    return this.templateService.getByIdWithCategories(id);
+  }
+
   @Post("/")
   async create(
     @Body() body: TemplateBodyRequest,

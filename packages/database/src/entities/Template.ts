@@ -35,7 +35,8 @@ export class TemplateEntity extends BaseEntity<TemplateEntity> {
   })
   userId?: number;
 
-  // @ManyToMany(() => TemplateCategoryEntity, (category) => category.template)
+  // @OneToMany(() => TemplateCategoryEntity, (tc) => tc.template)
+  // @JoinColumn()
   // categories: TemplateCategoryEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })

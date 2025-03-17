@@ -56,9 +56,6 @@ export default function PermissionModal({
     onSuccessCall
   );
 
-  console.log(formValue);
-  
-
   return (
     <>
       <Button

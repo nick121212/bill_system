@@ -8,6 +8,9 @@ import { RoleService } from "../role/role.service";
 import { UserController } from "./user.controller";
 import { UserService } from "./user.service";
 
+console.log(entities);
+
+
 @Module({
   controllers: [UserController],
   imports: [TypeOrmModule.forFeature(entities)],

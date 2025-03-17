@@ -42,7 +42,7 @@ export class CustomerService {
       where: {
         ...query.where,
         companyId: user?.companyId,
-        userId: user.id,
+        // userId: user.id,
       },
       loadRelationIds: true,
       withDeleted: false,

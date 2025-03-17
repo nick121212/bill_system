@@ -34,7 +34,7 @@ export class ProductCategoryService {
         ...rest,
         ...(name ? { name: ILike(`%${name}%`) } : {}),
         companyId: user?.companyId,
-        userId: user?.id,
+        // userId: user?.id,
       },
     });
 

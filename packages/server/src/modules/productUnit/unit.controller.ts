@@ -44,7 +44,7 @@ export class ProductUnitController {
     @Body() body: ProductUnitBodyRequest,
     @ActiveUser() user: ActiveUserData
   ) {
-    return this.ProductUnitService.create(body);
+    return this.ProductUnitService.create(body, user);
   }
 
   @Put("/:id")

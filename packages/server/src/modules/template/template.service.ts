@@ -1,4 +1,5 @@
-import { EntityManager, Repository } from "typeorm";
+import * as _ from "lodash";
+import { EntityManager, In, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   ProductCategoryEntity,
@@ -19,7 +20,11 @@ import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
 export class TemplateService {
   constructor(
     private em: EntityManager,
-    @InjectRepository(TemplateEntity) private repo: Repository<TemplateEntity>
+    @InjectRepository(TemplateEntity) private repo: Repository<TemplateEntity>,
+    @InjectRepository(TemplateCategoryEntity)
+    private repoTC: Repository<TemplateCategoryEntity>,
+    @InjectRepository(TemplateCategoryProductEntity)
+    private repoTCP: Repository<TemplateCategoryProductEntity>
   ) {}
 
   async all(
@@ -35,7 +40,7 @@ export class TemplateService {
       where: {
         ...query.where,
         companyId: user?.companyId,
-        userId: user?.id,
+        // userId: user?.id,
       },
     });
 
@@ -55,6 +60,51 @@ export class TemplateService {
     });
 
     return data || undefined;
+  }
+
+  async getByIdWithCategories(id?: number) {
+    const child = await this.getById(id);
+
+    if (!child) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK
+      );
+    }
+
+    const categories = await this.repoTC.find({
+      where: {
+        templateId: id,
+      },
+    });
+
+    const categoryProducts = await this.repoTCP.find({
+      where: {
+        templateCategory: {
+          id: In(categories.map((c) => c.id)),
+        },
+      },
+      relations: {
+        templateCategory: true,
+        product: true,
+      },
+    });
+
+    const categoryMap = _.keyBy(categories, "id");
+
+    for (const cp of categoryProducts) {
+      const category: any = categoryMap[cp.templateCategory.id];
+
+      if (category) {
+        if (!category.products) {
+          category.products = [];
+        }
+        category.products.push(cp);
+      }
+    }
+
+    return categories;
   }
 
   async create(
@@ -98,8 +148,8 @@ export class TemplateService {
         }
 
         const templateCategory = new TemplateCategoryEntity().extend({
-          template: template,
           category: productCategory,
+          templateId: child.id,
           name: c.name,
         });
         categories.push(entityManager.save(templateCategory));
@@ -121,15 +171,15 @@ export class TemplateService {
             );
           }
 
-          products.push(
-            entityManager.save(
-              new TemplateCategoryProductEntity().extend({
-                product: product,
-                price: p.price,
-                count: p.count,
-              })
-            )
-          );
+          const templateCategoryProduct =
+            new TemplateCategoryProductEntity().extend({
+              product: product,
+              price: p.price,
+              count: p.count,
+              templateCategory: templateCategory,
+            });
+
+          products.push(entityManager.save(templateCategoryProduct));
         }
       }
 

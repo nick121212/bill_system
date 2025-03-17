@@ -31,7 +31,7 @@ export class ProductUnitService {
         ...rest,
         ...(name ? { name: Like(`%${name}%`) } : {}),
         companyId: user?.companyId,
-        userId: user?.id,
+        // userId: user?.id,
       },
     });
 
