@@ -120,8 +120,8 @@ export default function CustomerDetail({ id, title }: IProps) {
         const disPrice = record.customerPrices?.[0]?.price;
         return (
           <InputNumber
-            value={disPrice || val}
-            onChange={(value) => handleChangePrice(record.id, value)}
+            value={disPrice}
+            onChange={(value) => handleChangePrice(record.id, value!)}
           />
         );
       },
@@ -134,11 +134,11 @@ export default function CustomerDetail({ id, title }: IProps) {
         const discount = record.customerPrices?.[0]?.discount;
         return (
           <InputNumber
-            value={discount || val}
+            value={discount}
             min={0}
             max={100}
             precision={0}
-            onChange={(value) => handleChangeDiscount(record.id, value)}
+            onChange={(value) => handleChangeDiscount(record.id, value!)}
           />
         );
       },
