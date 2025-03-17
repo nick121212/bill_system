@@ -52,14 +52,14 @@ export default function TemplateCreateModal({
     <>
       {formValue?.id ? (
         <Button
-        type="text"
-        shape="circle"
-        loading={loadingAjax}
-        icon={<EditOutlined />}
-        onClick={() => {
-          setShowModal(true);
-        }}
-      />
+          type="text"
+          shape="circle"
+          loading={loadingAjax}
+          icon={<EditOutlined />}
+          onClick={() => {
+            setShowModal(true);
+          }}
+        />
       ) : (
         <Button
           loading={loadingAjax}
@@ -112,6 +112,7 @@ export default function TemplateCreateModal({
           layout="horizontal"
           labelAlign="right"
           ref={formRef}
+          initialValues={formValue}
         >
           <Spin spinning={loadingAjax}>
             <Form.Item label="模板名称" name="name">
@@ -123,30 +124,24 @@ export default function TemplateCreateModal({
             <Form.List name="categories">
               {(fields, { add, remove }) => (
                 <Form.Item label="产品">
-                  <Space size={10} direction="vertical">
+                  <Space
+                    size={10}
+                    direction="vertical"
+                    style={{ width: '100%' }}
+                  >
                     {fields.map((field, index) => (
-                      <Card
-                        key={field.key}
-                        title={`分类${index + 1}`}
-                        extra={
-                          fields.length > 1 && (
-                            <Button
-                              type="text"
-                              icon={<CloseOutlined />}
-                              onClick={() => remove(field.name)}
-                            />
-                          )
-                        }
-                      >
-                        <Form.Item key={field.key} name={[field.name]}>
-                          <CatProd />
-                        </Form.Item>
-                      </Card>
+                      <Form.Item key={field.key} name={[field.name]}>
+                        <CatProd
+                          onRemove={() => remove(field.name)}
+                          index={index}
+                        />
+                      </Form.Item>
                     ))}
                   </Space>
                   <Form.Item>
                     <Button
-                      type="dashed"
+                      type="primary"
+                      variant="filled"
                       onClick={() => add()}
                       style={{ width: '100%', marginTop: 10 }}
                       icon={<PlusOutlined />}
