@@ -68,6 +68,7 @@ export class TemplateService {
       desc: rest.desc,
       companyId: user?.companyId,
       userId: user?.id,
+      status: 1,
     });
 
     return await this.em.transaction(async (entityManager: EntityManager) => {
@@ -99,7 +100,7 @@ export class TemplateService {
         const templateCategory = new TemplateCategoryEntity().extend({
           template: template,
           category: productCategory,
-          name: c.name
+          name: c.name,
         });
         categories.push(entityManager.save(templateCategory));
 
