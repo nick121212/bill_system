@@ -9,43 +9,64 @@ import {
   InputNumber,
   Drawer,
   Table,
+  Select,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
-import { EyeOutlined } from '@ant-design/icons';
+import { EyeOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import type {
   ProductCategoryEntity,
   ProductUnitEntity,
   ProductEntity,
 } from '@bill/database/esm';
-
+import { getRandomId } from '@/utils/utils';
 
 const { Title } = Typography;
+const randomId = getRandomId();
 
 interface IProps {
   id: number;
   title: string;
 }
 
-interface IDataSource extends ProductEntity {
-  discount: number;
-}
+type IDataSource = Partial<ProductEntity> & {
+  discount?: number;
+  randomId?: number;
+};
 
 export default function CustomerDetail({ id, title }: IProps) {
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   const [dataSource, setDataSource] = useState<IDataSource[]>([]);
-  const [{ data: rows, loading, error: apiError }, refresh] = useAxios({
-    url: `/customers/${id}/products`,
-  });
-  const [{ data: info }] = useAxios({
-    url: `/customers/${id}`,
-  });
+  const [{ data: rows, loading, error: apiError }, fetchRows] = useAxios(
+    {
+      url: `/customers/${id}/products`,
+    },
+    {
+      manual: true,
+    },
+  );
+  const [{ data: info }, fetchInfo] = useAxios(
+    {
+      url: `/customers/${id}`,
+    },
+    {
+      manual: true,
+    },
+  );
   const [{ data: postData, loading: saveLoad }, executePost] = useAxios(
     {
       url: `/customers/${id}/products`,
       method: 'POST',
+    },
+    {
+      manual: true,
+    },
+  );
+  const [{ data: productList }, fetchProductList] = useAxios(
+    {
+      url: '/products',
     },
     {
       manual: true,
@@ -60,7 +81,7 @@ export default function CustomerDetail({ id, title }: IProps) {
           customerPrices: [{ price: item.price, discount: 100 }],
         };
       }
-      return item;
+      return { ...item, randomId: randomId() };
     });
     setDataSource(data || []);
   }, [rows]);
@@ -69,7 +90,6 @@ export default function CustomerDetail({ id, title }: IProps) {
     if (postData) {
       message.success('保存成功');
       setShowModal(false);
-      refresh();
     }
   }, [postData]);
 
@@ -79,9 +99,17 @@ export default function CustomerDetail({ id, title }: IProps) {
     }
   }, [apiError]);
 
-  const handleChangePrice = (proId: number, value: number) => {
+  useEffect(() => {
+    if (showModal) {
+      fetchProductList({ params: { take: 99, skip: 0 } });
+      fetchRows();
+      fetchInfo();
+    }
+  }, [showModal]);
+
+  const handleChangePrice = (randomId: number, value: number) => {
     const updatedRows = dataSource.map((item) => {
-      if (item.id === proId) {
+      if (item.randomId === randomId) {
         item.customerPrices![0].price = value;
       }
       return item;
@@ -90,9 +118,9 @@ export default function CustomerDetail({ id, title }: IProps) {
     setDataSource(updatedRows);
   };
 
-  const handleChangeDiscount = (proId: number, value: number) => {
+  const handleChangeDiscount = (randomId: number, value: number) => {
     const updatedRows = dataSource.map((item) => {
-      if (item.id === proId) {
+      if (item.randomId === randomId) {
         item.customerPrices![0].discount = value;
       }
       return item;
@@ -101,11 +129,43 @@ export default function CustomerDetail({ id, title }: IProps) {
     setDataSource(updatedRows);
   };
 
+  const handleProductSelectChange = (value: number) => {
+    console.log(value);
+    const product = productList?.rows?.find((c: any) => c.id === value);
+    if (product) {
+      setDataSource(
+        dataSource.map((item) => {
+          if (!item.id) {
+            return { ...item, ...product };
+          }
+          return item;
+        }),
+      );
+    }
+  };
+
   const columns: ColumnsType<IDataSource> = [
     {
       title: '名称',
       dataIndex: 'name',
       align: 'center',
+      width: 200,
+      render: (val, record) => {
+        if (record.id) return val;
+        return (
+          <Select
+            style={{ width: '100%' }}
+            value={Number(val) || undefined}
+            showSearch
+            optionFilterProp="label"
+            options={(productList?.rows || [])?.map((c: any) => ({
+              label: c.name,
+              value: Number(c.id),
+            }))}
+            onChange={(value: number) => handleProductSelectChange(value)}
+          />
+        );
+      },
     },
     {
       title: '标签',
@@ -120,8 +180,9 @@ export default function CustomerDetail({ id, title }: IProps) {
         const disPrice = record.customerPrices?.[0]?.price;
         return (
           <InputNumber
+            disabled={!record.id}
             value={disPrice}
-            onChange={(value) => handleChangePrice(record.id, value!)}
+            onChange={(value) => handleChangePrice(record.randomId!, value!)}
           />
         );
       },
@@ -134,11 +195,12 @@ export default function CustomerDetail({ id, title }: IProps) {
         const discount = record.customerPrices?.[0]?.discount;
         return (
           <InputNumber
+            disabled={!record.id}
             value={discount}
             min={0}
             max={100}
             precision={0}
-            onChange={(value) => handleChangeDiscount(record.id, value!)}
+            onChange={(value) => handleChangeDiscount(record.randomId!, value!)}
           />
         );
       },
@@ -162,15 +224,24 @@ export default function CustomerDetail({ id, title }: IProps) {
       width: '15%',
       ellipsis: true,
     },
-    // {
-    //   title: '操作',
-    //   key: 'operation',
-    //   align: 'center',
-    //   width: 100,
-    //   render: (_, record) => (
-    //     <Remove title="删除商品" record={record} onSuccess={onSuccess} />
-    //   ),
-    // },
+    {
+      title: '操作',
+      key: 'operation',
+      align: 'center',
+      width: 100,
+      render: (_, record) => (
+        <Button
+          type="link"
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => {
+            setDataSource(
+              dataSource.filter((p) => p.randomId !== record.randomId),
+            );
+          }}
+        />
+      ),
+    },
   ];
 
   return (
@@ -262,12 +333,35 @@ export default function CustomerDetail({ id, title }: IProps) {
           </Card>
           <Table
             title={() => <Title level={5}>商品列表</Title>}
-            rowKey="id"
+            rowKey="randomId"
             loading={loading}
             dataSource={dataSource || []}
             columns={columns}
             pagination={false}
             scroll={{ x: 1200 }}
+            footer={() => (
+              <Button
+                ghost
+                style={{ width: '100%' }}
+                type="primary"
+                icon={<PlusOutlined />}
+                disabled={dataSource.some((item) => !item.id)}
+                onClick={() => {
+                  setDataSource((prev) => [
+                    ...prev,
+                    {
+                      name: '',
+                      label: '',
+                      price: 0,
+                      randomId: randomId(),
+                      customerPrices: [{ price: 0, discount: 100 }],
+                    } as IDataSource,
+                  ]);
+                }}
+              >
+                添加数据
+              </Button>
+            )}
           />
         </Space>
       </Drawer>

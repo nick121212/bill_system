@@ -1,6 +1,7 @@
 {
   "cls": {
     "com": {
+      "idx": "序号",
       "desc": "描述",
       "createTime": "创建时间",
       "updateTime": "更新时间",

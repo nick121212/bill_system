@@ -38,6 +38,13 @@ export default function ProductUnit() {
 
   const columns: ColumnsType<CustomerEntity> = [
     {
+      title: t('cls.com.idx'),
+      dataIndex: 'index',
+      align: 'center',
+      width: 80,
+      render: (_, __, index) => index + 1,
+    },
+    {
       title: t('cls.customer.name'),
       dataIndex: 'fullname',
       align: 'center',

@@ -38,6 +38,13 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<ProductEntity> = [
     {
+      title: t('cls.com.idx'),
+      dataIndex: 'index',
+      align: 'center',
+      width: 80,
+      render: (_, __, index) => index + 1,
+    },
+    {
       title: t('cls.product.name'),
       dataIndex: 'name',
       align: 'center',
