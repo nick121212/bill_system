@@ -16,8 +16,8 @@ export default function useData<T = unknown>(name: string) {
     [refetch]
   );
 
-  const onSearchDeb = debounce((val) => {
-    onSearch({ name: val });
+  const onSearchDeb = debounce((formData) => {
+    onSearch(formData);
   }, 800);
 
   return { rows: rows?.rows as T, loading, onSearch: onSearchDeb };

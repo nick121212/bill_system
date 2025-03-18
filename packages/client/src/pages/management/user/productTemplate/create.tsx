@@ -106,8 +106,8 @@ export default function TemplateCreateModal({
         }
       >
         <Form
-          labelCol={{ span: 5 }}
-          wrapperCol={{ span: 14 }}
+          labelCol={{ span: 3 }}
+          wrapperCol={{ span: 20 }}
           preserve={false}
           layout="horizontal"
           labelAlign="right"

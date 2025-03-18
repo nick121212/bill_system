@@ -1,7 +1,7 @@
-import { useEffect, useState, Key } from 'react';
+import { useEffect, useState } from 'react';
 import { Select, Table, Space, Button, Card, InputNumber, Input } from 'antd';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
-import type { ColumnsType, TableProps } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
 import type {
   ProductCategoryEntity,
   ProductUnitEntity,
@@ -28,7 +28,10 @@ interface IProps {
   onRemove: () => void;
 }
 
-type IDataSource = Partial<ProductEntity> & { num?: number; randomId?: number };
+type IDataSource = Partial<ProductEntity> & {
+  num?: number;
+  randomId?: number;
+};
 
 const randomId = getRandomId();
 
@@ -51,38 +54,35 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     loading: serachLoad,
     onSearch: debouncedOnProductSearch,
   } = useData<ProductCategoryEntity[]>('products');
-  const [title, setTitle] = useState<string>(value?.title || `分类${index + 1}`);
+  const [title, setTitle] = useState<string>(
+    value?.title || `分类${index + 1}`,
+  );
   const [categoryId, setCategoryId] = useState<number | undefined>(
     value?.productCategoryId,
   );
   const [products, setProducts] = useState<IDataSource[]>(
     value?.products || [],
   );
-  const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
   useWatch(() => {
     if (!categoryId) {
       setProducts([]);
       return;
     }
-    refresh({ params: { category: { id: categoryId } } });
+    refresh({ params: { whele: { category: { id: categoryId } } } });
   }, [categoryId]);
 
   useWatch(() => {
-    setProducts(
-      rows?.rows?.map((item: IDataSource) => ({
-        ...item,
-        randomId: randomId(),
-      })) || [],
-    );
+    // 取第一条数据
+    const first = rows?.rows?.[0];
+    first && setProducts([{ ...first, randomId: randomId() }]);
   }, [rows]);
 
   useEffect(() => {
     onChange?.({
       title,
       productCategoryId: categoryId,
-      products: selectedRowKeys.map((key) => {
-        const product = products.find((p) => p.randomId === key);
+      products: products.map((product) => {
         return {
           id: product?.id,
           price: product?.price,
@@ -90,14 +90,34 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         };
       }),
     });
-  }, [categoryId, products, selectedRowKeys, title]);
+  }, [categoryId, products, title]);
 
   const columns: ColumnsType<IDataSource> = [
     {
       title: '名称',
       dataIndex: 'name',
       align: 'center',
-      render: (val, record) => renderProductSelector(val, record),
+      width: 200,
+      render: (val: string, record: IDataSource) => {
+        if (record.id) return val;
+        return (
+          <Select
+            value={Number(val) || undefined}
+            showSearch
+            options={productList.map((c) => ({
+              label: c.name,
+              value: Number(c.id),
+            }))}
+            onSearch={(val) =>
+              debouncedOnProductSearch({
+                name: val,
+                category: { id: categoryId },
+              })
+            }
+            onChange={(value: number) => handleProductSelectChange(value)}
+          />
+        );
+      },
     },
     {
       title: '标签',
@@ -133,6 +153,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       render: (val, record) => (
         <InputNumber
           disabled={!record.id}
+          defaultValue={1}
           value={val}
           min={1}
           precision={0}
@@ -144,7 +165,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       title: '操作',
       key: 'operation',
       align: 'center',
-      width: 100,
+      width: 80,
       render: (_, record) => (
         <Button
           type="link"
@@ -176,7 +197,6 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
               return {
                 ...pro,
                 ...p,
-                randomId: randomId(),
               };
             }
             return pro;
@@ -184,22 +204,6 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         );
       }
     });
-  };
-
-  const renderProductSelector = (val: string, record: IDataSource) => {
-    if (record.id) return val;
-    return (
-      <Select
-        value={Number(val) || undefined}
-        showSearch
-        options={productList.map((c) => ({
-          label: c.name,
-          value: Number(c.id),
-        }))}
-        onSearch={debouncedOnProductSearch}
-        onChange={(value: number) => handleProductSelectChange(value)}
-      />
-    );
   };
 
   // 修改列表数据
@@ -219,31 +223,6 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         return p;
       }),
     );
-  };
-
-  const rowSelection: TableProps<IDataSource>['rowSelection'] = {
-    onChange: (selectedRowKeys, selectedRows) => {
-      console.log(
-        `selectedRowKeys: ${selectedRowKeys}`,
-        'selectedRows: ',
-        selectedRows,
-      );
-      setSelectedRowKeys(selectedRowKeys);
-      onChange?.({
-        productCategoryId: categoryId,
-        products: selectedRowKeys.map((key) => {
-          const product = products.find((p) => p.randomId === key);
-          return {
-            id: product?.id,
-            num: product?.num,
-          };
-        }),
-      });
-    },
-    selectedRowKeys,
-    getCheckboxProps: (record: IDataSource) => ({
-      disabled: !record.id,
-    }),
   };
 
   return (
@@ -280,7 +259,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           }
           showSearch
           filterOption={false}
-          onSearch={debouncedOnCateSearch}
+          onSearch={(val) => debouncedOnCateSearch({ name: val })}
           allowClear
         />
         <Table
@@ -288,14 +267,14 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           dataSource={products || []}
           columns={columns}
           pagination={false}
-          rowSelection={rowSelection}
+          // scroll={{ x: 720 }}
           footer={() => (
             <Button
               ghost
               style={{ width: '100%' }}
               type="primary"
               icon={<PlusOutlined />}
-              disabled={!categoryId}
+              disabled={!categoryId || products.some((item) => !item.id)}
               onClick={() => {
                 updateProducts([
                   ...products,
@@ -305,6 +284,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
                     label: '',
                     price: 0,
                     unit: undefined,
+                    randomId: randomId(),
                   },
                 ]);
               }}

@@ -34,6 +34,13 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<TemplateEntity> = [
     {
+      title: t('cls.com.idx'),
+      dataIndex: 'index',
+      align: 'center',
+      width: 80,
+      render: (_, __, index) => index + 1,
+    },
+    {
       title: t('cls.proTemp.name'),
       dataIndex: 'name',
       align: 'center',
@@ -42,16 +49,6 @@ export default function PermissionPage() {
     {
       title: t('cls.com.desc'),
       dataIndex: 'desc',
-      align: 'center',
-    },
-    {
-      title: t('cls.proTemp.status'),
-      dataIndex: 'status',
-      align: 'center',
-    },
-    {
-      title: t('cls.proTemp.categories'),
-      dataIndex: 'categories',
       align: 'center',
     },
     {

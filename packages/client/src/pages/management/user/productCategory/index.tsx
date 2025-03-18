@@ -36,6 +36,13 @@ export default function ProductCategory() {
 
   const columns: ColumnsType<ProductCategoryEntity> = [
     {
+      title: t('cls.com.idx'),
+      dataIndex: 'index',
+      align: 'center',
+      width: 80,
+      render: (_, __, index) => index + 1,
+    },
+    {
       title: t('cls.proCategory.name'),
       dataIndex: 'name',
       align: 'center',
