@@ -73,11 +73,13 @@ export class TemplateService {
       );
     }
 
-    const categories = await this.repoTC.find({
+    const categories = (await this.repoTC.find({
       where: {
         templateId: id,
       },
-    });
+    })) as (TemplateCategoryEntity & {
+      products: TemplateCategoryProductEntity[];
+    })[];
 
     const categoryProducts = await this.repoTCP.find({
       where: {
@@ -94,7 +96,7 @@ export class TemplateService {
     const categoryMap = _.keyBy(categories, "id");
 
     for (const cp of categoryProducts) {
-      const category: any = categoryMap[cp.templateCategory.id];
+      const category = categoryMap[cp.templateCategory.id];
 
       if (category) {
         if (!category.products) {
