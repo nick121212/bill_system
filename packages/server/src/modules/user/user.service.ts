@@ -29,11 +29,6 @@ export class UserService {
       where: {
         ...rest,
         role: role?.id ? { id: ~~role.id } : undefined,
-        // ...rest,
-        // role: {
-        //   id: roleId,
-        // },
-        // role: await this.roleService.getById(roleId),
       },
       relations: {
         role: true,

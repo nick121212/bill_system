@@ -38,7 +38,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   email: string;
 
   @IsNotEmpty()
-  @Exclude()
+  @Exclude({
+    toPlainOnly: true,
+  })
   @Column()
   password: string;
 

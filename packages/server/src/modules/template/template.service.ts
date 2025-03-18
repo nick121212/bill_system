@@ -109,24 +109,24 @@ export class TemplateService {
     return categories;
   }
 
-  async create(
+  async saveData(
+    child: TemplateEntity,
     body: TemplateBodyRequest,
-    user?: ActiveUserData
-  ): Promise<TemplateEntity> {
-    const { categories, ...rest } = body;
-    const child = new TemplateEntity().extend({
-      // ...rest,
-      name: rest.name,
-      desc: rest.desc,
-      companyId: user?.companyId,
-      userId: user?.id,
-      status: 1,
-    });
-
+    remove = false
+  ) {
     return await this.em.transaction(async (entityManager: EntityManager) => {
       const template = await entityManager.save(child);
       const categories: Promise<unknown>[] = [];
       const products: Promise<unknown>[] = [];
+
+      if (remove) {
+        await this.repoTCP.delete({
+          templateId: template.id,
+        });
+        await this.repoTC.delete({
+          templateId: template.id,
+        });
+      }
 
       for (const c of body.categories) {
         const productCategory =
@@ -179,6 +179,7 @@ export class TemplateService {
               price: p.price,
               count: p.count,
               templateCategory: templateCategory,
+              templateId: child.id,
             });
 
           products.push(entityManager.save(templateCategoryProduct));
@@ -193,6 +194,23 @@ export class TemplateService {
     });
   }
 
+  async create(
+    body: TemplateBodyRequest,
+    user?: ActiveUserData
+  ): Promise<TemplateEntity> {
+    const { categories, ...rest } = body;
+    const child = new TemplateEntity().extend({
+      // ...rest,
+      name: rest.name,
+      desc: rest.desc,
+      companyId: user?.companyId,
+      userId: user?.id,
+      status: 1,
+    });
+
+    return this.saveData(child, body);
+  }
+
   async update(id: number, body: TemplateBodyRequest): Promise<TemplateEntity> {
     const child = await this.getById(id);
 
@@ -204,10 +222,13 @@ export class TemplateService {
       );
     }
 
-    child.desc = body.desc;
-    child.name = body.name;
+    child.extend({
+      desc: body.desc,
+      name: body.name,
+    });
 
-    return this.repo.save(child);
+    return this.saveData(child, body, true);
+    // return this.repo.save(child);
   }
 
   async remove(id: number) {
@@ -220,6 +241,13 @@ export class TemplateService {
         HttpStatus.OK
       );
     }
+    
+    // await this.repoTCP.delete({
+    //   templateId: child.id,
+    // });
+    // await this.repoTC.delete({
+    //   templateId: child.id,
+    // });
 
     return this.repo.softRemove(child);
   }

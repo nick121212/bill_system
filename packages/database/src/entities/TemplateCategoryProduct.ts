@@ -28,6 +28,11 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
   product: ProductEntity;
 
   @Column({
+    nullable: true,
+  })
+  templateId?: number;
+
+  @Column({
     default: 0,
   })
   price: number;
