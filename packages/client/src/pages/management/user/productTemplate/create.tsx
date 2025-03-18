@@ -1,9 +1,8 @@
 import { useCallback, useRef, useEffect } from 'react';
-import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin, Card, Input } from 'antd';
+import { Button, Drawer, Form, Space, Spin, Input } from 'antd';
 
 import { useTranslation } from 'react-i18next';
-import { PlusOutlined, CloseOutlined, EditOutlined } from '@ant-design/icons';
+import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import type {
   TemplateEntity,
   TemplateCategoryEntity,
@@ -12,9 +11,7 @@ import type {
 import useAxios from 'axios-hooks';
 
 import useFormAction from '@/hooks/form/useFormAction';
-import { getBridge } from '@/uniforms/ajv';
 
-import schema from './schemas/create.json';
 import CatProd from './catProd';
 
 export type ProductModalProps = {
@@ -27,8 +24,6 @@ type TmpCategorys = TemplateCategoryEntity & {
   products: TemplateCategoryProductEntity[];
 };
 
-const bridge = getBridge(schema as SomeJSONSchema);
-
 export default function TemplateCreateModal({
   formValue,
   title,
@@ -36,15 +31,14 @@ export default function TemplateCreateModal({
 }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const [{ data: categories, loading: categoriesLoading }, fetchCategories] =
-    useAxios(
-      {
-        url: `/templates/${formValue?.id}/categories`,
-      },
-      {
-        manual: true,
-      },
-    );
+  const [{loading: loadingCategories}, fetchCategories] = useAxios(
+    {
+      url: `/templates/${formValue?.id}/categories`,
+    },
+    {
+      manual: true,
+    },
+  );
   const onSuccessCall = useCallback(() => {
     onSuccess?.();
     setShowModal(false);
@@ -68,7 +62,22 @@ export default function TemplateCreateModal({
 
   useEffect(() => {
     if (showModal && formValue?.id) {
-      fetchCategories();
+      fetchCategories().then((res: { data: TmpCategorys[] }) => {
+        const categories = res.data;
+        formRef.current.setFieldsValue({
+          ...formValue,
+          categories: categories?.map((item: TmpCategorys) => ({
+            name: item.name,
+            productCategoryId: item.category.id,
+            products: item.products?.map((product) => ({
+              ...product,
+              name: product.product.name,
+              label: product.product.label,
+              unit: product.product.unit,
+            })),
+          })),
+        });
+      });
     }
   }, [showModal]);
 
@@ -136,21 +145,8 @@ export default function TemplateCreateModal({
           layout="horizontal"
           labelAlign="right"
           ref={formRef}
-          initialValues={{
-            ...formValue,
-            categories: categories?.map((item: TmpCategorys) => ({
-              name: item.name,
-              productCategoryId: item.products?.[0]?.templateCategory?.id,
-              products: item.products?.map((product) => ({
-                ...product,
-                name: product.product.name,
-                label: product.product.label,
-                unit: product.product.unit,
-              })),
-            })),
-          }}
         >
-          <Spin spinning={loadingAjax}>
+          <Spin spinning={loadingAjax || loadingCategories}>
             <Form.Item
               label="模板名称"
               name="name"

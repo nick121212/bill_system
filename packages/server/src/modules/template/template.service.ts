@@ -77,6 +77,9 @@ export class TemplateService {
       where: {
         templateId: id,
       },
+      relations: {
+        category: true,
+      },
     })) as (TemplateCategoryEntity & {
       products: TemplateCategoryProductEntity[];
     })[];
