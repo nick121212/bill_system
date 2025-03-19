@@ -54,9 +54,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     loading: serachLoad,
     onSearch: debouncedOnProductSearch,
   } = useData<ProductCategoryEntity[]>('products');
-  const [title, setTitle] = useState<string>(
-    value?.name || `分类${index + 1}`,
-  );
+  const [title, setTitle] = useState<string>(value?.name || `分类${index + 1}`);
   const [categoryId, setCategoryId] = useState<number | undefined>(
     value?.productCategoryId,
   );
@@ -114,7 +112,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             })}
             onSearch={(val) => {
               debouncedOnProductSearch({
-                name: val ?? undefined,
+                name: val === '' ? undefined : val,
                 category: { id: categoryId },
               });
             }}
@@ -161,7 +159,9 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           value={val}
           min={1}
           precision={0}
-          onChange={(value) => handleChangeData(record.randomId!, 'count', value)}
+          onChange={(value) =>
+            handleChangeData(record.randomId!, 'count', value)
+          }
         />
       ),
     },
@@ -263,7 +263,9 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           }
           showSearch
           filterOption={false}
-          onSearch={(val) => debouncedOnCateSearch({ name: val })}
+          onSearch={(val) =>
+            debouncedOnCateSearch({ name: val === '' ? undefined : val })
+          }
           allowClear
         />
         <Table

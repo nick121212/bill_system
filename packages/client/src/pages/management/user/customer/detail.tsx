@@ -22,6 +22,8 @@ import type {
 } from '@bill/database/esm';
 import { getRandomId } from '@/utils/utils';
 
+import useData from '@/hooks/data/useData';
+
 const { Title } = Typography;
 const randomId = getRandomId();
 
@@ -64,14 +66,11 @@ export default function CustomerDetail({ id, title }: IProps) {
       manual: true,
     },
   );
-  const [{ data: productList }, fetchProductList] = useAxios(
-    {
-      url: '/products',
-    },
-    {
-      manual: true,
-    },
-  );
+  const {
+    rows: productList,
+    loading: serachLoad,
+    onSearch: debouncedOnProductSearch,
+  } = useData<ProductCategoryEntity[]>('products');
 
   useEffect(() => {
     const data = rows?.[0]?.map((item: ProductEntity) => {
@@ -101,7 +100,6 @@ export default function CustomerDetail({ id, title }: IProps) {
 
   useEffect(() => {
     if (showModal) {
-      fetchProductList({ params: { take: 99, skip: 0 } });
       fetchRows();
       fetchInfo();
     }
@@ -130,8 +128,7 @@ export default function CustomerDetail({ id, title }: IProps) {
   };
 
   const handleProductSelectChange = (value: number) => {
-    console.log(value);
-    const product = productList?.rows?.find((c: any) => c.id === value);
+    const product = productList?.find((c) => c.id === value);
     if (product) {
       setDataSource(
         dataSource.map((item) => {
@@ -154,14 +151,21 @@ export default function CustomerDetail({ id, title }: IProps) {
         if (record.id) return val;
         return (
           <Select
+            loading={serachLoad}
             style={{ width: '100%' }}
             value={Number(val) || undefined}
             showSearch
-            optionFilterProp="label"
-            options={(productList?.rows || [])?.map((c: any) => ({
+            filterOption={false}
+            options={productList?.map((c) => ({
               label: c.name,
               value: Number(c.id),
             }))}
+            onSearch={(val) => {
+              debouncedOnProductSearch({
+                name: val === '' ? undefined : val,
+                excludeIds: dataSource.map((item) => item.id).filter(Boolean),
+              });
+            }}
             onChange={(value: number) => handleProductSelectChange(value)}
           />
         );
@@ -176,7 +180,7 @@ export default function CustomerDetail({ id, title }: IProps) {
       title: '价格',
       dataIndex: 'price',
       align: 'center',
-      render: (val, record) => {
+      render: (_, record) => {
         const disPrice = record.customerPrices?.[0]?.price;
         return (
           <InputNumber
@@ -191,7 +195,7 @@ export default function CustomerDetail({ id, title }: IProps) {
       title: '折扣',
       dataIndex: 'discount',
       align: 'center',
-      render: (val, record) => {
+      render: (_, record) => {
         const discount = record.customerPrices?.[0]?.discount;
         return (
           <InputNumber

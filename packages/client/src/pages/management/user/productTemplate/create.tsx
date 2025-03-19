@@ -31,7 +31,7 @@ export default function TemplateCreateModal({
 }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const [{loading: loadingCategories}, fetchCategories] = useAxios(
+  const [{ loading: loadingCategories }, fetchCategories] = useAxios(
     {
       url: `/templates/${formValue?.id}/categories`,
     },
@@ -64,7 +64,7 @@ export default function TemplateCreateModal({
     if (showModal && formValue?.id) {
       fetchCategories().then((res: { data: TmpCategorys[] }) => {
         const categories = res.data;
-        formRef.current.setFieldsValue({
+        const initialValues = {
           ...formValue,
           categories: categories?.map((item: TmpCategorys) => ({
             name: item.name,
@@ -76,7 +76,8 @@ export default function TemplateCreateModal({
               unit: product.product.unit,
             })),
           })),
-        });
+        };
+        formRef.current.setFieldsValue(initialValues);
       });
     }
   }, [showModal]);

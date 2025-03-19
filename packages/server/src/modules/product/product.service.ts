@@ -1,4 +1,4 @@
-import { Like, Repository } from "typeorm";
+import { Like, Repository, Not, In } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { ProductEntity } from "@bill/database/dist/entities";
 import { HttpStatus, Injectable } from "@nestjs/common";
@@ -25,13 +25,14 @@ export class ProductService {
     query: ProductQuery,
     user: ActiveUserData
   ): Promise<{ rows: ProductEntity[]; count: number }> {
-    const { name } = query.where || {};
+    const { name, excludeIds, ...otherConditions } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
+        ...otherConditions,
         ...(name ? { name: Like(`%${name}%`) } : {}),
+        ...(excludeIds ? { id: Not(In(excludeIds)) } : {}),
         companyId: user?.companyId,
         // userId: user.id,
       },

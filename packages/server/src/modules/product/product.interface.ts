@@ -27,5 +27,8 @@ export class ProductBodyRequest {
   unitId: number;
 }
 
-export class ProductQuery extends BaseQuery {}
+export class ProductQuery extends BaseQuery<{
+  name?: string;
+  excludeIds?: number[];
+}> {}
 

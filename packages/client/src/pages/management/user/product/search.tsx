@@ -67,7 +67,9 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
             })??[]}
             showSearch
             filterOption={false}
-            onSearch={val => debouncedOnUnitSearch({name: val})}
+            onSearch={(val: string) =>
+              debouncedOnUnitSearch({ name: val === '' ? undefined : val })
+            }
           />
 
           <SelectField
@@ -81,7 +83,9 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
             })??[]}
             showSearch
             filterOption={false}
-            onSearch={val => debouncedOnCateSearch({name: val})}
+            onSearch={(val: string) =>
+              debouncedOnCateSearch({ name: val === '' ? undefined : val })
+            }
           />
 
           <Space size={'small'} align="start">
