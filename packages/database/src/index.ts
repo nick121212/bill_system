@@ -11,7 +11,9 @@ import {
   TemplateEntity,
   CompanyEntity,
   ProductPriceEntity,
-  OrderEntity
+  OrderEntity,
+  OrderProductEntity,
+  OrderCategoryEntity,
 } from "./entities";
 
 export * from "./enums";
@@ -30,5 +32,7 @@ export default [
   TemplateEntity,
   CompanyEntity,
   OrderEntity,
-  ProductPriceEntity
+  ProductPriceEntity,
+  OrderProductEntity,
+  OrderCategoryEntity,
 ];

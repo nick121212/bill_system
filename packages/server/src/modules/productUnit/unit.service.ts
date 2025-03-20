@@ -53,6 +53,24 @@ export class ProductUnitService {
     return data || undefined;
   }
 
+  async getByIdWithError(id?: number): Promise<ProductUnitEntity> {
+    const category = await this.getById(id);
+
+    if (!category) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: "ProductUnitEntity",
+        }
+      );
+    }
+
+    return category;
+  }
+
   async create(
     body: ProductUnitBodyRequest,
     user?: ActiveUserData
@@ -72,15 +90,7 @@ export class ProductUnitService {
     id: number,
     body: ProductUnitBodyRequest
   ): Promise<ProductUnitEntity> {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child = await this.getByIdWithError(id);
 
     child.label = body.label;
     child.name = body.name;
@@ -90,15 +100,7 @@ export class ProductUnitService {
   }
 
   async remove(id: number) {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child = await this.getByIdWithError(id);
 
     return this.repo.remove(child);
   }

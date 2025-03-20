@@ -3,8 +3,6 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
-// import base from "@/config1/base";
-// import database from "@/config1/database";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import appConfig from "@/config/app.config";
@@ -25,6 +23,8 @@ import { RedisModule } from "@/modules/redis/redis.module";
 import { RoleModule } from "@/modules/role/role.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
+
+import { OrderModule } from "../order/order.module";
 
 @Module({
   imports: [
@@ -68,7 +68,8 @@ import { UserModule } from "@/modules/user/user.module";
     ProductUnitModule,
     RoleModule,
     CompanyModule,
-    CustomerModule
+    CustomerModule,
+    OrderModule
   ],
   providers: [
     {

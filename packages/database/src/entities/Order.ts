@@ -4,8 +4,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  JoinTable,
-  ManyToMany,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 
 import { OrderStatus } from "../enums/OrderStatus";
@@ -13,17 +13,14 @@ import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
 
 @Entity({
-  name: "product",
+  name: "order",
 })
 export class OrderEntity extends BaseEntity<OrderEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  // @Column()
-  // customerId: number;
-
-  @ManyToMany(() => CustomerEntity)
-  @JoinTable()
+  @ManyToOne(() => CustomerEntity)
+  @JoinColumn()
   customer: CustomerEntity;
 
   @Column()
@@ -31,6 +28,9 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
 
   @Column()
   totalPrice: number;
+
+  @Column()
+  discount: number;
 
   @Column({
     nullable: true,
