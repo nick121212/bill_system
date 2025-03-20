@@ -1,3 +1,4 @@
+import { Role } from "@bill/database";
 import {
   Controller,
   Request,
@@ -11,6 +12,7 @@ import {
 } from "@nestjs/common";
 
 import { Public } from "@/common/decorators/public.decorator";
+import { Roles } from "@/common/decorators/roles.decorator";
 import { Log4jsService } from "@/modules/log4js";
 
 import { RoleQuery, RoleRequest } from "./role.interface";
@@ -19,7 +21,7 @@ import { RoleService } from "./role.service";
 @Controller({
   path: ["roles"],
 })
-@Public()
+@Roles(Role.Admin)
 export class RoleController {
   constructor(
     private roleService: RoleService,

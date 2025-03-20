@@ -5,9 +5,10 @@ import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { RolesGuard } from "@/common/guard/role.guard";
 import appConfig from "@/config/app.config";
 import databaseConfig from "@/config/database.config";
-import { validate } from '@/config/env.validation';
+import { validate } from "@/config/env.validation";
 import jwtConfig from "@/config/jwt.config";
 import redisConfig from "@/config/redis.config";
 import { AuthModule } from "@/modules/auth/auth.module";
@@ -32,7 +33,7 @@ import { OrderModule } from "../order/order.module";
       envFilePath: [".env"],
       load: [appConfig, databaseConfig, jwtConfig, redisConfig],
       isGlobal: true,
-      validate
+      validate,
     }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
@@ -69,12 +70,17 @@ import { OrderModule } from "../order/order.module";
     RoleModule,
     CompanyModule,
     CustomerModule,
-    OrderModule
+    OrderModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-  ],})
+  ],
+})
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { Role } from "@bill/database";
 import {
   Controller,
   Request,
@@ -14,6 +15,7 @@ import {
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { Public } from "@/common/decorators/public.decorator";
+import { Roles } from "@/common/decorators/roles.decorator";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
 import {
@@ -25,7 +27,7 @@ import { OrderService } from "./order.service";
 @Controller({
   path: ["orders"],
 })
-@Public()
+@Roles(Role.User)
 export class OrderController {
   constructor(private orderService: OrderService) {}
 

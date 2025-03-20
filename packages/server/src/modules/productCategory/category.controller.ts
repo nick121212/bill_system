@@ -1,3 +1,4 @@
+import { Role } from "@bill/database";
 import {
   Controller,
   Request,
@@ -11,6 +12,7 @@ import {
 } from "@nestjs/common";
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { Roles } from "@/common/decorators/roles.decorator";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
@@ -23,6 +25,7 @@ import { ProductCategoryService } from "./category.service";
 @Controller({
   path: ["product/categories"],
 })
+@Roles(Role.User)
 export class ProductCategoryController {
   constructor(
     private productCategoryService: ProductCategoryService,

@@ -1,7 +1,11 @@
-import type { Repository } from "typeorm";
+import type {
+  FindOptionsRelationByString,
+  FindOptionsRelations,
+  Repository,
+} from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { UserEntity } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { Global, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 
@@ -18,6 +22,7 @@ import type {
 } from "./user.interface";
 
 @Injectable()
+@Global()
 export class UserService {
   constructor(
     private configService: ConfigService,
@@ -52,20 +57,24 @@ export class UserService {
     };
   }
 
-  async getById(id?: number): Promise<UserEntity | undefined> {
+  async getById(id?: number, relations?: FindOptionsRelations<UserEntity>): Promise<UserEntity | undefined> {
     if (!id) {
       return undefined;
     }
 
-    const data = await this.repo.findOneBy({
-      id,
+    const data = await this.repo.findOne({
+      where: { id },
+      relations,
     });
 
     return data || undefined;
   }
 
-  async getByIdWithError(id?: number): Promise<UserEntity> {
-    const user = await this.getById(id);
+  async getByIdWithError(
+    id?: number,
+    relations?: FindOptionsRelations<UserEntity>
+  ): Promise<UserEntity> {
+    const user = await this.getById(id, relations);
 
     if (!user) {
       throw new ApiException(
