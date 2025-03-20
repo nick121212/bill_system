@@ -40,6 +40,15 @@ export class UserRequest {
   role: number;
 }
 
+export class UserPasswordRequest {
+  @IsString()
+  password: string;
+  @IsString()
+  passwordNew: string;
+  @IsString()
+  passwordNewAgain: string;
+}
+
 class UserSearchModel {
   @Type(() => Boolean)
   isActive?: boolean;
