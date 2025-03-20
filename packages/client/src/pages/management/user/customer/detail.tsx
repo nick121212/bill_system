@@ -20,10 +20,10 @@ import type {
   ProductUnitEntity,
   ProductEntity,
 } from '@bill/database/esm';
-import { getRandomId } from '@/utils/utils';
+
+import useData from '@/hooks/data/useData';
 
 const { Title } = Typography;
-const randomId = getRandomId();
 
 interface IProps {
   id: number;
@@ -32,7 +32,6 @@ interface IProps {
 
 type IDataSource = Partial<ProductEntity> & {
   discount?: number;
-  randomId?: number;
 };
 
 export default function CustomerDetail({ id, title }: IProps) {
@@ -64,14 +63,11 @@ export default function CustomerDetail({ id, title }: IProps) {
       manual: true,
     },
   );
-  const [{ data: productList }, fetchProductList] = useAxios(
-    {
-      url: '/products',
-    },
-    {
-      manual: true,
-    },
-  );
+  const {
+    rows: productList,
+    loading: serachLoad,
+    onSearch: debouncedOnProductSearch,
+  } = useData<ProductCategoryEntity[]>('products');
 
   useEffect(() => {
     const data = rows?.[0]?.map((item: ProductEntity) => {
@@ -81,7 +77,7 @@ export default function CustomerDetail({ id, title }: IProps) {
           customerPrices: [{ price: item.price, discount: 100 }],
         };
       }
-      return { ...item, randomId: randomId() };
+      return item;
     });
     setDataSource(data || []);
   }, [rows]);
@@ -101,15 +97,14 @@ export default function CustomerDetail({ id, title }: IProps) {
 
   useEffect(() => {
     if (showModal) {
-      fetchProductList({ params: { take: 99, skip: 0 } });
       fetchRows();
       fetchInfo();
     }
   }, [showModal]);
 
-  const handleChangePrice = (randomId: number, value: number) => {
+  const handleChangePrice = (id: number, value: number) => {
     const updatedRows = dataSource.map((item) => {
-      if (item.randomId === randomId) {
+      if (item.id === id) {
         item.customerPrices![0].price = value;
       }
       return item;
@@ -118,9 +113,9 @@ export default function CustomerDetail({ id, title }: IProps) {
     setDataSource(updatedRows);
   };
 
-  const handleChangeDiscount = (randomId: number, value: number) => {
+  const handleChangeDiscount = (id: number, value: number) => {
     const updatedRows = dataSource.map((item) => {
-      if (item.randomId === randomId) {
+      if (item.id === id) {
         item.customerPrices![0].discount = value;
       }
       return item;
@@ -130,8 +125,7 @@ export default function CustomerDetail({ id, title }: IProps) {
   };
 
   const handleProductSelectChange = (value: number) => {
-    console.log(value);
-    const product = productList?.rows?.find((c: any) => c.id === value);
+    const product = productList?.find((c) => c.id === value);
     if (product) {
       setDataSource(
         dataSource.map((item) => {
@@ -154,14 +148,25 @@ export default function CustomerDetail({ id, title }: IProps) {
         if (record.id) return val;
         return (
           <Select
+            loading={serachLoad}
             style={{ width: '100%' }}
             value={Number(val) || undefined}
             showSearch
-            optionFilterProp="label"
-            options={(productList?.rows || [])?.map((c: any) => ({
-              label: c.name,
-              value: Number(c.id),
-            }))}
+            filterOption={false}
+            options={productList
+              ?.map((c) => ({
+                label: c.name,
+                value: Number(c.id),
+              }))
+              .filter((item) => {
+                return !dataSource.some((p) => p.id === item.value);
+              })}
+            onSearch={(val) => {
+              debouncedOnProductSearch({
+                name: val === '' ? undefined : val,
+                excludeIds: dataSource.map((item) => item.id).filter(Boolean),
+              });
+            }}
             onChange={(value: number) => handleProductSelectChange(value)}
           />
         );
@@ -176,13 +181,13 @@ export default function CustomerDetail({ id, title }: IProps) {
       title: '价格',
       dataIndex: 'price',
       align: 'center',
-      render: (val, record) => {
+      render: (_, record) => {
         const disPrice = record.customerPrices?.[0]?.price;
         return (
           <InputNumber
             disabled={!record.id}
             value={disPrice}
-            onChange={(value) => handleChangePrice(record.randomId!, value!)}
+            onChange={(value) => handleChangePrice(record.id!, value!)}
           />
         );
       },
@@ -191,7 +196,7 @@ export default function CustomerDetail({ id, title }: IProps) {
       title: '折扣',
       dataIndex: 'discount',
       align: 'center',
-      render: (val, record) => {
+      render: (_, record) => {
         const discount = record.customerPrices?.[0]?.discount;
         return (
           <InputNumber
@@ -200,7 +205,7 @@ export default function CustomerDetail({ id, title }: IProps) {
             min={0}
             max={100}
             precision={0}
-            onChange={(value) => handleChangeDiscount(record.randomId!, value!)}
+            onChange={(value) => handleChangeDiscount(record.id!, value!)}
           />
         );
       },
@@ -235,9 +240,7 @@ export default function CustomerDetail({ id, title }: IProps) {
           danger
           icon={<DeleteOutlined />}
           onClick={() => {
-            setDataSource(
-              dataSource.filter((p) => p.randomId !== record.randomId),
-            );
+            setDataSource(dataSource.filter((p) => p.id !== record.id));
           }}
         />
       ),
@@ -280,7 +283,7 @@ export default function CustomerDetail({ id, title }: IProps) {
                     price: item.customerPrices?.[0]?.price,
                     discount: item.customerPrices?.[0]?.discount,
                   };
-                });
+                }).filter((item) => item.productId);
                 executePost({
                   data: {
                     prices: res,
@@ -333,7 +336,7 @@ export default function CustomerDetail({ id, title }: IProps) {
           </Card>
           <Table
             title={() => <Title level={5}>商品列表</Title>}
-            rowKey="randomId"
+            rowKey="id"
             loading={loading}
             dataSource={dataSource || []}
             columns={columns}
@@ -353,7 +356,6 @@ export default function CustomerDetail({ id, title }: IProps) {
                       name: '',
                       label: '',
                       price: 0,
-                      randomId: randomId(),
                       customerPrices: [{ price: 0, discount: 100 }],
                     } as IDataSource,
                   ]);

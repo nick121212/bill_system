@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { EntityManager, In, Repository } from "typeorm";
+import { EntityManager, In, Not, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   ProductCategoryEntity,
@@ -34,14 +34,19 @@ export class TemplateService {
     count: number;
     rows: TemplateEntity[];
   }> {
+    const whereCondition = {
+      ...query.where,
+      companyId: user?.companyId,
+    };
+
+    if (query.ids && query.ids.length > 0) {
+      whereCondition['id'] = Not(In(query.ids));
+    }
+
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
-      where: {
-        ...query.where,
-        companyId: user?.companyId,
-        // userId: user?.id,
-      },
+      where: whereCondition,
     });
 
     return {
@@ -77,6 +82,9 @@ export class TemplateService {
       where: {
         templateId: id,
       },
+      relations: {
+        category: true,
+      },
     })) as (TemplateCategoryEntity & {
       products: TemplateCategoryProductEntity[];
     })[];
@@ -89,7 +97,9 @@ export class TemplateService {
       },
       relations: {
         templateCategory: true,
-        product: true,
+        product: {
+          unit: true,
+        },
       },
     });
 

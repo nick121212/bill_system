@@ -45,4 +45,6 @@ export class TemplateBodyRequest {
   categories: TemplateCategory[];
 }
 
-export class TemplateQuery extends BaseQuery {}
+export class TemplateQuery extends BaseQuery {
+  ids?: number[];
+}

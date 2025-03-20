@@ -65,21 +65,13 @@ export default function ProductEditModal({
   const {
     rows: categories,
     loading: cateLoad,
-    onSearch: onCateSearch,
+    onSearch: debouncedOnCateSearch,
   } = useData<ProductCategoryEntity[]>('product/categories');
   const {
     rows: units,
     loading: unitLoad,
-    onSearch: onUnitLoad,
+    onSearch: debouncedOnUnitSearch,
   } = useData<ProductUnitEntity[]>('product/units');
-
-  const debouncedOnCateSearch = debounce((val) => {
-    onCateSearch({ name: val });
-  }, 800);
-
-  const debouncedOnUnitSearch = debounce((val) => {
-    onUnitLoad({ name: val });
-  }, 800);
 
   return (
     <>
@@ -151,7 +143,11 @@ export default function ProductEditModal({
                         };
                       })
                 }
-                onSearch={debouncedOnUnitSearch}
+                showSearch
+                filterOption={false}
+                onSearch={(val: string) =>
+                  debouncedOnUnitSearch({ name: val === '' ? undefined : val })
+                }
               />
 
               <AutoField
@@ -166,7 +162,11 @@ export default function ProductEditModal({
                         };
                       })
                 }
-                onSearch={debouncedOnCateSearch}
+                showSearch
+                filterOption={false}
+                onSearch={(val: string) =>
+                  debouncedOnCateSearch({ name: val === '' ? undefined : val })
+                }
               />
 
               <TextAreaField name="desc" />
