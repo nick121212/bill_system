@@ -2,34 +2,35 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  OneToOne,
-  JoinColumn,
   UpdateDateColumn,
   CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
 } from "typeorm";
 
+import { OrderStatus } from "../enums/OrderStatus";
 import { BaseEntity } from "./Base";
-import { ProductCategoryEntity } from "./ProductCategory";
-import { ProductUnitEntity } from "./ProductUnit";
+import { CustomerEntity } from "./Customer";
 
 @Entity({
-  name: "product",
+  name: "order",
 })
 export class OrderEntity extends BaseEntity<OrderEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
-  @Column()
-  label: string;
+  @ManyToOne(() => CustomerEntity)
+  @JoinColumn()
+  customer: CustomerEntity;
 
   @Column()
   desc: string;
 
   @Column()
-  price: number;
+  totalPrice: number;
+
+  @Column()
+  discount: number;
 
   @Column({
     nullable: true,
@@ -41,13 +42,8 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   })
   userId?: number;
 
-  @OneToOne(() => ProductCategoryEntity)
-  @JoinColumn()
-  category: ProductCategoryEntity;
-
-  @OneToOne(() => ProductUnitEntity)
-  @JoinColumn()
-  unit: ProductUnitEntity;
+  @Column()
+  status: OrderStatus;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

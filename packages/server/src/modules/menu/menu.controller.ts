@@ -1,6 +1,7 @@
+import { Role } from "@bill/database";
 import { Controller, Request, Get, Post, Body, Param, Put, Delete } from "@nestjs/common";
 
-import { Public } from "@/common/decorators/public.decorator";
+import { Roles } from "@/common/decorators/roles.decorator";
 import { Log4jsService } from "@/modules/log4js";
 
 import { MenuBodyRequest } from "./menu.interface";
@@ -9,7 +10,7 @@ import { MenuService } from "./menu.service";
 @Controller({
   path: ["menus"],
 })
-@Public()
+@Roles(Role.Admin)
 export class MenuController {
   constructor(private menuService: MenuService, private readonly log4jService: Log4jsService) {
     this.log4jService.warn("abc");

@@ -10,3 +10,6 @@ export * from "./Template";
 export * from "./TemplateCategory";
 export * from "./TemplateCategoryProduct";
 export * from "./Company";
+export * from "./Order";
+export * from "./OrderProduct";
+export * from "./OrderCategory";

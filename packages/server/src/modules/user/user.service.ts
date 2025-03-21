@@ -1,18 +1,28 @@
-import type { Repository } from "typeorm";
+import type {
+  FindOptionsRelationByString,
+  FindOptionsRelations,
+  Repository,
+} from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { UserEntity } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { Global, HttpStatus, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import hashPwd from "@/common/utils/hash";
 import { RoleService } from "@/modules/role/role.service";
 
 import { CompanyService } from "../company/company.service";
-import type { UserQuery, UserRequest } from "./user.interface";
+import type {
+  UserPasswordRequest,
+  UserQuery,
+  UserRequest,
+} from "./user.interface";
 
 @Injectable()
+@Global()
 export class UserService {
   constructor(
     private configService: ConfigService,
@@ -34,25 +44,51 @@ export class UserService {
         role: true,
         company: true,
       },
+      select: ["role", "company"],
       withDeleted: false,
     });
 
     return {
-      rows,
+      rows: rows.map((u) => {
+        u.password = "";
+        return u;
+      }),
       count,
     };
   }
 
-  async getById(id?: number): Promise<UserEntity | undefined> {
+  async getById(id?: number, relations?: FindOptionsRelations<UserEntity>): Promise<UserEntity | undefined> {
     if (!id) {
       return undefined;
     }
 
-    const data = await this.repo.findOneBy({
-      id,
+    const data = await this.repo.findOne({
+      where: { id },
+      relations,
     });
 
     return data || undefined;
+  }
+
+  async getByIdWithError(
+    id?: number,
+    relations?: FindOptionsRelations<UserEntity>
+  ): Promise<UserEntity> {
+    const user = await this.getById(id, relations);
+
+    if (!user) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: "UserEntity",
+        }
+      );
+    }
+
+    return user;
   }
 
   async findOne(fullname: string, pass: string): Promise<UserEntity | null> {
@@ -84,16 +120,8 @@ export class UserService {
   }
 
   async update(id: number, body: UserRequest): Promise<UserEntity> {
-    const user = await this.getById(id);
+    const user = await this.getByIdWithError(id);
     const { password, company, role, ...rest } = body;
-
-    if (!user) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
 
     user.extend({
       ...rest,
@@ -105,16 +133,38 @@ export class UserService {
   }
 
   async remove(id: number) {
-    const child = await this.getById(id);
+    const child = await this.getByIdWithError(id);
 
-    if (!child) {
+    return this.repo.softRemove(child);
+  }
+
+  async changePassword(body: UserPasswordRequest, user: ActiveUserData) {
+    const userEntity = await this.getByIdWithError(user.id);
+
+    if (
+      userEntity.password !==
+      hashPwd(body.password, this.configService.get("app").secret)
+    ) {
       throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
+        "password not correct",
+        ApiStatusCode.PASSWORD_NOT_CORRECT,
         HttpStatus.OK
       );
     }
 
-    return this.repo.softRemove(child);
+    if (body.passwordNew !== body.passwordNewAgain) {
+      throw new ApiException(
+        "2 passwords are not match.",
+        ApiStatusCode.TWO_PASSWORDS_NOT_MATCH,
+        HttpStatus.OK
+      );
+    }
+
+    userEntity.password = hashPwd(
+      body.passwordNew,
+      this.configService.get("app").secret
+    );
+
+    return this.repo.save(userEntity);
   }
 }

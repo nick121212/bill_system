@@ -12,9 +12,9 @@ import { BaseEntity } from "./Base";
 import { ProductCategoryEntity } from "./ProductCategory";
 
 @Entity({
-  name: "template_category",
+  name: "order_category",
 })
-export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
+export class OrderCategoryEntity extends BaseEntity<OrderCategoryEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -26,7 +26,7 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
   @Column({
     nullable: true,
   })
-  templateId?: number;
+  orderId?: number;
 
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()

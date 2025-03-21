@@ -40,7 +40,7 @@ export class TemplateService {
     };
 
     if (query.ids && query.ids.length > 0) {
-      whereCondition['id'] = Not(In(query.ids));
+      whereCondition["id"] = Not(In(query.ids));
     }
 
     const [rows, count] = await this.repo.findAndCount({
@@ -67,16 +67,26 @@ export class TemplateService {
     return data || undefined;
   }
 
-  async getByIdWithCategories(id?: number) {
-    const child = await this.getById(id);
+  async getByIdWithError(id?: number): Promise<TemplateEntity> {
+    const category = await this.getById(id);
 
-    if (!child) {
+    if (!category) {
       throw new ApiException(
         "can not find recoed",
         ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
+        HttpStatus.OK,
+        {
+          id: id,
+          type: "TemplateEntity",
+        }
       );
     }
+
+    return category;
+  }
+
+  async getByIdWithCategories(id?: number) {
+    await this.getByIdWithError(id);
 
     const categories = (await this.repoTC.find({
       where: {
@@ -222,15 +232,7 @@ export class TemplateService {
   }
 
   async update(id: number, body: TemplateBodyRequest): Promise<TemplateEntity> {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child = await this.getByIdWithError(id);
 
     child.extend({
       desc: body.desc,
@@ -238,26 +240,10 @@ export class TemplateService {
     });
 
     return this.saveData(child, body, true);
-    // return this.repo.save(child);
   }
 
   async remove(id: number) {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
-    
-    // await this.repoTCP.delete({
-    //   templateId: child.id,
-    // });
-    // await this.repoTC.delete({
-    //   templateId: child.id,
-    // });
+    const child = await this.getByIdWithError(id);
 
     return this.repo.softRemove(child);
   }

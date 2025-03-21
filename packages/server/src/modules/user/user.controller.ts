@@ -1,3 +1,4 @@
+import { Role } from "@bill/database";
 import {
   Controller,
   Request,
@@ -10,14 +11,18 @@ import {
   Query,
 } from "@nestjs/common";
 
+import { ActiveUser } from "@/common/decorators/active-user.decorator";
+import { Roles } from "@/common/decorators/roles.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { Log4jsService } from "@/modules/log4js";
 
-import { UserQuery, UserRequest } from "./user.interface";
+import { UserPasswordRequest, UserQuery, UserRequest } from "./user.interface";
 import { UserService } from "./user.service";
 
 @Controller({
   path: ["users"],
 })
+@Roles(Role.Admin)
 export class UserController {
   constructor(
     private userService: UserService,
@@ -42,6 +47,14 @@ export class UserController {
   @Put("/:id")
   async update(@Param("id") id: number, @Body() body: UserRequest) {
     return this.userService.update(id, body);
+  }
+
+  @Put("/:id/password")
+  async changePassword(
+    @Body() body: UserPasswordRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.userService.changePassword(body, user);
   }
 
   @Delete("/:id")

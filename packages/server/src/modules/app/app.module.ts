@@ -3,13 +3,12 @@ import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
-// import base from "@/config1/base";
-// import database from "@/config1/database";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
+import { RolesGuard } from "@/common/guard/role.guard";
 import appConfig from "@/config/app.config";
 import databaseConfig from "@/config/database.config";
-import { validate } from '@/config/env.validation';
+import { validate } from "@/config/env.validation";
 import jwtConfig from "@/config/jwt.config";
 import redisConfig from "@/config/redis.config";
 import { AuthModule } from "@/modules/auth/auth.module";
@@ -26,13 +25,15 @@ import { RoleModule } from "@/modules/role/role.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
 
+import { OrderModule } from "../order/order.module";
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       envFilePath: [".env"],
       load: [appConfig, databaseConfig, jwtConfig, redisConfig],
       isGlobal: true,
-      validate
+      validate,
     }),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => {
@@ -68,12 +69,18 @@ import { UserModule } from "@/modules/user/user.module";
     ProductUnitModule,
     RoleModule,
     CompanyModule,
-    CustomerModule
+    CustomerModule,
+    OrderModule,
   ],
   providers: [
     {
       provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-  ],})
+  ],
+})
 export class AppModule {}
