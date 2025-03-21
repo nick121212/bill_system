@@ -21,6 +21,7 @@ import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import {
   OrderQuery,
   OrderRequest,
+  OrderStatusRequest,
 } from "./order.interface";
 import { OrderService } from "./order.service";
 
@@ -61,6 +62,15 @@ export class OrderController {
     @ActiveUser() user: ActiveUserData
   ) {
     return this.orderService.update(id, body);
+  }
+
+  @Put("/:id/status")
+  async updateStatus(
+    @Param("id") id: number,
+    @Body() body: OrderStatusRequest,
+    @ActiveUser() user: ActiveUserData
+  ) {
+    return this.orderService.changeStatus(id, body);
   }
 
   @Delete("/:id")

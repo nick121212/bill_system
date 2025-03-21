@@ -3,7 +3,10 @@ import {
   ArrayMinSize,
   IsNumber,
   IsString,
+  Max,
+  Min,
 } from "class-validator";
+import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
 
 import { BaseQuery } from "@/common/interfaces/query";
 
@@ -40,14 +43,18 @@ export class OrderRequest {
   @IsNumber()
   customerId?: number;
 
-  // @IsNumber({
-  //   allowNaN: true,
-  // })
   totalPrice?: number;
 
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
   categories: OrderCategory[];
+}
+
+export class OrderStatusRequest {
+  @IsNumber()
+  @Max(2)
+  @Min(0)
+  status?: OrderStatus;
 }
 
 export class OrderQuery extends BaseQuery {}

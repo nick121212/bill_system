@@ -16,7 +16,12 @@ import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
 import { CustomerService } from "../customer/customer.service";
-import { OrderProduct, OrderQuery, OrderRequest } from "./order.interface";
+import {
+  OrderProduct,
+  OrderQuery,
+  OrderRequest,
+  OrderStatusRequest,
+} from "./order.interface";
 
 @Injectable()
 export class OrderService {
@@ -241,6 +246,29 @@ export class OrderService {
     order.extend(rest);
 
     return this.saveData(order, body, true);
+  }
+
+  async changeStatus(
+    id: number,
+    body: OrderStatusRequest
+  ): Promise<OrderEntity> {
+    const order = await this.getByIdWithError(id);
+
+    order.extend(body);
+
+    if (order.status !== OrderStatus.UNPAYED) {
+      throw new ApiException(
+        "Status has been closed.",
+        ApiStatusCode.UNKOWN_ERROR,
+        HttpStatus.OK
+      );
+    }
+
+    if (body.status === OrderStatus.UNPAYED) {
+      return order;
+    }
+
+    return this.em.save(OrderEntity, order);
   }
 
   async remove(id: number) {
