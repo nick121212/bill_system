@@ -1,4 +1,4 @@
-import _ from "lodash";
+import * as _ from "lodash";
 import { EntityManager, In, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
