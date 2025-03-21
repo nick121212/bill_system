@@ -61,6 +61,17 @@
         "eTitle": "编辑单位",
         "dTitle": "删除单位"
       }
+    },
+    "order": {
+      "num": "订单编号",
+      "name": "订单名称",
+      "customer": "客户名称",
+      "status": "订单状态",
+      "modal": {
+        "cTitle": "新建订单",
+        "eTitle": "编辑订单",
+        "dTitle": "删除订单"
+      }
     }
   }
 }

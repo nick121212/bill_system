@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Select, Table, Space, Button, Card, InputNumber, Input } from 'antd';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -12,6 +12,7 @@ import useAxios from 'axios-hooks';
 import useData from '@/hooks/data/useData';
 import useWatch from '@/hooks/data/useWatch';
 import { getRandomId } from '@/utils/utils';
+import { fShortenNumber } from '@/utils/format-number';
 
 interface IProps {
   value?: {
@@ -26,16 +27,20 @@ interface IProps {
   }) => void;
   index: number;
   onRemove: () => void;
+  cusProductData?: ProductEntity[];
 }
 
 type IDataSource = Partial<ProductEntity> & {
   count?: number;
+  discount?: number;
   randomId?: number;
+  product?: ProductEntity;
 };
 
 const randomId = getRandomId();
 
-export default function CatProd({ value, onChange, index, onRemove }: IProps) {
+export default function CatProd(props: IProps) {
+  const { value, onChange, index, onRemove, cusProductData } = props;
   const {
     rows: categories,
     loading: cateLoad,
@@ -58,12 +63,31 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   const [categoryId, setCategoryId] = useState<number | undefined>(
     value?.productCategoryId,
   );
+  // 获取客户配置的产品价格及折扣
+  const getCustomerPrice = (proId: number) => {
+    if (!proId) return { price: 0, discount: 100 };
+    const cusProduct = cusProductData?.find((p) => p.id === proId);
+    return {
+      price: cusProduct?.customerPrices?.[0]?.price || 0,
+      discount: cusProduct?.customerPrices?.[0]?.discount || 100,
+    };
+  };
   const [products, setProducts] = useState<IDataSource[]>(
-    value?.products?.map((item) => ({
-      ...item,
-      randomId: randomId(),
-    })) || [],
+    value?.products?.map((item) => {
+      const res = {
+        ...item,
+        randomId: randomId(),
+      };
+      if (!res.discount) {
+        const { price, discount } = getCustomerPrice(res?.product?.id || 0);
+        res.price = price;
+        res.discount = discount;
+      }
+      return res;
+    }) || [],
   );
+  // 每行总价集合
+  const rowTotalPrices = useRef<number[]>([]);
 
   useWatch(() => {
     if (!categoryId) {
@@ -76,7 +100,16 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   useWatch(() => {
     // 取第一条数据
     const first = rows?.rows?.[0];
-    first && setProducts([{ ...first, randomId: randomId() }]);
+    const { price, discount } = getCustomerPrice(first?.id!);
+    first &&
+      setProducts([
+        {
+          ...first,
+          randomId: randomId(),
+          price: price || first.price,
+          discount,
+        },
+      ]);
   }, [rows]);
 
   useEffect(() => {
@@ -87,11 +120,18 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         return {
           id: product?.id,
           price: product?.price,
-          count: product?.count,
+          count: product?.count ?? 1,
+          discount: product?.discount,
         };
       }),
     });
-  }, [categoryId, products, title]);
+  }, [categoryId, title, products]);
+
+  // 单行总价
+  const handleTotalPrice = (record: IDataSource) => {
+    const { price = 0, discount = 100, count = 1 } = record;
+    return fShortenNumber(price * count * (discount / 100));
+  };
 
   const columns: ColumnsType<IDataSource> = [
     {
@@ -146,6 +186,26 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       },
     },
     {
+      title: '折扣',
+      dataIndex: 'discount',
+      align: 'center',
+      render: (discount = 100, record) => {
+        return (
+          <InputNumber
+            disabled={!record.id}
+            value={discount}
+            min={0}
+            max={100}
+            precision={0}
+            placeholder="0-100"
+            onChange={(value) =>
+              handleChangeData(record.randomId!, 'discount', value!)
+            }
+          />
+        );
+      },
+    },
+    {
       title: '单位',
       dataIndex: 'unit',
       align: 'center',
@@ -167,6 +227,16 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           }
         />
       ),
+    },
+    {
+      title: '总价',
+      dataIndex: 'totalPrice',
+      align: 'center',
+      render: (_, record, index) => {
+        const res = handleTotalPrice(record);
+        rowTotalPrices.current[index] = Number(res);
+        return res;
+      },
     },
     {
       title: '操作',
@@ -191,6 +261,18 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   // 更新列表数据
   const updateProducts = (newProducts: IDataSource[]) => {
     setProducts(newProducts);
+    onChange?.({
+      name: title,
+      productCategoryId: categoryId,
+      products: newProducts.map((product) => {
+        return {
+          id: product?.id,
+          price: product?.price,
+          count: product?.count ?? 1,
+          discount: product?.discount,
+        };
+      }),
+    });
   };
 
   // 选择产品
@@ -201,9 +283,12 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         updateProducts(
           products.map((pro) => {
             if (!pro.id) {
+              const { price, discount } = getCustomerPrice(p.id!);
               return {
                 ...pro,
                 ...p,
+                price,
+                discount,
               };
             }
             return pro;
@@ -219,27 +304,57 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     key: keyof IDataSource,
     value: number | undefined,
   ) => {
-    updateProducts(
-      products.map((p) => {
-        if (p.randomId === id) {
-          return {
-            ...p,
-            [key]: value,
-          };
-        }
-        return p;
-      }),
-    );
+    const updatedProducts = products.map((p) => {
+      if (p.randomId === id) {
+        return {
+          ...p,
+          [key]: value,
+        };
+      }
+      return p;
+    });
+
+    updateProducts(updatedProducts);
   };
 
   return (
     <Card
       title={
-        <Input
-          style={{ width: 200 }}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <Space size={10}>
+          <Input
+            style={{ width: 300 }}
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Select
+            style={{ width: 500 }}
+            loading={cateLoad}
+            value={categoryId}
+            onChange={(value) => {
+              setCategoryId(value);
+            }}
+            options={
+              categories?.map((c) => {
+                return {
+                  label: c.name,
+                  value: c.id,
+                };
+              }) ?? []
+            }
+            showSearch
+            filterOption={false}
+            onSearch={(val) =>
+              debouncedOnCateSearch({ name: val === '' ? undefined : val })
+            }
+            allowClear
+          />
+          <div>
+            总价：
+            {rowTotalPrices.current.filter(Boolean).reduce((pre, cur) => {
+              return pre + cur;
+            }, 0)}
+          </div>
+        </Space>
       }
       extra={
         <Button
@@ -249,60 +364,38 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         />
       }
     >
-      <Space direction="vertical" size={10} style={{ width: '100%' }}>
-        <Select
-          loading={cateLoad}
-          value={categoryId}
-          onChange={(value) => {
-            setCategoryId(value);
-          }}
-          options={
-            categories?.map((c) => {
-              return {
-                label: c.name,
-                value: c.id,
-              };
-            }) ?? []
-          }
-          showSearch
-          filterOption={false}
-          onSearch={(val) =>
-            debouncedOnCateSearch({ name: val === '' ? undefined : val })
-          }
-          allowClear
-        />
-        <Table
-          rowKey="randomId"
-          dataSource={products || []}
-          columns={columns}
-          pagination={false}
-          // scroll={{ x: 720 }}
-          footer={() => (
-            <Button
-              ghost
-              style={{ width: '100%' }}
-              type="primary"
-              icon={<PlusOutlined />}
-              disabled={!categoryId || products.some((item) => !item.id)}
-              onClick={() => {
-                updateProducts([
-                  ...products,
-                  {
-                    id: undefined,
-                    name: '',
-                    label: '',
-                    price: 0,
-                    unit: undefined,
-                    randomId: randomId(),
-                  },
-                ]);
-              }}
-            >
-              添加数据
-            </Button>
-          )}
-        />
-      </Space>
+      <Table
+        rowKey="randomId"
+        size="small"
+        dataSource={products || []}
+        columns={columns}
+        pagination={false}
+        // scroll={{ x: 720 }}
+        footer={() => (
+          <Button
+            ghost
+            style={{ width: '100%' }}
+            type="primary"
+            icon={<PlusOutlined />}
+            disabled={!categoryId || products.some((item) => !item.id)}
+            onClick={() => {
+              updateProducts([
+                ...products,
+                {
+                  id: undefined,
+                  name: '',
+                  label: '',
+                  price: 0,
+                  unit: undefined,
+                  randomId: randomId(),
+                },
+              ]);
+            }}
+          >
+            添加数据
+          </Button>
+        )}
+      />
     </Card>
   );
 }
