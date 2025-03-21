@@ -38,7 +38,12 @@ export class OrderRequest {
   desc: string;
 
   @IsNumber()
-  totalPrice: number;
+  customerId?: number;
+
+  // @IsNumber({
+  //   allowNaN: true,
+  // })
+  totalPrice?: number;
 
   @ArrayMinSize(1)
   @ArrayMaxSize(100)

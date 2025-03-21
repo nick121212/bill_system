@@ -29,6 +29,9 @@ export class UserEntity extends BaseEntity<UserEntity> {
   @Column()
   fullname: string;
 
+  @Column({ default: "" })
+  Abbreviation?: string;
+
   @ManyToOne(() => CompanyEntity)
   @JoinColumn()
   company?: CompanyEntity;

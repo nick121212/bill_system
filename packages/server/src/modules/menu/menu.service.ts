@@ -49,6 +49,24 @@ export class MenuService {
     return menu || undefined;
   }
 
+  async getByIdWithError(id?: number): Promise<MenuEntity> {
+    const menu = await this.getById(id);
+
+    if (!menu) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: "MenuEntity",
+        }
+      );
+    }
+
+    return menu;
+  }
+
   async create(body: MenuBodyRequest): Promise<MenuEntity> {
     const { id, parentId, ...rest } = body;
 
@@ -62,15 +80,7 @@ export class MenuService {
   }
 
   async update(id: number, body: MenuBodyRequest): Promise<MenuEntity> {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child = await this.getByIdWithError(id);
 
     child.icon = body.icon;
     child.label = body.label;

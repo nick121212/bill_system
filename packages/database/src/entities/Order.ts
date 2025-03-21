@@ -28,6 +28,9 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: "" })
+  no?: string;
+
   /**
    * 订单关联的客户信息
    * @type {CustomerEntity}

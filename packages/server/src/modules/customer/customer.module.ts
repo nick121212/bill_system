@@ -1,5 +1,5 @@
 import entities from "@bill/database";
-import { Module } from "@nestjs/common";
+import { Global, Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { MenuService } from "@/modules/menu/menu.service";
@@ -14,4 +14,5 @@ import { CustomerService } from "./customer.service";
   providers: [CustomerService],
   exports: [CustomerService],
 })
+@Global()
 export class CustomerModule {}

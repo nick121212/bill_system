@@ -8,12 +8,14 @@ import {
   ProductCategoryEntity,
   ProductEntity,
 } from "@bill/database/dist/entities";
+import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
 import { HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
+import { CustomerService } from "../customer/customer.service";
 import { OrderProduct, OrderQuery, OrderRequest } from "./order.interface";
 
 @Injectable()
@@ -24,7 +26,8 @@ export class OrderService {
     @InjectRepository(OrderCategoryEntity)
     private repoCate: Repository<OrderCategoryEntity>,
     @InjectRepository(OrderProductEntity)
-    private repoPro: Repository<OrderProductEntity>
+    private repoPro: Repository<OrderProductEntity>,
+    private customerService: CustomerService
   ) {}
 
   async all(
@@ -123,8 +126,16 @@ export class OrderService {
   }
 
   async saveData(child: OrderEntity, body: OrderRequest, remove = false) {
+    const customer = await this.customerService.getByIdWithError(
+      body.customerId
+    );
     return await this.em.transaction(async (entityManager: EntityManager) => {
-      const order = await entityManager.save(child);
+      const order = await entityManager.save(OrderEntity, {
+        ...child,
+        totalPrice: 0,
+        discount: customer.discount,
+        status: OrderStatus.UNPAYED,
+      });
       const categories: Promise<unknown>[] = [];
       const products: Promise<unknown>[] = [];
 
@@ -136,6 +147,8 @@ export class OrderService {
           orderId: order.id,
         });
       }
+
+      order.totalPrice = 0;
 
       for (const c of body.categories) {
         const productCategory =
@@ -160,7 +173,7 @@ export class OrderService {
 
         const orderCategory = new OrderCategoryEntity().extend({
           category: productCategory,
-          orderId: child.id,
+          orderId: order.id,
           name: c.name,
         });
         categories.push(entityManager.save(orderCategory));
@@ -189,14 +202,21 @@ export class OrderService {
             discount: p.discount,
             count: p.count,
             orderCategory: orderCategory,
-            orderId: child.id,
+            orderId: order.id,
+            totalPrice: p.count * p.price * (p.discount / 100),
           });
+
+          order.totalPrice += orderProduct.totalPrice;
 
           products.push(entityManager.save(orderProduct));
         }
       }
-
-      await Promise.all([...categories, ...products]).catch((e) => {
+      await entityManager.save(OrderEntity, order);
+      await Promise.all([
+        ...categories,
+        ...products,
+        // entityManager.save(order),
+      ]).catch((e) => {
         throw e;
       });
 
@@ -205,7 +225,7 @@ export class OrderService {
   }
 
   async create(body: OrderRequest, user: ActiveUserData): Promise<OrderEntity> {
-    const { ...rest } = body;
+    const { categories, ...rest } = body;
     const order = new OrderEntity().extend({
       ...rest,
       companyId: user.companyId,
@@ -217,7 +237,7 @@ export class OrderService {
 
   async update(id: number, body: OrderRequest): Promise<OrderEntity> {
     const order = await this.getByIdWithError(id);
-    const { ...rest } = body;
+    const { categories, ...rest } = body;
 
     order.extend(rest);
 

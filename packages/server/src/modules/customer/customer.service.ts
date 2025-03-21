@@ -68,7 +68,7 @@ export class CustomerService {
     return data || undefined;
   }
 
-  async getPriceById(id?: number) {
+  async getByIdWithError(id?: number): Promise<CustomerEntity> {
     const customer = await this.getById(id);
 
     if (!customer) {
@@ -78,10 +78,16 @@ export class CustomerService {
         HttpStatus.OK,
         {
           id: id,
-          entity: "CustomerEntity",
+          type: "CustomerEntity",
         }
       );
     }
+
+    return customer;
+  }
+
+  async getPriceById(id?: number) {
+    const customer = await this.getByIdWithError(id);
 
     return this.repoForProduct
       .createQueryBuilder("product")
@@ -100,19 +106,7 @@ export class CustomerService {
   }
 
   async savePrices(id: number, body: CustomerPriceRequest) {
-    const customer = await this.getById(id);
-
-    if (!customer) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK,
-        {
-          id: id,
-          entity: "CustomerEntity",
-        }
-      );
-    }
+    const customer = await this.getByIdWithError(id);
 
     return this.repo.manager.transaction(
       async (entityManager: EntityManager) => {
@@ -159,20 +153,8 @@ export class CustomerService {
   }
 
   async update(id: number, body: CustomerRequest): Promise<CustomerEntity> {
-    const customer = await this.getById(id);
+    const customer = await this.getByIdWithError(id);
     const { ...rest } = body;
-
-    if (!customer) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK,
-        {
-          id: id,
-          entity: "CustomerEntity",
-        }
-      );
-    }
 
     customer.extend(rest);
 
@@ -180,15 +162,7 @@ export class CustomerService {
   }
 
   async remove(id: number) {
-    const customer = await this.getById(id);
-
-    if (!customer) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const customer = await this.getByIdWithError(id);
 
     return this.repo.softRemove(customer);
   }
