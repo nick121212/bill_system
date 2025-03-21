@@ -10,6 +10,7 @@ import {
   Row,
   Col,
   message,
+  Modal,
 } from 'antd';
 
 import { useTranslation } from 'react-i18next';
@@ -49,7 +50,8 @@ export default function OrderCreateModal({
   const [form] = Form.useForm();
   const formRef = useRef<any>();
   const customer = Form.useWatch('customer', form);
-  const templateId = Form.useWatch('templateId', form);
+  // const templateId = Form.useWatch('templateId', form);
+  const [templateId, setTemplateId] = useState<number | undefined>(undefined);
   const [{ loading: loadingCategories }, fetchCategories] = useAxios(
     {
       url: `/templates/${templateId}/categories`,
@@ -122,12 +124,39 @@ export default function OrderCreateModal({
     }
   }, [templateId]);
 
-
   useEffect(() => {
     if (customer) {
       fetchCustomerProduct();
     }
   }, [customer]);
+
+  const handleTemplateChange = (newTemplateId: number) => {
+    if (!customer) {
+      message.error('请选择客户');
+      form.setFieldsValue({ templateId: ''});
+      return false;
+    }
+    if (newTemplateId === templateId) {
+      return;
+    }
+    if (!templateId) {
+      form.setFieldsValue({ templateId: newTemplateId });
+      setTemplateId(newTemplateId);
+      return;
+    }
+
+    Modal.confirm({
+      title: '切换模板确认',
+      content: '切换模板将重置已设置的产品，是否继续？',
+      onOk: () => {
+        form.setFieldsValue({ templateId: newTemplateId });
+        setTemplateId(newTemplateId);
+      },
+      onCancel: () => {
+        form.setFieldsValue({ templateId: templateId });
+      },
+    });
+  }
 
   return (
     <>
@@ -236,11 +265,14 @@ export default function OrderCreateModal({
                       label: template.name,
                       value: template.id,
                     }))}
+                    value={templateId}
+                    showSearch
                     onSearch={(val) => {
                       debouncedOnTemplateSearch({
                         name: val === '' ? undefined : val,
                       });
                     }}
+                    onChange={handleTemplateChange}
                   />
                 </Form.Item>
               </Col>
@@ -308,7 +340,7 @@ export default function OrderCreateModal({
                           message.error('请选择客户和模板');
                           return;
                         }
-                        add()
+                        add();
                       }}
                       style={{ width: '100%', marginTop: 10 }}
                       icon={<PlusOutlined />}
