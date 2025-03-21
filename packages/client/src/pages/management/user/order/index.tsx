@@ -4,13 +4,13 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
-import type { TemplateEntity } from '@bill/database/esm';
+import type { OrderEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
-// import Remove from './remove';
+import Remove from './remove';
 // import Search from './search';
 
 export default function OrderPage() {
@@ -33,7 +33,7 @@ export default function OrderPage() {
   );
   const pag = usePagination(onSuccess);
 
-  const columns: ColumnsType<TemplateEntity> = [
+  const columns: ColumnsType<OrderEntity> = [
     {
       title: t('cls.com.idx'),
       dataIndex: 'index',
@@ -57,26 +57,26 @@ export default function OrderPage() {
       dataIndex: 'desc',
       align: 'center',
     },
-    // {
-    //   title: t('cls.com.operation'),
-    //   key: 'operation',
-    //   align: 'center',
-    //   width: 100,
-    //   render: (_, record) => (
-    //     <div className="flex w-full justify-center text-gray">
-    //       <Create
-    //         title={t('cls.order.modal.eTitle')}
-    //         formValue={record}
-    //         onSuccess={pag.refresh}
-    //       />
-    //       <Remove
-    //         title={t('cls.order.modal.dTitle')}
-    //         record={record}
-    //         onSuccess={pag.refresh}
-    //       />
-    //     </div>
-    //   ),
-    // },
+    {
+      title: t('cls.com.operation'),
+      key: 'operation',
+      align: 'center',
+      width: 100,
+      render: (_, record) => (
+        <div className="flex w-full justify-center text-gray">
+          {/* <Create
+            title={t('cls.order.modal.eTitle')}
+            formValue={record}
+            onSuccess={pag.refresh}
+          /> */}
+          <Remove
+            title={t('cls.order.modal.dTitle')}
+            record={record}
+            onSuccess={pag.refresh}
+          />
+        </div>
+      ),
+    },
   ];
 
   return (
