@@ -44,7 +44,6 @@ export class OrderService {
       relations: {
         customer: true,
       },
-      withDeleted: false,
     });
 
     return {
