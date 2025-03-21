@@ -10,14 +10,14 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
-import Remove from './remove';
-import Search from './search';
+// import Remove from './remove';
+// import Search from './search';
 
-export default function PermissionPage() {
+export default function OrderPage() {
   const { t } = useTranslation();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
-      url: '/templates',
+      url: '/orders',
     },
     {
       manual: true,
@@ -42,36 +42,41 @@ export default function PermissionPage() {
       render: (_, __, index) => index + 1,
     },
     {
-      title: t('cls.proTemp.name'),
+      title: t('cls.order.name'),
       dataIndex: 'name',
       align: 'center',
       width: 200,
+    },
+    {
+      title: t('cls.order.customer'),
+      dataIndex: 'customer',
+      align: 'center',
     },
     {
       title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
     },
-    {
-      title: t('cls.com.operation'),
-      key: 'operation',
-      align: 'center',
-      width: 100,
-      render: (_, record) => (
-        <div className="flex w-full justify-center text-gray">
-          <Create
-            title={t('cls.proTemp.modal.eTitle')}
-            formValue={record}
-            onSuccess={pag.refresh}
-          />
-          <Remove
-            title={t('cls.proTemp.modal.dTitle')}
-            record={record}
-            onSuccess={pag.refresh}
-          />
-        </div>
-      ),
-    },
+    // {
+    //   title: t('cls.com.operation'),
+    //   key: 'operation',
+    //   align: 'center',
+    //   width: 100,
+    //   render: (_, record) => (
+    //     <div className="flex w-full justify-center text-gray">
+    //       <Create
+    //         title={t('cls.order.modal.eTitle')}
+    //         formValue={record}
+    //         onSuccess={pag.refresh}
+    //       />
+    //       <Remove
+    //         title={t('cls.order.modal.dTitle')}
+    //         record={record}
+    //         onSuccess={pag.refresh}
+    //       />
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
@@ -79,7 +84,7 @@ export default function PermissionPage() {
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
           <Create
-            title={t('cls.proTemp.modal.cTitle')}
+            title={t('cls.order.modal.cTitle')}
             onSuccess={pag.refresh}
           />
           <Button
@@ -111,13 +116,13 @@ export default function PermissionPage() {
         columns,
       }}
     >
-      <Search
+      {/* <Search
         loading={loading}
         onSuccess={(searchData: unknown) => {
           pag.setPage(1);
           pag.setSearchData(searchData);
         }}
-      />
+      /> */}
     </TablePage>
   );
 }
