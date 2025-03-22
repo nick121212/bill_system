@@ -48,7 +48,6 @@ export class AuthService {
       user.role?.id ?? 0
     );
 
-    // user.permissions = PERMISSION_LIST;
     user.permissions = role.menus;
 
     return await this.generateAccessToken(user);
@@ -56,6 +55,19 @@ export class AuthService {
 
   async signOut(userId: string): Promise<void> {
     return this.redisService.delete(`user-${userId}`);
+  }
+
+  async profile(user: ActiveUserData): Promise<Partial<UserEntity>> {
+    const userEntity = await this.usersService.getByIdWithError(user.id, {
+      role: true,
+    });
+    const role = await this.roleService.getByIdWithPermission(
+      userEntity.role?.id ?? 0
+    );
+
+    userEntity.permissions = role.menus;
+
+    return userEntity;
   }
 
   async generateAccessToken(

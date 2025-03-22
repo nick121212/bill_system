@@ -10,6 +10,7 @@ import {
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { Public } from "@/common/decorators/public.decorator";
+import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
 import { AuthRequest } from "./auth.interface";
 import { AuthService } from "./auth.service";
@@ -32,10 +33,9 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Get("profile")
   profile(
-    @ActiveUser("id") userId: string,
-    @Request() req: Request
+    @ActiveUser() user: ActiveUserData
   ): Promise<unknown> {
-    return Promise.resolve((req as RequestWithUser).user);
+    return this.authService.profile(user);
   }
 
   @HttpCode(HttpStatus.OK)
