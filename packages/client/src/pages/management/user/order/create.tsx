@@ -16,6 +16,8 @@ import {
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import type {
+  OrderEntity,
+  OrderCategoryEntity,
   TemplateEntity,
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
@@ -27,12 +29,12 @@ import useFormAction from '@/hooks/form/useFormAction';
 import useData from '@/hooks/data/useData';
 import { getRandomId } from '@/utils/utils';
 
-import CatProd from './catProd';
+import CatProd, { IValue } from './catProd';
 
 const randomId = getRandomId();
 
 export type ProductModalProps = {
-  formValue?: TemplateEntity;
+  formValue?: OrderEntity;
   title: string;
   onSuccess: () => void;
 };
@@ -49,12 +51,20 @@ export default function OrderCreateModal({
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const formRef = useRef<any>();
-  const customer = Form.useWatch('customer', form);
+  const customerId = Form.useWatch('customerId', form);
   // const templateId = Form.useWatch('templateId', form);
   const [templateId, setTemplateId] = useState<number | undefined>(undefined);
-  const [{ loading: loadingCategories }, fetchCategories] = useAxios(
+  const [{ loading: tempCateLoading }, fetchTmpCategories] = useAxios(
     {
       url: `/templates/${templateId}/categories`,
+    },
+    {
+      manual: true,
+    },
+  );
+  const [{ loading: orderCateLoading }, fetchOrderCategories] = useAxios(
+    {
+      url: `/orders/${formValue?.id}/categories`,
     },
     {
       manual: true,
@@ -94,7 +104,7 @@ export default function OrderCreateModal({
 
   const [{ data: cusProductData }, fetchCustomerProduct] = useAxios(
     {
-      url: `/customers/${customer}/products`,
+      url: `/customers/${customerId}/products`,
     },
     {
       manual: true,
@@ -104,8 +114,34 @@ export default function OrderCreateModal({
   const [catProdKey, setCatProdKey] = useState<number>(randomId());
 
   useEffect(() => {
+    // 编辑回显
+    if (showModal && formValue?.id) {
+      fetchOrderCategories().then((res: { data: TmpCategorys[] }) => {
+        console.log(666, res)
+        const categories = res.data;
+        const initialValues = {
+          ...formValue,
+          categories: categories?.map((item: TmpCategorys) => ({
+            name: item.name,
+            productCategoryId: item.category.id,
+            products: item.products?.map((product) => ({
+              ...product,
+              name: product.product.name,
+              label: product.product.label,
+              unit: product.product.unit,
+              randomId: randomId(),
+            })),
+          })),
+        };
+        form.setFieldsValue(initialValues);
+      });
+    }
+  }, [showModal]);
+
+  useEffect(() => {
+    // 切换模板回显
     if (templateId) {
-      fetchCategories().then((res: { data: TmpCategorys[] }) => {
+      fetchTmpCategories().then((res: { data: TmpCategorys[] }) => {
         const categories = res.data?.map((item: TmpCategorys) => ({
           id: item.id,
           name: item.name,
@@ -125,16 +161,16 @@ export default function OrderCreateModal({
   }, [templateId]);
 
   useEffect(() => {
-    if (customer) {
+    if (customerId) {
       fetchCustomerProduct();
     }
-  }, [customer]);
+  }, [customerId]);
 
   const handleTemplateChange = (newTemplateId: number) => {
-    if (!customer) {
+    if (!customerId) {
       message.error('请选择客户');
-      form.setFieldsValue({ templateId: ''});
-      return false;
+      form.setFieldsValue({ templateId: '' });
+      return;
     }
     if (newTemplateId === templateId) {
       return;
@@ -156,7 +192,7 @@ export default function OrderCreateModal({
         form.setFieldsValue({ templateId: templateId });
       },
     });
-  }
+  };
 
   return (
     <>
@@ -203,8 +239,17 @@ export default function OrderCreateModal({
               loading={loadingAjax}
               onClick={async () => {
                 const res = await formRef.current.validateFields();
+                let { categories, templateId, ...restVal } = res;
+                let total = 0;
+                categories = categories.map((item: IValue) => {
+                  const { totalPrice = 0, ...rest } = item;
+                  total += totalPrice;
+                  return {
+                    ...rest,
+                  };
+                });
                 callAjax({
-                  data: { ...res },
+                  data: { ...restVal, categories, totalPrice: total },
                 });
                 onSubmit();
               }}
@@ -238,7 +283,7 @@ export default function OrderCreateModal({
               <Col xs={24} sm={12} md={6}>
                 <Form.Item
                   label="客户"
-                  name="customer"
+                  name="customerId"
                   rules={[{ required: true, message: '请选择客户' }]}
                 >
                   <Select
@@ -336,7 +381,7 @@ export default function OrderCreateModal({
                       type="primary"
                       variant="filled"
                       onClick={() => {
-                        if (!customer || !templateId) {
+                        if (!customerId || !templateId) {
                           message.error('请选择客户和模板');
                           return;
                         }
