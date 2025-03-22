@@ -35,7 +35,7 @@ export class OrderCategory {
 
 export class OrderRequest {
   @IsString()
-  name: string;
+  no: string;
 
   @IsString()
   desc: string;

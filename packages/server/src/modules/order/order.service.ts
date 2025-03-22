@@ -137,6 +137,7 @@ export class OrderService {
       const order = await entityManager.save(OrderEntity, {
         ...child,
         totalPrice: 0,
+        no: body.no,
         discount: customer.discount,
         status: OrderStatus.UNPAYED,
         customer: customer,
