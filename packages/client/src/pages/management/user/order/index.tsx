@@ -64,11 +64,11 @@ export default function OrderPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          {/* <Create
+          <Create
             title={t('cls.order.modal.eTitle')}
             formValue={record}
             onSuccess={pag.refresh}
-          /> */}
+          />
           <Remove
             title={t('cls.order.modal.dTitle')}
             record={record}

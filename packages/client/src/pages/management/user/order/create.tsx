@@ -54,9 +54,17 @@ export default function OrderCreateModal({
   const customerId = Form.useWatch('customerId', form);
   // const templateId = Form.useWatch('templateId', form);
   const [templateId, setTemplateId] = useState<number | undefined>(undefined);
-  const [{ loading: loadingCategories }, fetchCategories] = useAxios(
+  const [{ loading: tempCateLoading }, fetchTmpCategories] = useAxios(
     {
       url: `/templates/${templateId}/categories`,
+    },
+    {
+      manual: true,
+    },
+  );
+  const [{ loading: orderCateLoading }, fetchOrderCategories] = useAxios(
+    {
+      url: `/orders/${formValue?.id}/categories`,
     },
     {
       manual: true,
@@ -106,8 +114,34 @@ export default function OrderCreateModal({
   const [catProdKey, setCatProdKey] = useState<number>(randomId());
 
   useEffect(() => {
+    // 编辑回显
+    if (showModal && formValue?.id) {
+      fetchOrderCategories().then((res: { data: TmpCategorys[] }) => {
+        console.log(666, res)
+        const categories = res.data;
+        const initialValues = {
+          ...formValue,
+          categories: categories?.map((item: TmpCategorys) => ({
+            name: item.name,
+            productCategoryId: item.category.id,
+            products: item.products?.map((product) => ({
+              ...product,
+              name: product.product.name,
+              label: product.product.label,
+              unit: product.product.unit,
+              randomId: randomId(),
+            })),
+          })),
+        };
+        form.setFieldsValue(initialValues);
+      });
+    }
+  }, [showModal]);
+
+  useEffect(() => {
+    // 切换模板回显
     if (templateId) {
-      fetchCategories().then((res: { data: TmpCategorys[] }) => {
+      fetchTmpCategories().then((res: { data: TmpCategorys[] }) => {
         const categories = res.data?.map((item: TmpCategorys) => ({
           id: item.id,
           name: item.name,
