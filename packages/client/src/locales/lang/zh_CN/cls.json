@@ -64,13 +64,20 @@
     },
     "order": {
       "num": "订单编号",
-      "name": "订单名称",
+      "no": "订单编号",
       "customer": "客户名称",
       "status": "订单状态",
+      "totalPrice": "订单总价",
+      "statusStr": {
+        "0": "未付款",
+        "1": "已付款",
+        "2": "已取消"
+      },
       "modal": {
         "cTitle": "新建订单",
         "eTitle": "编辑订单",
-        "dTitle": "删除订单"
+        "dTitle": "删除订单",
+        "sTitle": "修改订单状态"
       }
     }
   }

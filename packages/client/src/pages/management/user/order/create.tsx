@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect, useState } from 'react';
+import { useCallback, useRef, useEffect, useState, useMemo } from 'react';
 import {
   Button,
   Drawer,
@@ -52,7 +52,7 @@ export default function OrderCreateModal({
   const [form] = Form.useForm();
   const formRef = useRef<any>();
   const customerId = Form.useWatch('customerId', form);
-  // const templateId = Form.useWatch('templateId', form);
+  const categoriesData = Form.useWatch('categories', form);
   const [templateId, setTemplateId] = useState<number | undefined>(undefined);
   const [{ loading: tempCateLoading }, fetchTmpCategories] = useAxios(
     {
@@ -117,7 +117,6 @@ export default function OrderCreateModal({
     // 编辑回显
     if (showModal && formValue?.id) {
       fetchOrderCategories().then((res: { data: TmpCategorys[] }) => {
-        console.log(666, res)
         const categories = res.data;
         const initialValues = {
           ...formValue,
@@ -194,6 +193,13 @@ export default function OrderCreateModal({
     });
   };
 
+  const totalPrices = useMemo(() => {
+    if (!categoriesData?.length) return 0;
+    return categoriesData.reduce((pre: number, cur: IValue) => {
+      return pre + Number(cur?.totalPrice || 0);
+    }, 0);
+  }, [categoriesData]);
+
   return (
     <>
       {formValue?.id ? (
@@ -232,6 +238,12 @@ export default function OrderCreateModal({
         }}
         extra={
           <Space>
+            <div
+              style={{ marginRight: 30, color: '#e84118', fontWeight: '600' }}
+            >
+              总价: {totalPrices}
+            </div>
+
             <Button loading={loadingAjax} onClick={onClose}>
               {t('crud.cancel')}
             </Button>
@@ -273,9 +285,9 @@ export default function OrderCreateModal({
             <Row gutter={24}>
               <Col xs={24} sm={12} md={6}>
                 <Form.Item
-                  label="订单名称"
-                  name="name"
-                  rules={[{ required: true, message: '请输入订单名称' }]}
+                  label="订单编号"
+                  name="no"
+                  rules={[{ required: true, message: '请输入订单编号' }]}
                 >
                   <Input />
                 </Form.Item>

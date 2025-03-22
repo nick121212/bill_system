@@ -56,7 +56,7 @@ export default function CatProd(props: IProps) {
     rows: productList,
     loading: serachLoad,
     onSearch: debouncedOnProductSearch,
-  } = useData<ProductCategoryEntity[]>('products');
+  } = useData<ProductEntity[]>('products');
   const [title, setTitle] = useState<string>(value?.name || `分类${index + 1}`);
   const [categoryId, setCategoryId] = useState<number | undefined>(
     value?.productCategoryId,
@@ -66,7 +66,7 @@ export default function CatProd(props: IProps) {
     if (!proId) return { price: 0, discount: 100 };
     const cusProduct = cusProductData?.find((p) => p.id === proId);
     return {
-      price: cusProduct?.customerPrices?.[0]?.price || 0,
+      price: cusProduct?.customerPrices?.[0]?.price,
       discount: cusProduct?.customerPrices?.[0]?.discount || 100,
     };
   };
@@ -285,7 +285,7 @@ export default function CatProd(props: IProps) {
         updateProducts(
           products.map((pro) => {
             if (!pro.id) {
-              const { price, discount } = getCustomerPrice(p.id!);
+              const { price = p.price, discount } = getCustomerPrice(p.id!);
               return {
                 ...pro,
                 ...p,
