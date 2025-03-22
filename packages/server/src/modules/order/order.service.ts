@@ -139,6 +139,7 @@ export class OrderService {
         totalPrice: 0,
         discount: customer.discount,
         status: OrderStatus.UNPAYED,
+        customer: customer,
       });
       const categories: Promise<unknown>[] = [];
       const products: Promise<unknown>[] = [];
