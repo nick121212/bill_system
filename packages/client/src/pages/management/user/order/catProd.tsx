@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { Select, Table, Space, Button, Card, InputNumber, Input } from 'antd';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
@@ -12,19 +12,17 @@ import useAxios from 'axios-hooks';
 import useData from '@/hooks/data/useData';
 import useWatch from '@/hooks/data/useWatch';
 import { getRandomId } from '@/utils/utils';
-import { fShortenNumber } from '@/utils/format-number';
+import { fNumberTwoDecimal } from '@/utils/format-number';
 
+export interface IValue {
+  name?: string;
+  productCategoryId?: number;
+  totalPrice?: number;
+  products?: IDataSource[];
+}
 interface IProps {
-  value?: {
-    name?: string;
-    productCategoryId?: number;
-    products?: IDataSource[];
-  };
-  onChange?: (value: {
-    name?: string;
-    productCategoryId?: number;
-    products?: IDataSource[];
-  }) => void;
+  value?: IValue;
+  onChange?: (value: IValue) => void;
   index: number;
   onRemove: () => void;
   cusProductData?: ProductEntity[];
@@ -86,8 +84,18 @@ export default function CatProd(props: IProps) {
       return res;
     }) || [],
   );
-  // 每行总价集合
-  const rowTotalPrices = useRef<number[]>([]);
+  // 单行总价
+  const handleTotalPrice = (record: IDataSource) => {
+    const { price = 0, discount = 100, count = 1 } = record;
+    return fNumberTwoDecimal(price * count * (discount / 100));
+  };
+
+  const totalPrice = useMemo(() => {
+    if (!products.length) return 0;
+    return products.reduce((pre: number, cur: IDataSource) => {
+      return pre + Number(handleTotalPrice(cur) || 0);
+    }, 0);
+  }, [products]);
 
   useWatch(() => {
     if (!categoryId) {
@@ -116,6 +124,7 @@ export default function CatProd(props: IProps) {
     onChange?.({
       name: title,
       productCategoryId: categoryId,
+      totalPrice: totalPrice,
       products: products.map((product) => {
         return {
           id: product?.id,
@@ -126,12 +135,6 @@ export default function CatProd(props: IProps) {
       }),
     });
   }, [categoryId, title, products]);
-
-  // 单行总价
-  const handleTotalPrice = (record: IDataSource) => {
-    const { price = 0, discount = 100, count = 1 } = record;
-    return fShortenNumber(price * count * (discount / 100));
-  };
 
   const columns: ColumnsType<IDataSource> = [
     {
@@ -234,7 +237,6 @@ export default function CatProd(props: IProps) {
       align: 'center',
       render: (_, record, index) => {
         const res = handleTotalPrice(record);
-        rowTotalPrices.current[index] = Number(res);
         return res;
       },
     },
@@ -348,12 +350,7 @@ export default function CatProd(props: IProps) {
             }
             allowClear
           />
-          <div>
-            总价：
-            {rowTotalPrices.current.filter(Boolean).reduce((pre, cur) => {
-              return pre + cur;
-            }, 0)}
-          </div>
+          <div>总价：{totalPrice}</div>
         </Space>
       }
       extra={
