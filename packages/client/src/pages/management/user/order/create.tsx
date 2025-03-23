@@ -120,6 +120,7 @@ export default function OrderCreateModal({
         const categories = res.data;
         const initialValues = {
           ...formValue,
+          customerId: formValue.customer.id,
           categories: categories?.map((item: TmpCategorys) => ({
             name: item.name,
             productCategoryId: item.category.id,

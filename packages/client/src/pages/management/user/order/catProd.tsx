@@ -136,6 +136,19 @@ export default function CatProd(props: IProps) {
     });
   }, [categoryId, title, products]);
 
+  useEffect(() => {
+    if (!cusProductData?.length || !products?.length) return;
+    const data = products.map((product) => {
+      const { price, discount } = getCustomerPrice(product?.product?.id!);
+      return {
+        ...product,
+        price,
+        discount: discount || product.discount || 100,
+      };
+    });
+    updateProducts(data);
+  }, [cusProductData]);
+
   const columns: ColumnsType<IDataSource> = [
     {
       title: '名称',
