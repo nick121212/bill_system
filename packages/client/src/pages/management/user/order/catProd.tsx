@@ -92,9 +92,10 @@ export default function CatProd(props: IProps) {
 
   const totalPrice = useMemo(() => {
     if (!products.length) return 0;
-    return products.reduce((pre: number, cur: IDataSource) => {
+    const res = products.reduce((pre: number, cur: IDataSource) => {
       return pre + Number(handleTotalPrice(cur) || 0);
     }, 0);
+    return fNumberTwoDecimal(res);
   }, [products]);
 
   useWatch(() => {
@@ -124,7 +125,7 @@ export default function CatProd(props: IProps) {
     onChange?.({
       name: title,
       productCategoryId: categoryId,
-      totalPrice: totalPrice,
+      totalPrice: Number(totalPrice),
       products: products.map((product) => {
         return {
           id: product?.id,
