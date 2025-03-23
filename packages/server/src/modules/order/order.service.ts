@@ -256,8 +256,6 @@ export class OrderService {
   ): Promise<OrderEntity> {
     const order = await this.getByIdWithError(id);
 
-    order.extend(body);
-
     if (order.status !== OrderStatus.UNPAYED) {
       throw new ApiException(
         "Status has been closed.",
@@ -269,6 +267,8 @@ export class OrderService {
     if (body.status === OrderStatus.UNPAYED) {
       return order;
     }
+
+    order.extend(body);
 
     return this.em.save(OrderEntity, order);
   }
