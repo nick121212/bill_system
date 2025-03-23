@@ -101,4 +101,26 @@ export const useLogout = () => {
   return logout;
 };
 
+export const useProfile = () => {
+  const { setUserInfo } = useUserActions();
+
+  const profileMutation = useMutation({
+    mutationFn: userService.findById,
+  });
+
+  const profile = async () => {
+    try {
+      const res = await profileMutation.mutateAsync();
+      res?.data && setUserInfo(res.data);
+    } catch (err) {
+      toast.error(err.message, {
+        position: "top-center",
+      });
+    }
+  };
+
+  return profile;
+}
+
+
 export default useUserStore;

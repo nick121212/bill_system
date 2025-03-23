@@ -28,7 +28,7 @@ const signup = (data: SignUpReq) =>
 	apiClient.post<SignInRes>({ url: UserApi.SignUp, data });
 const logout = () => apiClient.post({ url: UserApi.Logout });
 const findById = () =>
-	apiClient.get<UserEntity[]>({ url: `${UserApi.User}` });
+	apiClient.get<AxiosResponse<UserEntity>>({ url: `${UserApi.User}` });
 
 export default {
 	signin,
