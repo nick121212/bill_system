@@ -27,3 +27,4 @@ export { default as AutoCompleteField } from './AutoCompleteField';
 export { default as TreeField } from './TreeField';
 export { default as TextAreaField } from './TextAreaField';
 export { default as SliderField } from './SliderField';
+export { default as RangeFields } from './RangeFields';

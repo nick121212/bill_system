@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { Button, Space } from 'antd';
+import { Button, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
@@ -12,8 +12,10 @@ import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
 import Remove from './remove';
-// import Search from './search';
+import Search from './search';
 import OrderStatus from './orderStatus';
+
+const colorStatus = ['#f50', '#2db7f5', 'volcano'];
 
 export default function OrderPage() {
   const { t } = useTranslation();
@@ -70,7 +72,9 @@ export default function OrderPage() {
       dataIndex: 'status',
       align: 'center',
       render: (val) => {
-        return t(`cls.order.statusStr.${val}`);
+        return (
+          <Tag color={colorStatus[val]}>{t(`cls.order.statusStr.${val}`)}</Tag>
+        );
       },
     },
     {
@@ -92,15 +96,13 @@ export default function OrderPage() {
             formValue={record}
             onSuccess={pag.refresh}
           />
-          {
-            record.status === 0 && (
-              <OrderStatus
-                title={t('cls.order.modal.sTitle')}
-                record={record}
-                onSuccess={pag.refresh}
-              />
-            )
-          }
+          {record.status === 0 && (
+            <OrderStatus
+              title={t('cls.order.modal.sTitle')}
+              record={record}
+              onSuccess={pag.refresh}
+            />
+          )}
           <Remove
             title={t('cls.order.modal.dTitle')}
             record={record}
@@ -145,13 +147,13 @@ export default function OrderPage() {
         columns,
       }}
     >
-      {/* <Search
+      <Search
         loading={loading}
         onSuccess={(searchData: unknown) => {
           pag.setPage(1);
           pag.setSearchData(searchData);
         }}
-      /> */}
+      />
     </TablePage>
   );
 }
