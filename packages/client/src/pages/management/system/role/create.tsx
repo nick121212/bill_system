@@ -12,6 +12,7 @@ import {
   AutoFields,
   AutoForm,
   ErrorsField,
+  SelectField,
   TextAreaField,
   TreeField,
 } from '@/uniforms/fields';
@@ -107,7 +108,15 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
             >
               <ErrorsField />
 
-              <AutoFields fields={['label', 'name']} />
+              <SelectField
+                name="label"
+                options={[
+                  { value: 'admin', label: '管理员权限' },
+                  { value: 'user', label: '用户权限' },
+                ]}
+              />
+
+              <AutoFields fields={['name']} />
 
               <TextAreaField name="desc" />
 
