@@ -66,6 +66,7 @@ export class AuthService {
     );
 
     userEntity.permissions = role.menus;
+    userEntity.password = "";
 
     return userEntity;
   }

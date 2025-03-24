@@ -45,7 +45,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
     toPlainOnly: true,
   })
   @Column()
-  password: string;
+  password?: string;
 
   @Column()
   avatar: string;
