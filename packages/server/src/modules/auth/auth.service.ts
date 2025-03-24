@@ -60,6 +60,7 @@ export class AuthService {
   async profile(user: ActiveUserData): Promise<Partial<UserEntity>> {
     const userEntity = await this.usersService.getByIdWithError(user.id, {
       role: true,
+      company: true,
     });
     const role = await this.roleService.getByIdWithPermission(
       userEntity.role?.id ?? 0

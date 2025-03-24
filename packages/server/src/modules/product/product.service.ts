@@ -22,7 +22,6 @@ export class ProductService {
     private productCategoryService: ProductCategoryService,
     private productUnitService: ProductUnitService,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
-
   ) {}
 
   async all(
