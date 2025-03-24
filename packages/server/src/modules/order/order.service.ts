@@ -57,14 +57,14 @@ export class OrderService {
     };
   }
 
-  async getById(id?: number): Promise<OrderEntity | undefined> {
+  async getById(id?: number): Promise<OrderEntity | null> {
     const data = await this.repo.findOne({
       where: {
         id,
       },
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async getByIdWithError(id?: number): Promise<OrderEntity> {

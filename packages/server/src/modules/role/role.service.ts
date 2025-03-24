@@ -115,9 +115,9 @@ export class RoleService {
   async getById(
     id?: number,
     loadRelationIds = false
-  ): Promise<RoleEntity | undefined> {
+  ): Promise<RoleEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const data = await this.repo.findOne({
@@ -127,7 +127,7 @@ export class RoleService {
       loadRelationIds: loadRelationIds,
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async create(body: RoleRequest): Promise<RoleEntity> {

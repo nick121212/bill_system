@@ -44,16 +44,16 @@ export class ProductCategoryService {
     };
   }
 
-  async getById(id?: number): Promise<ProductCategoryEntity | undefined> {
+  async getById(id?: number): Promise<ProductCategoryEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const data = await this.repo.findOneBy({
       id,
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async getByIdWithError(

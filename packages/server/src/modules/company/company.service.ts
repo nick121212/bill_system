@@ -43,9 +43,9 @@ export class CompanyService {
   async getById(
     id?: number,
     loadRelationIds = false
-  ): Promise<CompanyEntity | undefined> {
+  ): Promise<CompanyEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const data = await this.repo.findOne({
@@ -54,7 +54,7 @@ export class CompanyService {
       },
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async create(body: CompanyRequest): Promise<CompanyEntity> {

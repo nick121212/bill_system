@@ -27,9 +27,9 @@ export class MenuService {
     return trees;
   }
 
-  async getById(id?: number): Promise<MenuEntity | undefined> {
+  async getById(id?: number): Promise<MenuEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const menu = await this.repo.findOne({
@@ -43,10 +43,10 @@ export class MenuService {
 
     if (menu) {
       menu.parentId = menu?.parent?.id;
-      menu.parent = undefined;
+      menu.parent = null;
     }
 
-    return menu || undefined;
+    return menu || null;
   }
 
   async getByIdWithError(id?: number): Promise<MenuEntity> {
@@ -90,7 +90,7 @@ export class MenuService {
     child.type = body.type;
     child.component = body.component;
 
-    child.parent = undefined;
+    child.parent = null;
 
     if (body.parentId) {
       child.parent = await this.getById(body.parentId);

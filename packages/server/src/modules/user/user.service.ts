@@ -57,9 +57,12 @@ export class UserService {
     };
   }
 
-  async getById(id?: number, relations?: FindOptionsRelations<UserEntity>): Promise<UserEntity | undefined> {
+  async getById(
+    id?: number,
+    relations?: FindOptionsRelations<UserEntity>
+  ): Promise<UserEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const data = await this.repo.findOne({
@@ -67,7 +70,7 @@ export class UserService {
       relations,
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async getByIdWithError(
@@ -112,8 +115,8 @@ export class UserService {
         password ?? "123456789",
         this.configService.get("app").secret
       ),
-      role: await this.roleService.getById(role),
-      company: await this.companyService.getById(company),
+      role: (await this.roleService.getById(role)) ?? undefined,
+      company: (await this.companyService.getById(company)) ?? undefined,
     });
 
     return await this.repo.save(user);

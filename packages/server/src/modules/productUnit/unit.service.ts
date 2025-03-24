@@ -41,16 +41,16 @@ export class ProductUnitService {
     };
   }
 
-  async getById(id?: number): Promise<ProductUnitEntity | undefined> {
+  async getById(id?: number): Promise<ProductUnitEntity | null> {
     if (!id) {
-      return undefined;
+      return null;
     }
 
     const data = await this.repo.findOneBy({
       id,
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async getByIdWithError(id?: number): Promise<ProductUnitEntity> {

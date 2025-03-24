@@ -57,7 +57,7 @@ export class CustomerService {
   async getById(
     id?: number,
     loadRelationIds = false
-  ): Promise<CustomerEntity | undefined> {
+  ): Promise<CustomerEntity | null> {
     const data = await this.repo.findOne({
       where: {
         id,
@@ -65,7 +65,7 @@ export class CustomerService {
       loadRelationIds: loadRelationIds,
     });
 
-    return data || undefined;
+    return data || null;
   }
 
   async getByIdWithError(id?: number): Promise<CustomerEntity> {
