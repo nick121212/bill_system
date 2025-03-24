@@ -30,12 +30,17 @@ async function bootstrap() {
 
   app.useLogger(logger);
   app.use(cookieParser());
+  // 全局异常过滤器，统一处理HTTP异常
   app.useGlobalFilters(new HttpExceptionFilter(logger));
+  // 全局响应拦截器，统一处理响应格式
   app.useGlobalInterceptors(new ResponseInterceptor());
 
+  // 全局验证管道，用于请求参数验证
   app.useGlobalPipes(
     new ValidationPipe({
+      // 自动转换请求参数类型
       transform: true,
+      // 自定义验证异常处理
       exceptionFactory(validationErrors = []) {
         throw new ApiException(
           Object.values(validationErrors[0].constraints || [])[0],
@@ -45,24 +50,29 @@ async function bootstrap() {
       },
     })
   );
+  // 设置查询参数解析器为扩展模式
   app.set("query parser", "extended");
 
+  // 非生产环境启用CORS
   if (configService.get("app").nodeEnv !== "production") {
     app.enableCors({
-      origin: true,
-      methods: "GET,HEAD,PUT,PATCH,DELETE,POST,OPTIONS",
-      // credential: true,
+      origin: true, // 允许所有来源
+      methods: "GET,HEAD,PUT,PATCH,DELETE,POST,OPTIONS", // 允许的HTTP方法
+      // credential: true, // 是否允许发送认证信息
     });
   }
 
+  // 启动服务并执行数据库迁移
   await app.listen(port).then(() => {
     console.log("serer start on port: ", port);
 
+    // 执行数据库迁移
     migrationExecutor(em, configService.get("app")?.secret);
   });
 
   Module;
 
+  // 热模块替换支持
   const hot = (module as ModuleWithHotReload).hot;
 
   if (hot) {
