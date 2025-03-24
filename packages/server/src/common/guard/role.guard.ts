@@ -14,19 +14,24 @@ export class RolesGuard implements CanActivate {
       context.getHandler(),
       context.getClass(),
     ]);
+    const request = context.switchToHttp().getRequest();
 
     if (!requiredRoles) {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
+    const { user } = request;
 
     const userEntity = await this.userService.getByIdWithError(user?.id, {
       role: true,
       company: true,
     });
 
-    context.switchToHttp().getRequest().userEntity = userEntity;
+    request.userEntity = userEntity;
+
+    if(userEntity.role?.label === Role.Admin) {
+      return true;
+    }
 
     return requiredRoles.some((role) => userEntity.role?.label === role);
   }
