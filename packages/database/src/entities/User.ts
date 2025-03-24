@@ -34,7 +34,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
 
   @ManyToOne(() => CompanyEntity)
   @JoinColumn()
-  company?: CompanyEntity;
+  company?: CompanyEntity | null;
 
   @IsEmail()
   @Column()
@@ -57,7 +57,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
   phone: string;
 
   @ManyToOne(() => RoleEntity)
-  role?: RoleEntity;
+  role?: RoleEntity | null;
 
   @Column({ default: true })
   isActive: boolean;

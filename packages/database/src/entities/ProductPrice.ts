@@ -30,11 +30,11 @@ export class ProductPriceEntity extends BaseEntity<ProductPriceEntity> {
 
   @ManyToOne(() => ProductEntity)
   @JoinColumn()
-  product: object;
+  product: ProductEntity | null;
 
   @ManyToOne(() => CustomerEntity)
   @JoinColumn()
-  customer: CustomerEntity;
+  customer: CustomerEntity | null;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

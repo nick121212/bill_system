@@ -30,7 +30,7 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
 
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
-  category: ProductCategoryEntity;
+  category: ProductCategoryEntity | null;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

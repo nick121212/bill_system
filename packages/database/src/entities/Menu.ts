@@ -45,7 +45,7 @@ export class MenuEntity extends BaseEntity<MenuEntity> {
   children: MenuEntity[];
 
   @TreeParent()
-  parent?: MenuEntity;
+  parent?: MenuEntity | null;
 
   parentId?: number;
 
