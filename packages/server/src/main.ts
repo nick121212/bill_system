@@ -70,8 +70,6 @@ async function bootstrap() {
     migrationExecutor(em, configService.get("app")?.secret);
   });
 
-  Module;
-
   // 热模块替换支持
   const hot = (module as ModuleWithHotReload).hot;
 
