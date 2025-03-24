@@ -1,3 +1,4 @@
+import { UserEntity } from "@bill/database";
 import { createParamDecorator, type ExecutionContext} from "@nestjs/common";
 
 import type { ActiveUserData } from "@/common/interfaces/active-user-data.interface";

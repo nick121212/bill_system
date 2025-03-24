@@ -1,11 +1,13 @@
 import { EntityManager, ILike, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import { ProductCategoryEntity } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { ProductCategoryEntity, UserEntity } from "@bill/database/dist/entities";
+import { HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
 
 import {
@@ -16,10 +18,10 @@ import {
 @Injectable()
 export class ProductCategoryService {
   constructor(
-    private logger: Log4jsService,
     @InjectRepository(ProductCategoryEntity)
     private repo: Repository<ProductCategoryEntity>,
-    private em: EntityManager
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+
   ) {}
 
   async all(
@@ -33,8 +35,7 @@ export class ProductCategoryService {
       where: {
         ...rest,
         ...(name ? { name: ILike(`%${name}%`) } : {}),
-        companyId: user?.companyId,
-        // userId: user?.id,
+        ...dataFilter(this.request.userEntity),
       },
     });
 

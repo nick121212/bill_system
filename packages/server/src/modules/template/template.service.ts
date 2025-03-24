@@ -7,12 +7,15 @@ import {
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
   TemplateEntity,
+  UserEntity,
 } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import dataFilter from "@/common/utils/dataFilter";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
 
@@ -24,7 +27,8 @@ export class TemplateService {
     @InjectRepository(TemplateCategoryEntity)
     private repoTC: Repository<TemplateCategoryEntity>,
     @InjectRepository(TemplateCategoryProductEntity)
-    private repoTCP: Repository<TemplateCategoryProductEntity>
+    private repoTCP: Repository<TemplateCategoryProductEntity>,
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
   ) {}
 
   async all(
@@ -36,7 +40,7 @@ export class TemplateService {
   }> {
     const whereCondition = {
       ...query.where,
-      companyId: user?.companyId,
+      ...dataFilter(this.request.userEntity),
     };
 
     if (query.ids && query.ids.length > 0) {

@@ -6,13 +6,16 @@ import {
   ProductEntity,
   ProductPriceEntity,
   ProductUnitEntity,
+  UserEntity,
 } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import dataFilter from "@/common/utils/dataFilter";
 import { ProductService } from "@/modules/product/product.service";
 
 import {
@@ -29,7 +32,8 @@ export class CustomerService {
     private repoForProduct: Repository<ProductEntity>,
     @InjectRepository(ProductPriceEntity)
     private repoForPrice: Repository<ProductPriceEntity>,
-    private productService: ProductService
+    private productService: ProductService,
+    @Inject(REQUEST) private request: Request & {userEntity: UserEntity}
   ) {}
 
   async all(
@@ -41,8 +45,7 @@ export class CustomerService {
       take: query.take,
       where: {
         ...query.where,
-        companyId: user?.companyId,
-        // userId: user.id,
+        ...dataFilter(this.request.userEntity)
       },
       loadRelationIds: true,
       withDeleted: false,

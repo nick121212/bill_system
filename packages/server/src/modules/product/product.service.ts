@@ -1,11 +1,13 @@
 import { Like, Repository, Not, In } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import { ProductEntity } from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
+import { ProductEntity, UserEntity } from "@bill/database/dist/entities";
+import { HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
 import { ProductCategoryService } from "@/modules/productCategory/category.service";
 import { ProductUnitService } from "@/modules/productUnit/unit.service";
@@ -18,7 +20,9 @@ export class ProductService {
     private logger: Log4jsService,
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
     private productCategoryService: ProductCategoryService,
-    private productUnitService: ProductUnitService
+    private productUnitService: ProductUnitService,
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+
   ) {}
 
   async all(
@@ -33,7 +37,8 @@ export class ProductService {
         ...otherConditions,
         ...(name ? { name: Like(`%${name}%`) } : {}),
         ...(excludeIds ? { id: Not(In(excludeIds)) } : {}),
-        companyId: user?.companyId,
+        ...dataFilter(this.request.userEntity),
+        // companyId: user?.companyId,
         // userId: user.id,
       },
       relations: {
