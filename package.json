@@ -5,13 +5,15 @@
     "packages/*"
   ],
   "dependencies": {
-    "@bill/database": "^1.0.0"
+    "@bill/database": "^1.0.0",
+    "@compodoc/compodoc": "^1.1.26"
   },
   "devDependencies": {
     "lerna": "^8.2.0"
   },
   "scripts": {
     "start:dev": "lerna run start:dev",
+    "compodoc": "npx compodoc -p packages/server/tsconfig.json -d docs",
     "doc": "npx @compodoc/compodoc -p packages/server/tsconfig.json -s"
   }
 }

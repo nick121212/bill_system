@@ -119,7 +119,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>packages/server/src/utils/query.ts</code>
+            <code>packages/server/src/common/interfaces/query.ts</code>
         </p>
 
 
@@ -140,14 +140,17 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#skip" >skip</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#take" >take</a>
                             </li>
                             <li>
+                                    <span class="modifier"></span>
                                     <span class="modifier">Optional</span>
                                 <a href="#where" >where</a>
                             </li>
@@ -160,26 +163,6 @@
 
 
 
-                    <tr>
-                        <td class="col-md-4">
-                            <h6><b>Accessors</b></h6>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="col-md-4">
-                            <ul class="index-list">
-                                <li>
-                                    <a href="#skip_c" >skip_c</a>
-                                </li>
-                                <li>
-                                    <a href="#take_c" >take_c</a>
-                                </li>
-                                <li>
-                                    <a href="#where_c" >where_c</a>
-                                </li>
-                            </ul>
-                        </td>
-                    </tr>
         </tbody>
     </table>
 </section>
@@ -196,6 +179,7 @@
                 <td class="col-md-4">
                     <a name="skip"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>skip</b></span>
                         <a href="#skip"><span class="icon ion-ios-link"></span></a>
@@ -208,9 +192,18 @@
 
                     </td>
                 </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @Type(undefined)<br />
+                        </code>
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="2" class="link-to-prism">packages/server/src/utils/query.ts:2</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">packages/server/src/common/interfaces/query.ts:5</a></div>
                         </td>
                     </tr>
 
@@ -223,6 +216,7 @@
                 <td class="col-md-4">
                     <a name="take"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>take</b></span>
                         <a href="#take"><span class="icon ion-ios-link"></span></a>
@@ -235,9 +229,18 @@
 
                     </td>
                 </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @Type(undefined)<br />
+                        </code>
+                    </td>
+                </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="3" class="link-to-prism">packages/server/src/utils/query.ts:3</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">packages/server/src/common/interfaces/query.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -250,6 +253,7 @@
                 <td class="col-md-4">
                     <a name="where"></a>
                     <span class="name">
+                            <span class="modifier"></span>
                             <span class="modifier">Optional</span>
                         <span ><b>where</b></span>
                         <a href="#where"><span class="icon ion-ios-link"></span></a>
@@ -258,13 +262,22 @@
             </tr>
                 <tr>
                     <td class="col-md-4">
-                        <i>Type : </i>    <code>Record&lt;string | any&gt;</code>
+                        <i>Type : </i>    <code>T</code>
 
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @Type(undefined)<br />
+                        </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="4" class="link-to-prism">packages/server/src/utils/query.ts:4</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="11" class="link-to-prism">packages/server/src/common/interfaces/query.ts:11</a></div>
                         </td>
                     </tr>
 
@@ -279,97 +292,21 @@
 
 
 
-            <section data-compodoc="block-accessors">
-    <h3 id="accessors">
-        Accessors
-    </h3>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="skip_c"></a>
-                        <span class="name"><b>skip_c</b><a href="#skip_c"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>skip_c()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="6" class="link-to-prism">packages/server/src/utils/query.ts:6</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="take_c"></a>
-                        <span class="name"><b>take_c</b><a href="#take_c"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>take_c()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="10" class="link-to-prism">packages/server/src/utils/query.ts:10</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-        <table class="table table-sm table-bordered">
-            <tbody>
-                <tr>
-                    <td class="col-md-4">
-                        <a name="where_c"></a>
-                        <span class="name"><b>where_c</b><a href="#where_c"><span class="icon ion-ios-link"></span></a></span>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td class="col-md-4">
-                        <span class="accessor"><b>get</b><code>where_c()</code></span>
-                    </td>
-                </tr>
-                            <tr>
-                                <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="14" class="link-to-prism">packages/server/src/utils/query.ts:14</a></div>
-                                </td>
-                            </tr>
-
-            </tbody>
-        </table>
-</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class BaseQuery {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Type } from &quot;class-transformer&quot;;
+
+export class BaseQuery&lt;T &#x3D; Record&lt;string, unknown&gt;&gt; {
+  @Type(() &#x3D;&gt; Number)
   skip?: number;
+
+  @Type(() &#x3D;&gt; Number)
   take?: number;
-  where?: Record&lt;string, any&gt;;
 
-  get skip_c() {
-    return this.skip || 0;
-  }
-
-  get take_c() {
-    return this.take || 10;
-  }
-
-  get where_c() {
-    return this.where || {};
-  }
+  @Type(() &#x3D;&gt; Object)
+  where?: T;
 }
 </code></pre>
     </div>

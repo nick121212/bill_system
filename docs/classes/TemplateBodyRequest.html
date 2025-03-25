@@ -141,6 +141,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#categories" >categories</a>
                             </li>
                             <li>
@@ -185,6 +186,7 @@
                     <a name="categories"></a>
                     <span class="name">
                             <span class="modifier"></span>
+                            <span class="modifier"></span>
                         <span ><b>categories</b></span>
                         <a href="#categories"><span class="icon ion-ios-link"></span></a>
                     </span>
@@ -201,13 +203,13 @@
                         <b>Decorators : </b>
                         <br />
                         <code>
-                            @Length(1)<br />
+                            @ArrayMinSize(1)<br />@ArrayMaxSize(100)<br />
                         </code>
                     </td>
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:37</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="45" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:45</a></div>
                         </td>
                     </tr>
 
@@ -243,7 +245,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:38</a></div>
                         </td>
                     </tr>
 
@@ -270,7 +272,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="25" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:25</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:32</a></div>
                         </td>
                     </tr>
 
@@ -306,7 +308,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -342,7 +344,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:34</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">packages/server/src/modules/template/template.interface.ts:41</a></div>
                         </td>
                     </tr>
 
@@ -362,26 +364,33 @@
 
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsNumber,
-  isString,
   IsString,
-  Length,
-  Max,
-  Min,
 } from &quot;class-validator&quot;;
-import { PermissionType } from &quot;@bill/database&quot;;
-import {
-  ProductCategoryEntity,
-  TemplateCategoryEntity,
-} from &quot;@bill/database/dist/entities&quot;;
 
-import { BaseQuery } from &quot;@/utils/query&quot;;
+import { BaseQuery } from &quot;@/common/interfaces/query&quot;;
+
+export class TemplateCategoryProduct {
+  @IsNumber()
+  productId: number;
+  @IsNumber()
+  price: number;
+  @IsNumber()
+  count: number;
+}
 
 export class TemplateCategory {
+  @IsString()
+  name: string;
+
   @IsNumber()
   productCategoryId: number;
-  @Length(1)
-  products: number[];
+
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  products: TemplateCategoryProduct[];
 }
 
 export class TemplateBodyRequest {
@@ -396,11 +405,14 @@ export class TemplateBodyRequest {
   @IsNumber()
   status: number;
 
-  @Length(1)
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
   categories: TemplateCategory[];
 }
 
-export class TemplateQuery extends BaseQuery {}
+export class TemplateQuery extends BaseQuery {
+  ids?: number[];
+}
 </code></pre>
     </div>
 </div>

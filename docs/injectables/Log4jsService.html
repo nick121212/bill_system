@@ -247,7 +247,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>debug(message: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>debug(message, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -278,7 +278,6 @@
                                         <tr>
                                                 <td>message</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -326,7 +325,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>error(message: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, trace?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>error(message, trace?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -357,7 +356,6 @@
                                         <tr>
                                                 <td>message</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -555,7 +553,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>log(message: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>log(message, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -586,7 +584,6 @@
                                         <tr>
                                                 <td>message</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -634,7 +631,7 @@
             </tr>
             <tr>
                 <td class="col-md-4">
-<code>warn(message: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+<code>warn(message, context?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -665,7 +662,6 @@
                                         <tr>
                                                 <td>message</td>
                                             <td>
-                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
                                             </td>
 
                                             <td>
@@ -751,9 +747,9 @@ export class Log4jsService implements LoggerService {
     private loggers: Map&lt;string, Logger&gt;;
     constructor(@Inject(LOG4JS_OPTION) options?: Configuration | string) {
         this.loggers &#x3D; new Map();
-        if (typeof options &#x3D;&#x3D; &quot;string&quot;) {
+        if (typeof options &#x3D;&#x3D;&#x3D; &quot;string&quot;) {
             options &#x3D; buildDefaultConfig(options);
-        } else if (typeof options &#x3D;&#x3D; &quot;undefined&quot;) {
+        } else if (typeof options &#x3D;&#x3D;&#x3D; &quot;undefined&quot;) {
             options &#x3D; buildDefaultConfig(&quot;all&quot;);
         }
         configure(options);
@@ -768,25 +764,25 @@ export class Log4jsService implements LoggerService {
         return logger;
     }
 
-    log(message: any, context?: string) {
+    log(message: unknown, context?: string) {
         this.getLogger(context).info(message);
     }
 
-    error(message: any, trace?: string, context?: string) {
+    error(message: unknown, trace?: string, context?: string) {
         this.getLogger(context).error(message, trace);
     }
 
-    warn(message: any, context?: string) {
+    warn(message: unknown, context?: string) {
         this.getLogger(context).warn(message);
     }
 
-    debug(message: any, context?: string) {
+    debug(message: unknown, context?: string) {
         this.getLogger(context).debug(message);
     }
 
     flushall(cb?: () &#x3D;&gt; void) {
         shutdown(() &#x3D;&gt; {
-            cb &amp;&amp; cb();
+            cb?.();
         });
     }
 }

@@ -239,7 +239,10 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import entities from &quot;@bill/database&quot;;
 import { Module } from &quot;@nestjs/common&quot;;
+import { APP_GUARD } from &quot;@nestjs/core&quot;;
 import { TypeOrmModule } from &quot;@nestjs/typeorm&quot;;
+
+import { RolesGuard } from &quot;@/common/guard/role.guard&quot;;
 
 import { MenuController } from &quot;./menu.controller&quot;;
 import { MenuService } from &quot;./menu.service&quot;;

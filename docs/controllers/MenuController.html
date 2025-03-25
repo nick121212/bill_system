@@ -152,11 +152,6 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
-                                <a href="#test" >test</a>
-                            </li>
-                            <li>
-                                    <span class="modifier"></span>
-                                    <span class="modifier">Async</span>
                                 <a href="#tree" >tree</a>
                             </li>
                             <li>
@@ -211,8 +206,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="29"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:29</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="30"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:30</a></div>
                         </td>
                     </tr>
 
@@ -288,8 +283,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="24"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:24</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -365,8 +360,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="39"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:39</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -391,79 +386,6 @@
                                             <td>
                                                             <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
                                             </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="test"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier">Async</span>
-                        <span ><b>test</b></span>
-                        <a href="#test"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>test(req)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@Get(&#x27;/test&#x27;)<br /></code>
-                </td>
-            </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:44</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
 
                                             <td>
                                                     No
@@ -515,8 +437,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="19"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:19</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="20"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:20</a></div>
                         </td>
                     </tr>
 
@@ -588,8 +510,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="34"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:34</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.controller.ts:35</a></div>
                         </td>
                     </tr>
 
@@ -651,9 +573,10 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, Request, Get, Post, Body, Param, Put, Delete } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Role } from &quot;@bill/database&quot;;
+import { Controller, Request, Get, Post, Body, Param, Put, Delete } from &quot;@nestjs/common&quot;;
 
-import { Public } from &quot;@/decorator/public&quot;;
+import { Roles } from &quot;@/common/decorators/roles.decorator&quot;;
 import { Log4jsService } from &quot;@/modules/log4js&quot;;
 
 import { MenuBodyRequest } from &quot;./menu.interface&quot;;
@@ -662,7 +585,7 @@ import { MenuService } from &quot;./menu.service&quot;;
 @Controller({
   path: [&quot;menus&quot;],
 })
-@Public()
+@Roles(Role.Admin)
 export class MenuController {
   constructor(private menuService: MenuService, private readonly log4jService: Log4jsService) {
     this.log4jService.warn(&quot;abc&quot;);
@@ -691,11 +614,6 @@ export class MenuController {
   @Delete(&quot;/:id&quot;)
   async remote(@Param(&quot;id&quot;) id: number) {
     return this.menuService.remove(id);
-  }
-
-  @Get(&quot;/test&quot;)
-  async test(@Request() req) {
-    return this.menuService.testData();
   }
 }
 </code></pre>

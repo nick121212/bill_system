@@ -149,7 +149,19 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#getByIdWithCategories" >getByIdWithCategories</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getByIdWithError" >getByIdWithError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#saveData" >saveData</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -173,12 +185,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(logger: <a href="../injectables/Log4jsService.html" target="_self">Log4jsService</a>, repo: Repository<TemplateEntity>, em: EntityManager)</code>
+<code>constructor(em: EntityManager, repo: Repository<TemplateEntity>, repoTC: <a href="../classes/TemplateCategory.html" target="_self">Repository&lt;TemplateCategoryEntity&gt;</a>, repoTCP: Repository<TemplateCategoryProductEntity>, request)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">packages/server/src/modules/template/template.service.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">packages/server/src/modules/template/template.service.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -196,10 +208,10 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>logger</td>
+                                                        <td>em</td>
                                                   
                                                         <td>
-                                                                        <code><a href="../injectables/Log4jsService.html" target="_self" >Log4jsService</a></code>
+                                                                    <code>EntityManager</code>
                                                         </td>
                                                   
                                                     <td>
@@ -220,10 +232,33 @@
                                                     
                                                 </tr>
                                                 <tr>
-                                                        <td>em</td>
+                                                        <td>repoTC</td>
                                                   
                                                         <td>
-                                                                    <code>EntityManager</code>
+                                                                        <code><a href="../classes/TemplateCategory.html" target="_self" >Repository&lt;TemplateCategoryEntity&gt;</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>repoTCP</td>
+                                                  
+                                                        <td>
+                                                                    <code>Repository&lt;TemplateCategoryProductEntity&gt;</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>request</td>
+                                                  
+                                                        <td>
                                                         </td>
                                                   
                                                     <td>
@@ -260,15 +295,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>all(query: <a href="../classes/TemplateQuery.html" target="_self">TemplateQuery</a>)</code>
+                    <code>all(query: <a href="../classes/TemplateQuery.html" target="_self">TemplateQuery</a>, user?: <a href="../interfaces/ActiveUserData.html" target="_self">ActiveUserData</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="20"
-                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:20</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="34"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:34</a></div>
                         </td>
                     </tr>
 
@@ -296,6 +331,18 @@
 
                                             <td>
                                                     No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ActiveUserData.html" target="_self" >ActiveUserData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
                                             </td>
 
 
@@ -329,15 +376,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>create(body: <a href="../classes/TemplateBodyRequest.html" target="_self">TemplateBodyRequest</a>)</code>
+                    <code>create(body: <a href="../classes/TemplateBodyRequest.html" target="_self">TemplateBodyRequest</a>, user?: <a href="../interfaces/ActiveUserData.html" target="_self">ActiveUserData</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="50"
-                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:50</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="221"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:221</a></div>
                         </td>
                     </tr>
 
@@ -365,6 +412,18 @@
 
                                             <td>
                                                     No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ActiveUserData.html" target="_self" >ActiveUserData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
                                             </td>
 
 
@@ -405,8 +464,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="62"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:62</a></div>
                         </td>
                     </tr>
 
@@ -456,6 +515,144 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getByIdWithCategories"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getByIdWithCategories</b></span>
+                        <a href="#getByIdWithCategories"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getByIdWithCategories(id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="92"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:92</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getByIdWithError"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getByIdWithError</b></span>
+                        <a href="#getByIdWithError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getByIdWithError(id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:74</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;TemplateEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="remove"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -474,8 +671,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="249"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:249</a></div>
                         </td>
                     </tr>
 
@@ -525,6 +722,106 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="saveData"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>saveData</b></span>
+                        <a href="#saveData"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveData(child: TemplateEntity, body: <a href="../classes/TemplateBodyRequest.html" target="_self">TemplateBodyRequest</a>, remove)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="136"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:136</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>child</td>
+                                            <td>
+                                                        <code>TemplateEntity</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/TemplateBodyRequest.html" target="_self" >TemplateBodyRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>remove</td>
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>false</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="update"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -543,8 +840,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="58"
-                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:58</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="238"
+                                    class="link-to-prism">packages/server/src/modules/template/template.service.ts:238</a></div>
                         </td>
                     </tr>
 
@@ -608,35 +905,59 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { EntityManager, Repository } from &quot;typeorm&quot;;
-import { ApiStatusCode, PermissionType } from &quot;@bill/database&quot;;
-import { TemplateEntity } from &quot;@bill/database/dist/entities&quot;;
-import { HttpCode, HttpStatus, Injectable } from &quot;@nestjs/common&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import * as _ from &quot;lodash&quot;;
+import { EntityManager, In, Not, Repository } from &quot;typeorm&quot;;
+import { ApiStatusCode } from &quot;@bill/database&quot;;
+import {
+  ProductCategoryEntity,
+  ProductEntity,
+  TemplateCategoryEntity,
+  TemplateCategoryProductEntity,
+  TemplateEntity,
+  UserEntity,
+} from &quot;@bill/database/dist/entities&quot;;
+import { HttpStatus, Inject, Injectable } from &quot;@nestjs/common&quot;;
+import { REQUEST } from &quot;@nestjs/core&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 
-import { ApiException } from &quot;@/exception/api.exception&quot;;
-import { Log4jsService } from &quot;@/modules/log4js&quot;;
+import { ApiException } from &quot;@/common/exception/api.exception&quot;;
+import { ActiveUserData } from &quot;@/common/interfaces/active-user-data.interface&quot;;
+import dataFilter from &quot;@/common/utils/dataFilter&quot;;
 
 import { TemplateBodyRequest, TemplateQuery } from &quot;./template.interface&quot;;
 
 @Injectable()
 export class TemplateService {
   constructor(
-    private logger: Log4jsService,
+    private em: EntityManager,
     @InjectRepository(TemplateEntity) private repo: Repository&lt;TemplateEntity&gt;,
-    private em: EntityManager
+    @InjectRepository(TemplateCategoryEntity)
+    private repoTC: Repository&lt;TemplateCategoryEntity&gt;,
+    @InjectRepository(TemplateCategoryProductEntity)
+    private repoTCP: Repository&lt;TemplateCategoryProductEntity&gt;,
+    @Inject(REQUEST) private request: Request &amp; { userEntity: UserEntity }
   ) {}
 
-  async all(query: TemplateQuery): Promise&lt;{
+  async all(
+    query: TemplateQuery,
+    user?: ActiveUserData
+  ): Promise&lt;{
     count: number;
     rows: TemplateEntity[];
   }&gt; {
+    const whereCondition &#x3D; {
+      ...query.where,
+      ...dataFilter(this.request.userEntity),
+    };
+
+    if (query.ids &amp;&amp; query.ids.length &gt; 0) {
+      whereCondition[&quot;id&quot;] &#x3D; Not(In(query.ids));
+    }
+
     const [rows, count] &#x3D; await this.repo.findAndCount({
-      skip: query.skip_c,
-      take: query.take_c,
-      where: {
-        ...query.where_c,
-      },
+      skip: query.skip,
+      take: query.take,
+      where: whereCondition,
     });
 
     return {
@@ -657,41 +978,183 @@ export class TemplateService {
     return data || undefined;
   }
 
-  async create(body: TemplateBodyRequest): Promise&lt;TemplateEntity&gt; {
-    const child &#x3D; new TemplateEntity().extend({
-      ...body,
+  async getByIdWithError(id?: number): Promise&lt;TemplateEntity&gt; {
+    const category &#x3D; await this.getById(id);
+
+    if (!category) {
+      throw new ApiException(
+        &quot;can not find recoed&quot;,
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: &quot;TemplateEntity&quot;,
+        }
+      );
+    }
+
+    return category;
+  }
+
+  async getByIdWithCategories(id?: number) {
+    await this.getByIdWithError(id);
+
+    const categories &#x3D; (await this.repoTC.find({
+      where: {
+        templateId: id,
+      },
+      relations: {
+        category: true,
+      },
+    })) as (TemplateCategoryEntity &amp; {
+      products: TemplateCategoryProductEntity[];
+    })[];
+
+    const categoryProducts &#x3D; await this.repoTCP.find({
+      where: {
+        templateCategory: {
+          id: In(categories.map((c) &#x3D;&gt; c.id)),
+        },
+      },
+      relations: {
+        templateCategory: true,
+        product: {
+          unit: true,
+        },
+      },
     });
 
-    return await this.repo.save(child);
+    const categoryMap &#x3D; _.keyBy(categories, &quot;id&quot;);
+
+    for (const cp of categoryProducts) {
+      const category &#x3D; categoryMap[cp.templateCategory.id];
+
+      if (category) {
+        if (!category.products) {
+          category.products &#x3D; [];
+        }
+        category.products.push(cp);
+      }
+    }
+
+    return categories;
+  }
+
+  async saveData(
+    child: TemplateEntity,
+    body: TemplateBodyRequest,
+    remove &#x3D; false
+  ) {
+    return await this.em.transaction(async (entityManager: EntityManager) &#x3D;&gt; {
+      const template &#x3D; await entityManager.save(child);
+      const categories: Promise&lt;unknown&gt;[] &#x3D; [];
+      const products: Promise&lt;unknown&gt;[] &#x3D; [];
+
+      if (remove) {
+        await this.repoTCP.delete({
+          templateId: template.id,
+        });
+        await this.repoTC.delete({
+          templateId: template.id,
+        });
+      }
+
+      for (const c of body.categories) {
+        const productCategory &#x3D;
+          await entityManager.findOneBy&lt;ProductCategoryEntity&gt;(
+            ProductCategoryEntity,
+            {
+              id: c.productCategoryId,
+            }
+          );
+
+        if (!productCategory) {
+          throw new ApiException(
+            &quot;can not find recoed&quot;,
+            ApiStatusCode.KEY_NOT_EXIST,
+            HttpStatus.OK,
+            {
+              id: c.productCategoryId,
+              type: &quot;ProductCategory&quot;,
+            }
+          );
+        }
+
+        const templateCategory &#x3D; new TemplateCategoryEntity().extend({
+          category: productCategory,
+          templateId: child.id,
+          name: c.name,
+        });
+        categories.push(entityManager.save(templateCategory));
+
+        for (const p of c.products) {
+          const product &#x3D; await entityManager.findOneBy(ProductEntity, {
+            id: p.productId,
+          });
+
+          if (!product) {
+            throw new ApiException(
+              &quot;can not find recoed&quot;,
+              ApiStatusCode.KEY_NOT_EXIST,
+              HttpStatus.OK,
+              {
+                id: p,
+                type: &quot;Product&quot;,
+              }
+            );
+          }
+
+          const templateCategoryProduct &#x3D;
+            new TemplateCategoryProductEntity().extend({
+              product: product,
+              price: p.price,
+              count: p.count,
+              templateCategory: templateCategory,
+              templateId: child.id,
+            });
+
+          products.push(entityManager.save(templateCategoryProduct));
+        }
+      }
+
+      await Promise.all([...categories, ...products]).catch((e) &#x3D;&gt; {
+        throw e;
+      });
+
+      return template;
+    });
+  }
+
+  async create(
+    body: TemplateBodyRequest,
+    user?: ActiveUserData
+  ): Promise&lt;TemplateEntity&gt; {
+    const { categories, ...rest } &#x3D; body;
+    const child &#x3D; new TemplateEntity().extend({
+      // ...rest,
+      name: rest.name,
+      desc: rest.desc,
+      companyId: user?.companyId,
+      userId: user?.id,
+      status: 1,
+    });
+
+    return this.saveData(child, body);
   }
 
   async update(id: number, body: TemplateBodyRequest): Promise&lt;TemplateEntity&gt; {
-    const child &#x3D; await this.getById(id);
+    const child &#x3D; await this.getByIdWithError(id);
 
-    if (!child) {
-      throw new ApiException(
-        &quot;can not find recoed&quot;,
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    child.extend({
+      desc: body.desc,
+      name: body.name,
+    });
 
-    child.desc &#x3D; body.desc;
-    child.name &#x3D; body.name;
-
-    return this.repo.save(child);
+    return this.saveData(child, body, true);
   }
 
   async remove(id: number) {
-    const child &#x3D; await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        &quot;can not find recoed&quot;,
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child &#x3D; await this.getByIdWithError(id);
 
     return this.repo.softRemove(child);
   }

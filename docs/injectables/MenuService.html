@@ -119,6 +119,14 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>菜单服务
+用于管理系统的菜单树结构，包括菜单的增删改查等操作</p>
+
+            </p>
 
 
 
@@ -149,11 +157,11 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#remove" >remove</a>
+                                <a href="#getByIdWithError" >getByIdWithError</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#testData" >testData</a>
+                                <a href="#remove" >remove</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -182,7 +190,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:13</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:17</a></div>
                             </td>
                         </tr>
 
@@ -271,19 +279,25 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="20"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:20</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="28"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:28</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>获取所有菜单</p>
+</div>
 
                         <div class="io-description">
                             <b>Returns : </b>    <code>Promise&lt;MenuEntity[]&gt;</code>
 
                         </div>
+                            <div class="io-description">
+                                <p>返回完整的菜单树结构</p>
+
+                            </div>
                 </td>
             </tr>
         </tbody>
@@ -310,14 +324,16 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:40</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:94</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>创建新菜单</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -328,6 +344,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -342,6 +359,10 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>菜单创建请求体</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -351,7 +372,8 @@
 
                         </div>
                             <div class="io-description">
-                                
+                                <p>返回新创建的菜单实体</p>
+
                             </div>
                 </td>
             </tr>
@@ -379,14 +401,16 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="28"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:28</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:43</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>根据ID获取菜单</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -397,6 +421,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -411,16 +436,98 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>菜单ID</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;MenuEntity | undefined&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;MenuEntity | null&gt;</code>
 
                         </div>
                             <div class="io-description">
+                                <p>返回菜单实体，如果不存在返回 null</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getByIdWithError"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getByIdWithError</b></span>
+                        <a href="#getByIdWithError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getByIdWithError(id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="71"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:71</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>根据ID获取菜单，如果不存在则抛出异常</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
                                 
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>菜单ID</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;MenuEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>返回菜单实体</p>
+
                             </div>
                 </td>
             </tr>
@@ -448,14 +555,16 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="79"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:79</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:138</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>删除菜单</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -466,6 +575,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -480,6 +590,10 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>要删除的菜单ID</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -489,47 +603,9 @@
 
                         </div>
                             <div class="io-description">
-                                
+                                <p>返回删除的菜单实体</p>
+
                             </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="testData"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>testData</b></span>
-                        <a href="#testData"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>testData()</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="93"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:93</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
-
-                        </div>
                 </td>
             </tr>
         </tbody>
@@ -556,14 +632,16 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">packages/server/src/modules/menu/menu.service.ts:112</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>更新菜单</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -574,6 +652,7 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -588,6 +667,10 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>要更新的菜单ID</p>
+
+                                            </td>
                                         </tr>
                                         <tr>
                                                 <td>body</td>
@@ -600,6 +683,10 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>菜单更新请求体</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -609,7 +696,8 @@
 
                         </div>
                             <div class="io-description">
-                                
+                                <p>返回更新后的菜单实体</p>
+
                             </div>
                 </td>
             </tr>
@@ -627,11 +715,15 @@ import { MenuEntity, UserEntity } from &quot;@bill/database/dist/entities&quot;;
 import { HttpCode, HttpStatus, Injectable } from &quot;@nestjs/common&quot;;
 import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
 
-import { ApiException } from &quot;@/exception/api.exception&quot;;
+import { ApiException } from &quot;@/common/exception/api.exception&quot;;
 import { Log4jsService } from &quot;@/modules/log4js&quot;;
 
 import { MenuBodyRequest } from &quot;./menu.interface&quot;;
 
+/**
+ * 菜单服务
+ * 用于管理系统的菜单树结构，包括菜单的增删改查等操作
+ */
 @Injectable()
 export class MenuService {
   constructor(
@@ -640,26 +732,76 @@ export class MenuService {
     private em: EntityManager
   ) {}
 
+  /**
+   * 获取所有菜单
+   * @returns 返回完整的菜单树结构
+   */
   async all(): Promise&lt;MenuEntity[]&gt; {
     const trees &#x3D; await this.repo.manager
       .getTreeRepository(MenuEntity)
-      .findTrees();
+      .findTrees({
+        relations: [&quot;parent&quot;],
+      });
 
     return trees;
   }
 
-  async getById(id?: number): Promise&lt;MenuEntity | undefined&gt; {
+  /**
+   * 根据ID获取菜单
+   * @param id 菜单ID
+   * @returns 返回菜单实体，如果不存在返回 null
+   */
+  async getById(id?: number): Promise&lt;MenuEntity | null&gt; {
     if (!id) {
-      return undefined;
+      return null;
     }
 
-    const menu &#x3D; await this.repo.findOneBy({
-      id,
+    const menu &#x3D; await this.repo.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        parent: true,
+      },
     });
 
-    return menu || undefined;
+    if (menu) {
+      menu.parentId &#x3D; menu?.parent?.id;
+      menu.parent &#x3D; null;
+    }
+
+    return menu || null;
   }
 
+  /**
+   * 根据ID获取菜单，如果不存在则抛出异常
+   * @param id 菜单ID
+   * @returns 返回菜单实体
+   * @throws ApiException 当菜单不存在时
+   */
+  async getByIdWithError(id?: number): Promise&lt;MenuEntity&gt; {
+    const menu &#x3D; await this.getById(id);
+
+    if (!menu) {
+      throw new ApiException(
+        &quot;can not find recoed&quot;,
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: &quot;MenuEntity&quot;,
+        }
+      );
+    }
+
+    return menu;
+  }
+
+  /**
+   * 创建新菜单
+   * @param body 菜单创建请求体
+   * @returns 返回新创建的菜单实体
+   */
   async create(body: MenuBodyRequest): Promise&lt;MenuEntity&gt; {
     const { id, parentId, ...rest } &#x3D; body;
 
@@ -672,16 +814,14 @@ export class MenuService {
     return await this.repo.save(child);
   }
 
+  /**
+   * 更新菜单
+   * @param id 要更新的菜单ID
+   * @param body 菜单更新请求体
+   * @returns 返回更新后的菜单实体
+   */
   async update(id: number, body: MenuBodyRequest): Promise&lt;MenuEntity&gt; {
-    const child &#x3D; await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        &quot;can not find recoed&quot;,
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child &#x3D; await this.getByIdWithError(id);
 
     child.icon &#x3D; body.icon;
     child.label &#x3D; body.label;
@@ -689,8 +829,9 @@ export class MenuService {
     child.order &#x3D; body.order;
     child.route &#x3D; body.route;
     child.type &#x3D; body.type;
+    child.component &#x3D; body.component;
 
-    child.parent &#x3D; undefined;
+    child.parent &#x3D; null;
 
     if (body.parentId) {
       child.parent &#x3D; await this.getById(body.parentId);
@@ -699,6 +840,12 @@ export class MenuService {
     return this.repo.save(child);
   }
 
+  /**
+   * 删除菜单
+   * @param id 要删除的菜单ID
+   * @returns 返回删除的菜单实体
+   * @throws ApiException 当菜单不存在时
+   */
   async remove(id: number) {
     const child &#x3D; await this.getById(id);
 
@@ -711,47 +858,6 @@ export class MenuService {
     }
 
     return this.repo.remove(child);
-  }
-
-  async testData() {
-    const dashboard &#x3D; new MenuEntity().extend({
-      label: &quot;sys.menu.dashboard&quot;,
-      name: &quot;Dashboard&quot;,
-      icon: &quot;ic-analysis&quot;,
-      type: PermissionType.CATALOGUE,
-      route: &quot;dashboard&quot;,
-      order: 1,
-    });
-
-    const child1 &#x3D; new MenuEntity().extend({
-      label: &quot;sys.menu.dashboard1&quot;,
-      name: &quot;Dashboard-Child1&quot;,
-      icon: &quot;ic-analysis&quot;,
-      type: PermissionType.CATALOGUE,
-      route: &quot;dashboard&quot;,
-      order: 1,
-      parent: dashboard,
-    });
-    const child2 &#x3D; new MenuEntity().extend({
-      label: &quot;sys.menu.dashboard1&quot;,
-      name: &quot;Dashboard-Child2&quot;,
-      icon: &quot;ic-analysis&quot;,
-      type: PermissionType.CATALOGUE,
-      route: &quot;dashboard&quot;,
-      order: 1,
-      parent: dashboard,
-    });
-
-    return await this.em.transaction(async (transactionalEntityManager) &#x3D;&gt; {
-      await transactionalEntityManager.save(dashboard);
-
-      return await Promise.all([
-        transactionalEntityManager.save(child1),
-        transactionalEntityManager.save(child2),
-      ]);
-    });
-
-    console.log(1111);
   }
 }
 </code></pre>

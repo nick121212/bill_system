@@ -115,6 +115,12 @@
             <code>packages/server/src/modules/auth/auth.controller.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Prefix</h3>
+            </p>
+            <p class="comment">
+                <code>auth</code>
+            </p>
 
 
 
@@ -137,20 +143,18 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                <a href="#getProfile" >getProfile</a>
+                                <a href="#profile" >profile</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier">Async</span>
-                                <a href="#login" >login</a>
+                                <a href="#signIn" >signIn</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
-                                    <span class="modifier">Async</span>
-                                <a href="#logout" >logout</a>
+                                <a href="#signOut" >signOut</a>
                             </li>
                         </ul>
                     </td>
@@ -173,19 +177,19 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getProfile"></a>
+                    <a name="profile"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                        <span ><b>getProfile</b></span>
-                        <a href="#getProfile"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>profile</b></span>
+                        <a href="#profile"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getProfile(req)</code>
+                    <code>profile(user: <a href="../interfaces/ActiveUserData.html" target="_self">ActiveUserData</a>)</code>
                 </td>
             </tr>
 
@@ -193,7 +197,85 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@UseGuards(JwtAuthGuard)<br />@Get(&#x27;profile&#x27;)<br /></code>
+                    <code>@HttpCode(HttpStatus.OK)<br />@Get(&#x27;profile&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="35"
+                                    class="link-to-prism">packages/server/src/modules/auth/auth.controller.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ActiveUserData.html" target="_self" >ActiveUserData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signIn"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                        <span ><b>signIn</b></span>
+                        <a href="#signIn"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signIn(signInDto: <a href="../classes/AuthRequest.html" target="_self">AuthRequest</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@HttpCode(HttpStatus.OK)<br />@Public()<br />@Post(&#x27;sign-in&#x27;)<br /></code>
                 </td>
             </tr>
 
@@ -215,12 +297,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>req</td>
+                                                <td>signInDto</td>
+                                            <td>
+                                                            <code><a href="../classes/AuthRequest.html" target="_self" >AuthRequest</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -246,21 +332,19 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="login"></a>
+                    <a name="signOut"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Async</span>
-                        <span ><b>login</b></span>
-                        <a href="#login"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>signOut</b></span>
+                        <a href="#signOut"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>login(req)</code>
+                    <code>signOut(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
@@ -268,14 +352,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Public()<br />@UseGuards(undefined)<br />@Post(&#x27;login&#x27;)<br /></code>
+                    <code>@HttpCode(HttpStatus.OK)<br />@Post(&#x27;sign-out&#x27;)<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="17"
-                                    class="link-to-prism">packages/server/src/modules/auth/auth.controller.ts:17</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">packages/server/src/modules/auth/auth.controller.ts:43</a></div>
                         </td>
                     </tr>
 
@@ -290,12 +374,16 @@
                                     <thead>
                                         <tr>
                                             <td>Name</td>
+                                                <td>Type</td>
                                             <td>Optional</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>req</td>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
 
                                             <td>
                                                     No
@@ -307,81 +395,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
-
-                        </div>
-                            <div class="io-description">
-                                
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="logout"></a>
-                    <span class="name">
-                            <span class="modifier"></span>
-                            <span class="modifier"></span>
-                            <span class="modifier">Async</span>
-                        <span ><b>logout</b></span>
-                        <a href="#logout"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>logout(req)</code>
-                </td>
-            </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <b>Decorators : </b>
-                    <br />
-                    <code>@UseGuards(undefined)<br />@Post(&#x27;auth/logout&#x27;)<br /></code>
-                </td>
-            </tr>
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="23"
-                                    class="link-to-prism">packages/server/src/modules/auth/auth.controller.ts:23</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                                <td>req</td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>    <code>unknown</code>
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -395,36 +409,50 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Controller, Request, Post, UseGuards, Get } from &quot;@nestjs/common&quot;;
-import { AuthGuard } from &quot;@nestjs/passport&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Request,
+  Get,
+} from &quot;@nestjs/common&quot;;
 
+import { ActiveUser } from &quot;@/common/decorators/active-user.decorator&quot;;
+import { Public } from &quot;@/common/decorators/public.decorator&quot;;
+import { ActiveUserData } from &quot;@/common/interfaces/active-user-data.interface&quot;;
+
+import { AuthRequest } from &quot;./auth.interface&quot;;
 import { AuthService } from &quot;./auth.service&quot;;
-import { JwtAuthGuard } from &quot;./jwt-auth.guard&quot;;
-import { Public } from &quot;@/decorator/public&quot;;
 
-@Controller({
-  path: [&quot;auth&quot;],
-})
+type RequestWithUser &#x3D; Request &amp; {
+  user: unknown;
+};
+
+@Controller(&quot;auth&quot;)
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
+  @HttpCode(HttpStatus.OK)
   @Public()
-  @UseGuards(AuthGuard(&quot;local&quot;))
-  @Post(&quot;login&quot;)
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  @Post(&quot;sign-in&quot;)
+  signIn(@Body() signInDto: AuthRequest) {
+    return this.authService.login(signInDto);
   }
 
-  @UseGuards(AuthGuard(&quot;local&quot;))
-  @Post(&quot;auth/logout&quot;)
-  async logout(@Request() req) {
-    return req.logout();
-  }
-
-  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Get(&quot;profile&quot;)
-  getProfile(@Request() req) {
-    return req.user;
+  profile(
+    @ActiveUser() user: ActiveUserData
+  ): Promise&lt;unknown&gt; {
+    return this.authService.profile(user);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post(&quot;sign-out&quot;)
+  signOut(@ActiveUser(&quot;id&quot;) userId: string): Promise&lt;void&gt; {
+    return this.authService.signOut(userId);
   }
 }
 </code></pre>
