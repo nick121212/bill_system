@@ -166,24 +166,12 @@ export class OrderService {
 
       for (const c of body.categories) {
         const productCategory =
-          await entityManager.findOneBy<ProductCategoryEntity>(
+          await entityManager.findOneByOrFail<ProductCategoryEntity>(
             ProductCategoryEntity,
             {
               id: c.productCategoryId,
             }
           );
-
-        if (!productCategory) {
-          throw new ApiException(
-            "can not find recoed",
-            ApiStatusCode.KEY_NOT_EXIST,
-            HttpStatus.OK,
-            {
-              id: c.productCategoryId,
-              type: "ProductCategory",
-            }
-          );
-        }
 
         const orderCategory = new OrderCategoryEntity().extend({
           category: productCategory,
@@ -193,24 +181,12 @@ export class OrderService {
         categories.push(entityManager.save(orderCategory));
 
         for (const p of c.products) {
-          const product = await entityManager.findOneBy(ProductEntity, {
+          const product = await entityManager.findOneByOrFail(ProductEntity, {
             id: p.productId,
           });
 
-          if (!product) {
-            throw new ApiException(
-              "can not find recoed",
-              ApiStatusCode.KEY_NOT_EXIST,
-              HttpStatus.OK,
-              {
-                id: p,
-                type: "Product",
-              }
-            );
-          }
-
           const orderProduct = new OrderProductEntity().extend({
-            productId: product.id,
+            productId: p.productId,
             name: product.name,
             price: p.price,
             discount: p.discount,
