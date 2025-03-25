@@ -58,10 +58,10 @@ export class OrderStatusRequest {
   status?: OrderStatus;
 }
 
-export class OrderQuery extends BaseQuery {
+export class OrderWhere {
   @IsDate()
   startDate?: Date;
-
+  
   @IsDate()
   endDate?: Date;
 
@@ -74,3 +74,5 @@ export class OrderQuery extends BaseQuery {
   @IsString()
   no?: string;
 }
+
+export class OrderQuery extends BaseQuery<OrderWhere> {}

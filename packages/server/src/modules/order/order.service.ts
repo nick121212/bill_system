@@ -1,5 +1,12 @@
 import * as _ from "lodash";
-import { EntityManager, In, LessThan, MoreThan, Repository } from "typeorm";
+import {
+  Between,
+  EntityManager,
+  In,
+  LessThan,
+  MoreThan,
+  Repository,
+} from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   OrderCategoryEntity,
@@ -46,8 +53,13 @@ export class OrderService {
     const { startDate, endDate, ...rest } = query.where ?? {};
     const whereClause = {
       ...rest,
-      ...(startDate ? { createdAt: MoreThan(startDate) } : {}),
-      ...(endDate ? { createdAt: LessThan(endDate) } : {}),
+
+      ...(startDate && endDate
+        ? {
+            createTime: Between(startDate, endDate),
+          }
+        : {}),
+
       ...dataFilter(this.request.userEntity),
     };
     const [rows, count] = await this.repo.findAndCount({
