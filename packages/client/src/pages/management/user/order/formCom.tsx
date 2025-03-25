@@ -276,7 +276,7 @@ export default function FormCom({ formValue, loadingAjax, form, formRef }: IProp
                   type="primary"
                   variant="filled"
                   onClick={() => {
-                    if (!customerId || !templateId) {
+                    if (!customerId || (!formValue && !templateId)) {
                       message.error('请选择客户和模板');
                       return;
                     }
