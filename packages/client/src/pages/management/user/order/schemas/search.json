@@ -14,7 +14,7 @@
       "items": {
         "type": "object"
       },
-      "title": "创建日期"
+      "title": "创建时间"
     }
   }
 }

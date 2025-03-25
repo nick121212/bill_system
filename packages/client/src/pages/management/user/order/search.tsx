@@ -42,21 +42,22 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
         showInlineError
         schema={bridge}
         onSubmit={(formData) => {
-          for (const key in formData) {
-            if (formData[key] === '') {
-              delete formData[key];
+          const modifiedData = { ...formData };
+          for (const key in modifiedData) {
+            if (modifiedData[key] === '') {
+              delete modifiedData[key];
             }
             if (key === 'time') {
-              formData.startTime = dayjs((formData[key] as Date[])[0]).format(
+              modifiedData.startTime = dayjs((modifiedData[key] as Date[])[0]).format(
                 'YYYY-MM-DD',
               );
-              formData.startend = dayjs((formData[key] as Date[])[1]).format(
+              modifiedData.startend = dayjs((modifiedData[key] as Date[])[1]).format(
                 'YYYY-MM-DD',
               );
-              delete formData[key];
+              delete modifiedData[key];
             }
           }
-          onSuccess?.(formData);
+          onSuccess?.(modifiedData);
         }}
       >
         <Form preserve={false} layout="inline">
