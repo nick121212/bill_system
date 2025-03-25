@@ -48,10 +48,10 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
               delete modifiedData[key];
             }
             if (key === 'time') {
-              modifiedData.startTime = dayjs((modifiedData[key] as Date[])[0]).format(
+              modifiedData.startDate = dayjs((modifiedData[key] as Date[])[0]).format(
                 'YYYY-MM-DD',
               );
-              modifiedData.startend = dayjs((modifiedData[key] as Date[])[1]).format(
+              modifiedData.endDate = dayjs((modifiedData[key] as Date[])[1]).format(
                 'YYYY-MM-DD',
               );
               delete modifiedData[key];
