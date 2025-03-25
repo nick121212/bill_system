@@ -128,7 +128,7 @@ export default function CatProd(props: IProps) {
       totalPrice: Number(totalPrice),
       products: products.map((product) => {
         return {
-          id: product?.id,
+          productId: product?.id,
           price: product?.price,
           count: product?.count ?? 1,
           discount: product?.discount,
@@ -249,7 +249,7 @@ export default function CatProd(props: IProps) {
       title: '总价',
       dataIndex: 'totalPrice',
       align: 'center',
-      render: (_, record, index) => {
+      render: (_, record) => {
         const res = handleTotalPrice(record);
         return res;
       },
@@ -282,7 +282,7 @@ export default function CatProd(props: IProps) {
       productCategoryId: categoryId,
       products: newProducts.map((product) => {
         return {
-          id: product?.id,
+          productId: product?.id,
           price: product?.price,
           count: product?.count ?? 1,
           discount: product?.discount,
