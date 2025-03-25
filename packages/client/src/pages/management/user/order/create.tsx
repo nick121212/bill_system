@@ -12,7 +12,7 @@ import {
   message,
   Modal,
 } from 'antd';
-
+import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import type {
@@ -23,10 +23,9 @@ import type {
   TemplateCategoryProductEntity,
   CustomerEntity,
 } from '@bill/database/esm';
-import useAxios from 'axios-hooks';
 
-import useFormAction from '@/hooks/form/useFormAction';
 import useData from '@/hooks/data/useData';
+import useFormAction from '@/hooks/form/useFormAction';
 import { getRandomId } from '@/utils/utils';
 
 import CatProd, { IValue } from './catProd';
@@ -123,7 +122,7 @@ export default function OrderCreateModal({
           customerId: formValue.customer.id,
           categories: categories?.map((item: TmpCategorys) => ({
             name: item.name,
-            productCategoryId: item.category.id,
+            productCategoryId: item.category?.id,
             products: item.products?.map((product) => ({
               ...product,
               name: product.product.name,
@@ -145,7 +144,7 @@ export default function OrderCreateModal({
         const categories = res.data?.map((item: TmpCategorys) => ({
           id: item.id,
           name: item.name,
-          productCategoryId: item.category.id,
+          productCategoryId: item.category?.id,
           products: item.products?.map((product) => ({
             ...product,
             name: product.product.name,

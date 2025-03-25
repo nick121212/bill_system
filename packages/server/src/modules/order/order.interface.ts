@@ -1,6 +1,7 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  IsDate,
   IsNumber,
   IsString,
   Max,
@@ -57,4 +58,19 @@ export class OrderStatusRequest {
   status?: OrderStatus;
 }
 
-export class OrderQuery extends BaseQuery {}
+export class OrderQuery extends BaseQuery {
+  @IsDate()
+  startDate?: Date;
+
+  @IsDate()
+  endDate?: Date;
+
+  @IsNumber()
+  customerId?: number;
+
+  @IsNumber()
+  status?: OrderStatus;
+
+  @IsString()
+  no?: string;
+}

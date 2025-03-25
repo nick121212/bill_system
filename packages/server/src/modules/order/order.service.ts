@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { EntityManager, In, Repository } from "typeorm";
+import { EntityManager, In, LessThan, MoreThan, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   OrderCategoryEntity,
@@ -43,13 +43,17 @@ export class OrderService {
     query: OrderQuery,
     user: ActiveUserData
   ): Promise<{ rows: OrderEntity[]; count: number }> {
+    const { startDate, endDate, ...rest } = query.where ?? {};
+    const whereClause = {
+      ...rest,
+      ...(startDate ? { createdAt: MoreThan(startDate) } : {}),
+      ...(endDate ? { createdAt: LessThan(endDate) } : {}),
+      ...dataFilter(this.request.userEntity),
+    };
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
-      where: {
-        ...query.where,
-        ...dataFilter(this.request.userEntity),
-      },
+      where: whereClause,
       relations: {
         customer: true,
       },
