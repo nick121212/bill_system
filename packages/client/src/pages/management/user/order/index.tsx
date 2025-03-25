@@ -15,7 +15,7 @@ import Remove from './remove';
 import Search from './search';
 import OrderStatus from './orderStatus';
 
-const colorStatus = ['#f50', '#2db7f5', 'volcano'];
+const colorStatus = ['#f50', '#87d068', 'volcano'];
 
 export default function OrderPage() {
   const { t } = useTranslation();
