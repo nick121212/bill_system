@@ -1,7 +1,0 @@
-{
-  "title": "User",
-  "type": "object",
-  "properties": {
-    "name": { "type": "string", "title": "公司名称" }
-  }
-}
