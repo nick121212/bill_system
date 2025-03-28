@@ -15,9 +15,11 @@ import {
   OrderProductEntity,
   OrderCategoryEntity,
 } from "./entities";
+import { TotalAmountView } from "./views";
 
 export * from "./enums";
 export * from "./entities";
+export * from "./views";
 
 export default [
   UserEntity,
@@ -35,4 +37,5 @@ export default [
   ProductPriceEntity,
   OrderProductEntity,
   OrderCategoryEntity,
+  TotalAmountView,
 ];

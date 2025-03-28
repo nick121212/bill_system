@@ -1,9 +1,9 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Form, Space } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { CustomerEntity } from '@bill/database/esm';
-import dayjs from 'dayjs';
 
 import useData from '@/hooks/data/useData';
 import { getBridge } from '@/uniforms/ajv';

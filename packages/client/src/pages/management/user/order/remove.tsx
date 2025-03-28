@@ -69,7 +69,7 @@ export default function PermissionModal({
       >
         确定要删除
         <Tag bordered={false} color="red" style={{ fontSize: 14 }}>
-          {record.name}
+          {record.no}
         </Tag>
         订单吗？
       </Modal>

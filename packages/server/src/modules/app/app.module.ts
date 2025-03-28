@@ -17,15 +17,15 @@ import { CompanyModule } from "@/modules/company/company.module";
 import { CustomerModule } from "@/modules/customer/customer.module";
 import { Log4jsGlobalModule } from "@/modules/log4js/log4js.module";
 import { MenuModule } from "@/modules/menu/menu.module";
+import { OrderModule } from "@/modules/order/order.module";
 import { ProductModule } from "@/modules/product/product.module";
 import { ProductCategoryModule } from "@/modules/productCategory/category.module";
 import { ProductUnitModule } from "@/modules/productUnit/unit.module";
 import { RedisModule } from "@/modules/redis/redis.module";
 import { RoleModule } from "@/modules/role/role.module";
+import { StatisticsModule } from "@/modules/statistics/statistics.module";
 import { TemplateModule } from "@/modules/template/template.module";
 import { UserModule } from "@/modules/user/user.module";
-
-import { OrderModule } from "../order/order.module";
 
 @Module({
   imports: [
@@ -71,6 +71,7 @@ import { OrderModule } from "../order/order.module";
     CompanyModule,
     CustomerModule,
     OrderModule,
+    StatisticsModule,
   ],
   providers: [
     {
