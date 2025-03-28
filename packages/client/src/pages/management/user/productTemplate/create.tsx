@@ -1,6 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { Button, Drawer, Form, Space, Spin, Input } from 'antd';
-
+import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import type {
@@ -8,7 +8,6 @@ import type {
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
 } from '@bill/database/esm';
-import useAxios from 'axios-hooks';
 
 import useFormAction from '@/hooks/form/useFormAction';
 
@@ -68,9 +67,10 @@ export default function TemplateCreateModal({
           ...formValue,
           categories: categories?.map((item: TmpCategorys) => ({
             name: item.name,
-            productCategoryId: item.category.id,
+            productCategoryId: item.category?.id,
             products: item.products?.map((product) => ({
               ...product,
+              id: product.product?.id || product.id,
               name: product.product.name,
               label: product.product.label,
               unit: product.product.unit,

@@ -94,11 +94,6 @@ export default function OrderCreateModal({
         width={'100%'}
         onClose={onClose}
         open={showModal}
-        styles={{
-          body: {
-            padding: 50,
-          },
-        }}
         extra={
           <Space>
             <div

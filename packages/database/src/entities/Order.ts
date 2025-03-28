@@ -28,7 +28,7 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: "" })
+  @Column({ default: "", unique: true })
   no?: string;
 
   /**

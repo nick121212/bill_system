@@ -154,24 +154,12 @@ export class TemplateService {
 
       for (const c of body.categories) {
         const productCategory =
-          await entityManager.findOneBy<ProductCategoryEntity>(
+          await entityManager.findOneByOrFail<ProductCategoryEntity>(
             ProductCategoryEntity,
             {
               id: c.productCategoryId,
             }
           );
-
-        if (!productCategory) {
-          throw new ApiException(
-            "can not find recoed",
-            ApiStatusCode.KEY_NOT_EXIST,
-            HttpStatus.OK,
-            {
-              id: c.productCategoryId,
-              type: "ProductCategory",
-            }
-          );
-        }
 
         const templateCategory = new TemplateCategoryEntity().extend({
           category: productCategory,
@@ -181,27 +169,15 @@ export class TemplateService {
         categories.push(entityManager.save(templateCategory));
 
         for (const p of c.products) {
-          const product = await entityManager.findOneBy(ProductEntity, {
-            id: p.productId,
+          const product = await entityManager.findOneByOrFail(ProductEntity, {
+            id: p.productId || p.id,
           });
-
-          if (!product) {
-            throw new ApiException(
-              "can not find recoed",
-              ApiStatusCode.KEY_NOT_EXIST,
-              HttpStatus.OK,
-              {
-                id: p,
-                type: "Product",
-              }
-            );
-          }
 
           const templateCategoryProduct =
             new TemplateCategoryProductEntity().extend({
               product: product,
               price: p.price,
-              count: p.count,
+              count: p.count || 1,
               templateCategory: templateCategory,
               templateId: child.id,
             });

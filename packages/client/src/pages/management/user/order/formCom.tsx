@@ -10,7 +10,10 @@ import {
   Col,
   message,
   Modal,
+  Divider,
+  Splitter,
 } from 'antd';
+import useAxios from 'axios-hooks';
 import { PlusOutlined } from '@ant-design/icons';
 import type {
   OrderEntity,
@@ -19,7 +22,6 @@ import type {
   TemplateCategoryProductEntity,
   CustomerEntity,
 } from '@bill/database/esm';
-import useAxios from 'axios-hooks';
 
 import useData from '@/hooks/data/useData';
 import { getRandomId } from '@/utils/utils';
@@ -39,7 +41,12 @@ type TmpCategorys = TemplateCategoryEntity & {
   products: TemplateCategoryProductEntity[];
 };
 
-export default function FormCom({ formValue, loadingAjax, form, formRef }: IProps) {
+export default function FormCom({
+  formValue,
+  loadingAjax,
+  form,
+  formRef,
+}: IProps) {
   const customerId = Form.useWatch('customerId', form);
   const [templateId, setTemplateId] = useState<number | undefined>(undefined);
   const [{ loading: tempCateLoading }, fetchTmpCategories] = useAxios(
@@ -163,23 +170,25 @@ export default function FormCom({ formValue, loadingAjax, form, formRef }: IProp
   return (
     <Form
       preserve={false}
-      layout="horizontal"
+      layout="vertical"
       labelAlign="right"
       ref={formRef}
+      className="h-full"
       form={form}
     >
-      <Spin spinning={loadingAjax}>
-        <Row gutter={24}>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item
+      {/* <Spin className='h-full' spinning={loadingAjax}> */}
+      <Form.Item
               label="订单编号"
               name="no"
               rules={[{ required: true, message: '请输入订单编号' }]}
             >
               <Input />
             </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
+
+            <Form.Item label="描述" name="desc">
+              <Input.TextArea autoSize={{ maxRows: 6, minRows: 3 }} />
+            </Form.Item>
+
             <Form.Item
               label="客户"
               name="customerId"
@@ -199,8 +208,7 @@ export default function FormCom({ formValue, loadingAjax, form, formRef }: IProp
                 }}
               />
             </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
+
             <Form.Item label="模板" name="templateId">
               <Select
                 loading={loadingTemplates}
@@ -219,80 +227,56 @@ export default function FormCom({ formValue, loadingAjax, form, formRef }: IProp
                 onChange={handleTemplateChange}
               />
             </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="描述" name="desc">
-              <Input.TextArea autoSize={{ maxRows: 2 }} />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Form.List
-          name="categories"
-          rules={[
-            {
-              validator(_, value, callback) {
-                if (!value?.length) {
-                  callback('请添加产品');
-                }
-                callback();
+          <Form.List
+            name="categories"
+            rules={[
+              {
+                validator(_, value, callback) {
+                  if (!value?.length) {
+                    callback('请添加产品');
+                  }
+                  callback();
+                },
               },
-            },
-          ]}
-        >
-          {(fields, { add, remove }, { errors }) => (
-            <Form.Item required>
-              <Space size={10} direction="vertical" style={{ width: '100%' }}>
-                {fields.map((field, index) => (
-                  <Form.Item
-                    key={field.key}
-                    name={[field.name]}
-                    // rules={[
-                    //   {
-                    //     validator(_, value, callback) {
-                    //       if (!value?.name) {
-                    //         callback('请输入名称');
-                    //       } else if (!value?.productCategoryId) {
-                    //         callback('请选择产品分类');
-                    //       } else
-                    //       if (!value?.products?.length) {
-                    //         callback('请添加产品');
-                    //       }
-                    //       callback();
-                    //     },
-                    //   },
-                    // ]}
+            ]}
+          >
+            {(fields, { add, remove }, { errors }) => (
+              <Form.Item required>
+                <Space size={10} direction="vertical" style={{ width: '100%' }}>
+                  {fields.map((field, index) => (
+                    <Form.Item key={field.key} name={[field.name]}>
+                      <CatProd
+                        key={catProdKey}
+                        onRemove={() => remove(field.name)}
+                        index={index}
+                        cusProductData={cusProductData?.[0]}
+                      />
+                    </Form.Item>
+                  ))}
+                </Space>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    variant="filled"
+                    onClick={() => {
+                      if (!customerId || (!formValue && !templateId)) {
+                        message.error('请选择客户和模板');
+                        return;
+                      }
+                      add();
+                    }}
+                    style={{ width: '100%', marginTop: 10 }}
+                    icon={<PlusOutlined />}
                   >
-                    <CatProd
-                      key={catProdKey}
-                      onRemove={() => remove(field.name)}
-                      index={index}
-                      cusProductData={cusProductData?.[0]}
-                    />
-                  </Form.Item>
-                ))}
-              </Space>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  variant="filled"
-                  onClick={() => {
-                    if (!customerId || (!formValue && !templateId)) {
-                      message.error('请选择客户和模板');
-                      return;
-                    }
-                    add();
-                  }}
-                  style={{ width: '100%', marginTop: 10 }}
-                  icon={<PlusOutlined />}
-                >
-                  新增
-                </Button>
+                    新增分类
+                  </Button>
+                </Form.Item>
+                <Form.ErrorList errors={errors} />
               </Form.Item>
-              <Form.ErrorList errors={errors} />
-            </Form.Item>
-          )}
-        </Form.List>
-      </Spin>
+            )}
+          </Form.List>
+
+      {/* </Spin> */}
     </Form>
   );
 }

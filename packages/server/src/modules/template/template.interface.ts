@@ -10,6 +10,9 @@ import { BaseQuery } from "@/common/interfaces/query";
 export class TemplateCategoryProduct {
   @IsNumber()
   productId: number;
+
+  @IsNumber()
+  id: number;
   @IsNumber()
   price: number;
   @IsNumber()
