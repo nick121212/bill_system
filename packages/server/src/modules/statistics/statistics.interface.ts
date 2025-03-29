@@ -1,5 +1,6 @@
 import { Type } from "class-transformer";
 import { IsDate, IsNumber } from "class-validator";
+import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
 
 import { BaseQuery } from "@/common/interfaces/query";
 
@@ -18,6 +19,8 @@ export class StatisticsWhere {
   @Type(() => Date)
   @IsDate()
   createTimeEnd: Date;
+
+  showCancelOrders?: boolean;
 }
 
 export class StatisticsQuery extends BaseQuery<StatisticsWhere> {

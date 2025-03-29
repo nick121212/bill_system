@@ -1,21 +1,27 @@
 import { ViewEntity, ViewColumn } from "typeorm";
 
+import { OrderStatus } from "../enums/OrderStatus";
+
 @ViewEntity({
   expression: `
         select \`order\`.\`customerId\`, 
           \`order\`.\`companyId\`, 
           \`customer\`.\`fullname\`, 
-          sum(\`products\`.\`totalPrice\`) as \`totalAmount\`,
-          DATE(\`order\`.\`create_time\`) as createTime
+          \`order\`.\`status\`, 
+          \`order\`.\`no\`, 
+          \`order\`.\`create_time\` as \`createTime\`,
+          \`products\`.\`totalPrice\`
           from order_entity as \`order\`
           inner join customer as \`customer\` on \`order\`.\`customerId\` = \`customer\`.\`id\`
           inner join order_category as \`category\` on \`order\`.\`id\` = \`category\`.\`orderId\`
           inner join order_products as \`products\` on \`category\`.\`id\` = \`products\`.\`orderCategoryId\`
           where \`order\`.\`delete_time\` is NULL
-          group by \`order\`.\`customerId\`,\`order\`.\`companyId\`, DATE(\`order\`.\`create_time\`)
     `,
 })
 export class TotalAmountView {
+  @ViewColumn()
+  no: string;
+
   @ViewColumn()
   customerId: number;
 
@@ -25,14 +31,18 @@ export class TotalAmountView {
   @ViewColumn()
   fullname: string;
 
-  @ViewColumn({
-    transformer: {
-      to: (value) => Number(value),
-      from: (value) => Number(value),
-    },
-  })
-  totalAmount: number;
-
   @ViewColumn()
   createTime: Date;
+
+  @ViewColumn()
+  totalPrice: number;
+
+  @ViewColumn()
+  status: OrderStatus;
+
+  totalAmount: number;
+
+  totalCount: number;
+
+  customerCount: number;
 }
