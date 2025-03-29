@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { Between, Repository } from "typeorm";
 import { UserEntity } from "@bill/database";
 import { TotalAmountView } from "@bill/database";
 import { Inject, Injectable } from "@nestjs/common";
@@ -21,12 +21,26 @@ export class StatisticsService {
     query: StatisticsQuery
   ): Promise<{ rows: TotalAmountView[]; count: number }> {
     const userEntity = this.request.userEntity;
+    const { customerId, createTimeStart, createTimeEnd } =
+      query.where || {};
+    const where: any = {};
+    
+    if (userEntity.company?.id) {
+      where.companyId = userEntity.company.id;
+    }
+    
+    if (customerId) {
+      where.customerId = customerId;
+    }
+    
+    if (createTimeStart && createTimeEnd) {
+      where.createTime = Between(createTimeStart, createTimeEnd);
+    }
+
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
-      where: {
-        companyId: userEntity.company?.id,
-      },
+      where,
       relations: {},
       withDeleted: false,
     });

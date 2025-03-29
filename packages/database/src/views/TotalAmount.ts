@@ -2,13 +2,17 @@ import { ViewEntity, ViewColumn } from "typeorm";
 
 @ViewEntity({
   expression: `
-        select \`order\`.\`customerId\`, \`order\`.\`companyId\`, \`customer\`.\`fullname\`, sum(\`products\`.\`totalPrice\`) as \`totalAmount\`
+        select \`order\`.\`customerId\`, 
+          \`order\`.\`companyId\`, 
+          \`customer\`.\`fullname\`, 
+          sum(\`products\`.\`totalPrice\`) as \`totalAmount\`,
+          DATE(\`order\`.\`create_time\`) as createTime
           from order_entity as \`order\`
           inner join customer as \`customer\` on \`order\`.\`customerId\` = \`customer\`.\`id\`
           inner join order_category as \`category\` on \`order\`.\`id\` = \`category\`.\`orderId\`
           inner join order_products as \`products\` on \`category\`.\`id\` = \`products\`.\`orderCategoryId\`
           where \`order\`.\`delete_time\` is NULL
-          group by \`order\`.\`customerId\`,\`order\`.\`companyId\`
+          group by \`order\`.\`customerId\`,\`order\`.\`companyId\`, DATE(\`order\`.\`create_time\`)
     `,
 })
 export class TotalAmountView {
@@ -28,4 +32,7 @@ export class TotalAmountView {
     },
   })
   totalAmount: number;
+
+  @ViewColumn()
+  createTime: Date;
 }

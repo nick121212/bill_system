@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -61,7 +62,7 @@ export class OrderStatusRequest {
 export class OrderWhere {
   @IsDate()
   startDate?: Date;
-  
+
   @IsDate()
   endDate?: Date;
 
@@ -75,4 +76,7 @@ export class OrderWhere {
   no?: string;
 }
 
-export class OrderQuery extends BaseQuery<OrderWhere> {}
+export class OrderQuery extends BaseQuery<OrderWhere> {
+  @Type(() => OrderWhere)
+  declare where?: OrderWhere;
+}

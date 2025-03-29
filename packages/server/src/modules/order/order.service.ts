@@ -77,6 +77,16 @@ export class OrderService {
     };
   }
 
+  async getByNo(no: string): Promise<OrderEntity | null> {
+    const data = await this.repo.findOne({
+      where: {
+        no,
+      },
+    });
+
+    return data || null;
+  }
+
   async getById(id?: number): Promise<OrderEntity | null> {
     const data = await this.repo.findOne({
       where: {
@@ -227,12 +237,26 @@ export class OrderService {
   }
 
   async create(body: OrderRequest, user: ActiveUserData): Promise<OrderEntity> {
-    const { categories, ...rest } = body;
+    const { categories, no, ...rest } = body;
     const order = new OrderEntity().extend({
       ...rest,
+      no,
       companyId: user.companyId,
       userId: user.id,
     });
+    const orderNo = await this.getByNo(no);
+
+    if (orderNo) {
+      throw new ApiException(
+        "order no already exists",
+        ApiStatusCode.KEY_ALREADY_EXISTS,
+        HttpStatus.OK,
+        {
+          no: no,
+          type: "OrderEntity",
+        }
+      );
+    }
 
     return this.saveData(order, body);
   }
