@@ -10,6 +10,7 @@ import {
 
 import { BaseEntity } from "./Base";
 import { ProductEntity } from "./Product";
+import { ProductCategoryEntity } from "./ProductCategory";
 import { TemplateCategoryEntity } from "./TemplateCategory";
 
 @Entity({
@@ -28,6 +29,11 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
   @ManyToOne(() => TemplateCategoryEntity)
   @JoinColumn()
   templateCategory: TemplateCategoryEntity;
+
+  /** 关联的产品分类 */
+  @ManyToOne(() => ProductCategoryEntity)
+  @JoinColumn()
+  productCategory: ProductCategoryEntity;
 
   /** 关联的产品 */
   @ManyToOne(() => ProductEntity)

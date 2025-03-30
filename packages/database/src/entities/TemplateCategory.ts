@@ -3,13 +3,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
   CreateDateColumn,
-  JoinColumn,
-  ManyToOne,
   Column,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
-import { ProductCategoryEntity } from "./ProductCategory";
 
 @Entity({
   name: "template_category",
@@ -27,10 +24,6 @@ export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
     nullable: true,
   })
   templateId?: number;
-
-  @ManyToOne(() => ProductCategoryEntity)
-  @JoinColumn()
-  category: ProductCategoryEntity | null;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

@@ -19,10 +19,14 @@ export class TemplateEntity extends BaseEntity<TemplateEntity> {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    default: "",
+  })
   desc: string;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
   status: number;
 
   @Column({
