@@ -41,7 +41,7 @@ export class ProductService {
         // userId: user.id,
       },
       relations: {
-        category: true,
+        // category: true,
         unit: true,
       },
       withDeleted: false,
@@ -106,7 +106,7 @@ export class ProductService {
       );
     }
 
-    child.category = category;
+    // child.category = category;
     child.unit = unit;
 
     return await this.repo.save(child);
@@ -130,7 +130,7 @@ export class ProductService {
     product.cost = body.cost;
     product.desc = body.desc;
     product.price = body.price;
-    product.category = category;
+    // product.category = category;
     product.unit = unit;
 
     return this.repo.save(product);

@@ -14,6 +14,7 @@ import {
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { Roles } from "@/common/decorators/roles.decorator";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import { BaseQuery } from "@/common/interfaces/query";
 import { Log4jsService } from "@/modules/log4js";
 
 import {
@@ -43,6 +44,11 @@ export class ProductCategoryController {
   @Get("/:id")
   async one(@Param("id") id: number) {
     return this.productCategoryService.getById(id);
+  }
+
+  @Get("/:id/products")
+  async products(@Param("id") id: number, @Query() query: BaseQuery) {
+    return this.productCategoryService.getProducts(id, query);
   }
 
   @Post("/")
