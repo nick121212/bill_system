@@ -5,7 +5,7 @@ import {
   Form,
   Space,
 } from 'antd';
-import useAxios from 'axios-hooks';
+import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
 import type {
@@ -20,12 +20,16 @@ import FormCom from './formCom';
 
 
 export type ProductModalProps = {
+  btnType?: ButtonType;
+  btnTxt?: string;
   formValue?: OrderEntity;
   title: string;
   onSuccess: () => void;
 };
 
 export default function OrderCreateModal({
+  btnType = 'link',
+  btnTxt,
   formValue,
   title,
   onSuccess,
@@ -67,7 +71,7 @@ export default function OrderCreateModal({
     <>
       {formValue?.id ? (
         <Button
-          type="text"
+          type={btnType}
           shape="circle"
           loading={loadingAjax}
           icon={<EditOutlined />}
@@ -78,13 +82,13 @@ export default function OrderCreateModal({
       ) : (
         <Button
           loading={loadingAjax}
-          type="link"
+          type={btnType}
           icon={<PlusOutlined />}
           onClick={() => {
             setShowModal(true);
           }}
         >
-          {t('crud.create.buttonText')}
+          {btnTxt || t('crud.create.buttonText')}
         </Button>
       )}
 

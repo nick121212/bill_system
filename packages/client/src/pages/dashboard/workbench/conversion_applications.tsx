@@ -35,7 +35,7 @@ type Props = {
 	bg?: string;
 	strokeColor?: string;
 };
-function Basic({ percent, title, subtitle, iconify, bg, strokeColor }: Props) {
+export default function Basic({ percent, title, subtitle, iconify, bg, strokeColor }: Props) {
 	const format = (val?: number) => <span style={{ color: themeVars.colors.background.default }}>{val}%</span>;
 	return (
 		<div

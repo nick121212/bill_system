@@ -3,16 +3,31 @@ import Chart from "@/components/chart/chart";
 import useChart from "@/components/chart/useChart";
 import { SvgIcon } from "@/components/icon";
 
+export type IconType = 'rise' | 'decline' | 'steady';
+
 type Props = {
 	title: string;
-	increase: boolean;
+  iconType?: IconType;
 	percent: string;
 	count: string;
 	chartData: number[];
 };
+
+const iconColors = {
+  rise: "rgb(34, 197, 94)",
+  decline: "rgb(255, 86, 48)",
+  steady: "rgb(255, 214, 10)",
+}
+
+const signs = {
+  rise: "+",
+  decline: "-",
+  steady: "",
+}
+
 export default function TotalCard({
 	title,
-	increase,
+  iconType = 'rise',
 	count,
 	percent,
 	chartData,
@@ -22,13 +37,9 @@ export default function TotalCard({
 			<div className="flex-grow">
 				<h6 className="text-sm font-medium">{title}</h6>
 				<div className="mb-2 mt-4 flex flex-row">
-					{increase ? (
-						<SvgIcon icon="ic_rise" size={24} color="rgb(34, 197, 94)" />
-					) : (
-						<SvgIcon icon="ic_decline" size={24} color="rgb(255, 86, 48)" />
-					)}
+          <SvgIcon icon={`ic_${iconType}`} size={24} color={iconColors[iconType]} />
 					<div className="ml-2">
-						<span>{increase ? "+" : "-"}</span>
+						<span>{signs[iconType]}</span>
 						<span>{percent}</span>
 					</div>
 				</div>

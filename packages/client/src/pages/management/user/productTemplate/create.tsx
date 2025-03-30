@@ -1,5 +1,6 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { Button, Drawer, Form, Space, Spin, Input } from 'antd';
+import type { ButtonType } from 'antd/es/button';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined, EditOutlined } from '@ant-design/icons';
@@ -14,6 +15,8 @@ import useFormAction from '@/hooks/form/useFormAction';
 import CatProd from './catProd';
 
 export type ProductModalProps = {
+  btnType?: ButtonType;
+  btnTxt?: string;
   formValue?: TemplateEntity;
   title: string;
   onSuccess: () => void;
@@ -24,6 +27,8 @@ type TmpCategorys = TemplateCategoryEntity & {
 };
 
 export default function TemplateCreateModal({
+  btnType = 'link',
+  btnTxt,
   formValue,
   title,
   onSuccess,
@@ -86,7 +91,7 @@ export default function TemplateCreateModal({
     <>
       {formValue?.id ? (
         <Button
-          type="text"
+          type={btnType}
           shape="circle"
           loading={loadingAjax}
           icon={<EditOutlined />}
@@ -97,13 +102,13 @@ export default function TemplateCreateModal({
       ) : (
         <Button
           loading={loadingAjax}
-          type="link"
+          type={btnType}
           icon={<PlusOutlined />}
           onClick={() => {
             setShowModal(true);
           }}
         >
-          {t('crud.create.buttonText')}
+          {btnTxt || t('crud.create.buttonText')}
         </Button>
       )}
 

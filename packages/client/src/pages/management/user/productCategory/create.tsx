@@ -1,6 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
+import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProductCategoryEntity } from '@bill/database/esm';
@@ -12,6 +13,8 @@ import { AutoFields, AutoForm, ErrorsField, TextAreaField } from '@/uniforms/fie
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
+  btnType?: ButtonType;
+  btnTxt?: string;
   formValue?: ProductCategoryEntity;
   title: string;
   onSuccess: () => void;
@@ -20,6 +23,8 @@ export type ProductModalProps = {
 const bridge = getBridge(schema as SomeJSONSchema);
 
 export default function CategoryCreateModal({
+  btnType = 'link',
+  btnTxt,
   formValue,
   title,
   onSuccess,
@@ -44,13 +49,13 @@ export default function CategoryCreateModal({
     <>
       <Button
         loading={loadingAjax}
-        type="link"
+        type={btnType}
         icon={<PlusOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
       >
-        {t('crud.create.buttonText')}
+        {btnTxt || t('crud.create.buttonText')}
       </Button>
 
       <Drawer

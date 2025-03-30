@@ -1,12 +1,10 @@
 import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
-import type { ProductEntity } from '@bill/database/esm';
 import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
-import debounce from 'lodash/debounce';
 
 import useData from '@/hooks/data/useData';
 import useFormAction from '@/hooks/form/useFormAction';
@@ -22,7 +20,8 @@ import {
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
-  formValue?: ProductEntity;
+  btnType?: ButtonType;
+  btnTxt?: string;
   title: string;
   onSuccess: () => void;
 };
@@ -30,6 +29,8 @@ export type ProductModalProps = {
 const bridge = getBridge(schema as SomeJSONSchema);
 
 export default function ProductCreateModal({
+  btnType = 'link',
+  btnTxt,
   title,
   onSuccess,
 }: ProductModalProps) {
@@ -70,13 +71,13 @@ export default function ProductCreateModal({
     <>
       <Button
         loading={loadingAjax}
-        type="link"
+        type={btnType}
         icon={<PlusOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
       >
-        {t('crud.create.buttonText')}
+        {btnTxt || t('crud.create.buttonText')}
       </Button>
 
       <Drawer

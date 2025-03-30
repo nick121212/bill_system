@@ -1,91 +1,144 @@
-import { Col, Row, Space } from "antd";
+import { useEffect, useState } from 'react';
+import { Col, Row, Space, Select } from 'antd';
+import AreaDownload from './area-download';
+import BannerCard from './banner-card';
+import AmountStatus from './amountStatus';
+import CurrentDownload from './current-download';
+import TotalCard, { IconType } from './total-card';
 
-import AreaDownload from "./area-download";
-import BannerCard from "./banner-card";
-import { Applications, Conversion } from "./conversion_applications";
-import CurrentDownload from "./current-download";
-import NewInvoice from "./new-invoice";
-import TopAuthor from "./top-authors";
-import TopInstalled from "./top-installed";
-import TopRelated from "./top-related";
-import TotalCard from "./total-card";
+import { getTotalAmount } from '@/api/services/statistics';
+
+import { getDateRanges, DateType } from './util';
+import { themeVars } from '@/theme/theme.css';
+
+type DataItem = {
+  iconType: IconType;
+  count:  string;
+  percent: string;
+  chartData: number[];
+};
+
+const processData = (cur: any, pre: any, key: string): DataItem => {
+  const currentValue = +cur[key];
+  const previousValue = +pre[key];
+  const iconType =
+    currentValue > previousValue
+      ? 'rise'
+      : currentValue === previousValue
+        ? 'steady'
+        : 'decline';
+  const percent = (
+    ((currentValue - previousValue) / previousValue) *
+    100
+  ).toFixed(2);
+  return {
+    iconType,
+    count: cur[key],
+    percent: `${percent}%`,
+    chartData: [previousValue, currentValue],
+  };
+};
 
 function Workbench() {
-	return (
-		<div className="p-2">
-			<Row gutter={[16, 16]} justify="center">
-				<Col span={24} lg={16}>
-					<BannerCard />
-				</Col>
-				<Col span={24} lg={8}>
-					<Space direction="vertical" size="large" className="h-full w-full justify-center">
-						<Conversion />
-						<Applications />
-					</Space>
-				</Col>
-			</Row>
+  const [dateType, setDaeType] = useState<DateType>(DateType.Day);
 
-			<Row gutter={[16, 16]} className="mt-4" justify="center">
-				<Col span={24} md={8}>
-					<TotalCard
-						title="Total Active Users"
-						increase
-						count="18,765"
-						percent="2.6%"
-						chartData={[22, 8, 35, 50, 82, 84, 77, 12, 87, 43]}
-					/>
-				</Col>
+  const [customerData, setCustomerData] = useState<DataItem>();
+  const [orderCount, setOrderCount] = useState<DataItem>();
+  const [amountData, setAmountData] = useState<DataItem>();
 
-				<Col span={24} md={8}>
-					<TotalCard
-						title="Total Installed"
-						increase
-						count="4,876"
-						percent="0.2%"
-						chartData={[45, 52, 38, 24, 33, 26, 21, 20, 6]}
-					/>
-				</Col>
+  useEffect(() => {
+    const { currentRange, previousRange } = getDateRanges(dateType);
+    Promise.all([
+      getTotalAmount({
+        createTimeStart: currentRange[0],
+        createTimeEnd: currentRange[1],
+      }),
+      getTotalAmount({
+        createTimeStart: previousRange[0],
+        createTimeEnd: previousRange[1],
+      }),
+    ]).then(([current, previous]) => {
+      const cur = current.data[0];
+      const pre = previous.data[0];
+      setCustomerData(processData(cur, pre, 'customerCount'));
+      setOrderCount(processData(cur, pre, 'totalCount'));
+      setAmountData(processData(cur, pre, 'totalAmount'));
+    });
+  }, [dateType]);
 
-				<Col span={24} md={8}>
-					<TotalCard
-						title="Total Downloads"
-						increase={false}
-						count="678"
-						percent="0.1%"
-						chartData={[35, 41, 62, 42, 13, 18, 29, 37, 36]}
-					/>
-				</Col>
-			</Row>
+  // useEffect(() => {
+  //   console.log(111111, rows);
+  // }, [rows]);
 
-			<Row gutter={[16, 16]} className="mt-4" justify="center">
-				<Col span={24} md={12} lg={8}>
-					<CurrentDownload />
-				</Col>
-				<Col span={24} md={12} lg={16}>
-					<AreaDownload />
-				</Col>
-			</Row>
+  return (
+    <div className="p-2">
+      <Row gutter={[16, 16]} justify="center">
+        <Col span={24} lg={16}>
+          <BannerCard>
+            <div className="absolute right-10 top-6 c">
+              <span style={{ color: themeVars.colors.palette.primary.dark }}>
+                数据维度：
+              </span>
+              <Select
+                style={{ width: 100, opacity: 0.9 }}
+                value={dateType}
+                options={[
+                  { value: DateType.Day, label: '天' },
+                  { value: DateType.Week, label: '周' },
+                  { value: DateType.Month, label: '月' },
+                ]}
+                onChange={setDaeType}
+              />
+            </div>
+          </BannerCard>
+        </Col>
+        <Col span={24} lg={8}>
+          <AmountStatus dateType={dateType} />
+        </Col>
+      </Row>
 
-			<Row gutter={[16, 16]} className="mt-4" justify="center">
-				<Col span={24} md={12} lg={16}>
-					<NewInvoice />
-				</Col>
-				<Col span={24} md={12} lg={8}>
-					<TopRelated />
-				</Col>
-			</Row>
+      <Row gutter={[16, 16]} className="mt-4" justify="center">
+        <Col span={24} md={8}>
+          <TotalCard
+            title="客户数量"
+            iconType={customerData?.iconType}
+            count={customerData?.count || '0'}
+            percent={customerData?.percent || '0%'}
+            chartData={customerData?.chartData || []}
+          />
+        </Col>
 
-			<Row gutter={[16, 16]} className="mt-4" justify="center">
-				<Col span={24} md={12}>
-					<TopInstalled />
-				</Col>
+        <Col span={24} md={8}>
+          <TotalCard
+            title="订单数量"
+            iconType={orderCount?.iconType}
+            count={orderCount?.count || '0'}
+            percent={orderCount?.percent || '0%'}
+            chartData={orderCount?.chartData || []}
+          />
+        </Col>
 
-				<Col span={24} md={12}>
-					<TopAuthor />
-				</Col>
-			</Row>
-		</div>
-	);
+        <Col span={24} md={8}>
+          <TotalCard
+            title="订单总金额"
+            iconType={amountData?.iconType}
+            count={amountData?.count || '0'}
+            percent={amountData?.percent || '0%'}
+            chartData={amountData?.chartData || []}
+          />
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} className="mt-4" justify="center">
+        <Col span={24} md={12} lg={8}>
+          <CurrentDownload />
+        </Col>
+        <Col span={24} md={12} lg={16}>
+          <AreaDownload />
+        </Col>
+      </Row>
+    </div>
+  );
 }
 
 export default Workbench;
