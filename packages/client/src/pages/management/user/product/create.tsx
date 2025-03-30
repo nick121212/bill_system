@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
-import type { DefaultOptionType } from 'antd/es/select';
+import type { ButtonType } from 'antd/es/button';
 import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
@@ -22,6 +22,8 @@ import {
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
+  btnType?: ButtonType;
+  btnTxt?: string;
   formValue?: ProductEntity;
   title: string;
   onSuccess: () => void;
@@ -129,6 +131,8 @@ function ProductCreateForm({
 }
 
 export default function ProductCreateModal({
+  btnType = 'link',
+  btnTxt,
   title,
   onSuccess,
 }: ProductModalProps) {
@@ -142,13 +146,13 @@ export default function ProductCreateModal({
   return (
     <>
       <Button
-        type="link"
+        type={btnType}
         icon={<PlusOutlined />}
         onClick={() => {
           setShowModal(true);
         }}
       >
-        {t('crud.create.buttonText')}
+        {btnTxt || t('crud.create.buttonText')}
       </Button>
 
       {showModal && <ProductCreateForm title={title} onClose={() => setShowModal(false)} onSuccess={onSuccessCall} />}
