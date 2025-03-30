@@ -1,5 +1,5 @@
 import type React from "react";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { notification } from "antd";
 import type { AxiosRequestConfig } from "axios";
 import useAxios from "axios-hooks";
@@ -69,6 +69,10 @@ export default function useFormAction(
     }
   }, [onSuccess, t, error, loadingAjax, response?.statusText]);
 
+  const formModel = useCallback(() => {
+    return formRef.current?.getModel();
+  }, [formRef.current?.getModel]);
+
   return {
     onSubmit,
     onClose,
@@ -79,5 +83,6 @@ export default function useFormAction(
     setFormData,
     loadingAjax,
     callAjax,
+    formModel
   };
 }

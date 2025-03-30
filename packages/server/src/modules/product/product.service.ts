@@ -87,65 +87,35 @@ export class ProductService {
     body: ProductBodyRequest,
     user?: ActiveUserData
   ): Promise<ProductEntity> {
-    const { unitId, categoryId, id, ...rest } = body;
-    const unit = await this.productUnitService.getById(unitId);
-    const category = await this.productCategoryService.getByIdWithError(
-      categoryId
-    );
+    const { unitId, id, ...rest } = body;
+    const unit = await this.productUnitService.getByIdWithError(unitId);
     const child = new ProductEntity().extend({
       ...rest,
       companyId: user?.companyId,
       userId: user?.id,
     });
 
-    if (!unit || !category) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
-
-    // child.category = category;
     child.unit = unit;
 
     return await this.repo.save(child);
   }
 
   async update(id: number, body: ProductBodyRequest): Promise<ProductEntity> {
-    const product = await this.getById(id);
-    const unit = await this.productCategoryService.getById(body.unitId);
-    const category = await this.productCategoryService.getById(body.categoryId);
-
-    if (!product || !unit || !category) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const product = await this.getByIdWithError(id);
+    const unit = await this.productUnitService.getByIdWithError(body.unitId);
 
     product.label = body.label;
     product.name = body.name;
     product.cost = body.cost;
     product.desc = body.desc;
     product.price = body.price;
-    // product.category = category;
     product.unit = unit;
 
     return this.repo.save(product);
   }
 
   async remove(id: number) {
-    const child = await this.getById(id);
-
-    if (!child) {
-      throw new ApiException(
-        "can not find recoed",
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
-      );
-    }
+    const child = await this.getByIdWithError(id);
 
     return this.repo.softRemove(child);
   }

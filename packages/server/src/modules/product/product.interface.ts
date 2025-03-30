@@ -23,9 +23,6 @@ export class ProductBodyRequest {
   cost: number;
 
   @IsNumber()
-  categoryId: number;
-
-  @IsNumber()
   unitId: number;
 }
 
