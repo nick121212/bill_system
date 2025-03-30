@@ -12,6 +12,9 @@ export class TemplateCategoryProduct {
   productId: number;
 
   @IsNumber()
+  productCategoryId: number;
+
+  @IsNumber()
   id: number;
   @IsNumber()
   price: number;
@@ -22,9 +25,6 @@ export class TemplateCategoryProduct {
 export class TemplateCategory {
   @IsString()
   name: string;
-
-  @IsNumber()
-  productCategoryId: number;
 
   @ArrayMinSize(1)
   @ArrayMaxSize(100)

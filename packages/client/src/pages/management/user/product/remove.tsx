@@ -7,14 +7,14 @@ import type { ProductEntity } from '@bill/database/esm';
 import useFormAction from '@/hooks/form/useFormAction';
 
 export type ModalProps = {
-  record: ProductEntity;
+  formValue: ProductEntity;
   title: string;
   onSuccess: () => void;
 };
 
 export default function PermissionModal({
   title,
-  record,
+  formValue,
   onSuccess,
 }: ModalProps) {
   const { t } = useTranslation();
@@ -27,7 +27,7 @@ export default function PermissionModal({
     useFormAction(
       formRef,
       {
-        url: `/products/${record.id}`,
+        url: `/products/${formValue.id}`,
         method: 'DELETE',
       },
       onSuccessCall,
@@ -69,7 +69,7 @@ export default function PermissionModal({
       >
         确定要删除
         <Tag bordered={false} color="red" style={{ fontSize: 14 }}>
-          {record.name}
+          {formValue.name}
         </Tag>
         产品吗？
       </Modal>

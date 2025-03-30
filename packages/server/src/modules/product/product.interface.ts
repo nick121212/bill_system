@@ -14,14 +14,13 @@ export class ProductBodyRequest {
   @IsString()
   desc: string;
 
-  @IsNumber()
+  @IsNumber({
+    maxDecimalPlaces: 2,
+  })
   price: number;
 
   @IsNumber()
   cost: number;
-
-  @IsNumber()
-  categoryId: number;
 
   @IsNumber()
   unitId: number;
@@ -31,4 +30,3 @@ export class ProductQuery extends BaseQuery<{
   name?: string;
   excludeIds?: number[];
 }> {}
-

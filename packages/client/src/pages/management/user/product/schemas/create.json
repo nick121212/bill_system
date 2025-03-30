@@ -7,14 +7,10 @@
     "price": { "type": "number", "title": "价格" },
     "cost": { "type": "number", "title": "成本" },
     "desc": { "type": "string", "title": "介绍", "default": "" },
-    "categoryId": {
-      "type": "number",
-      "title": "分类"
-    },
     "unitId": {
       "type": "number",
       "title": "单位"
     }
   },
-  "required": ["name", "price", "cost", "unitId", "categoryId"]
+  "required": ["name", "price", "cost", "unitId"]
 }

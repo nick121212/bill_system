@@ -20,7 +20,9 @@ export class ProductPriceEntity extends BaseEntity<ProductPriceEntity> {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({
+    type: "float"
+  })
   price: number;
 
   @Min(10)

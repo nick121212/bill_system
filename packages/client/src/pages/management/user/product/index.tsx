@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
-import type { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
+import type { ProductUnitEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
@@ -71,12 +71,6 @@ export default function PermissionPage() {
       render: (obj: ProductUnitEntity) => obj?.name,
     },
     {
-      title: t('cls.product.category'),
-      dataIndex: 'category',
-      align: 'center',
-      render: (obj: ProductCategoryEntity) => obj?.name,
-    },
-    {
       title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
@@ -99,12 +93,12 @@ export default function PermissionPage() {
         <div className="flex w-full justify-center text-gray">
           <Edit
             title={t('cls.product.modal.eTitle')}
-            record={record}
+            formValue={record}
             onSuccess={onSuccess}
           />
           <Remove
             title={t('cls.product.modal.dTitle')}
-            record={record}
+            formValue={record}
             onSuccess={onSuccess}
           />
         </div>

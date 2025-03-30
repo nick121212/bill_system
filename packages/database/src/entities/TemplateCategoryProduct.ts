@@ -10,6 +10,7 @@ import {
 
 import { BaseEntity } from "./Base";
 import { ProductEntity } from "./Product";
+import { ProductCategoryEntity } from "./ProductCategory";
 import { TemplateCategoryEntity } from "./TemplateCategory";
 
 @Entity({
@@ -29,6 +30,11 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
   @JoinColumn()
   templateCategory: TemplateCategoryEntity;
 
+  /** 关联的产品分类 */
+  @ManyToOne(() => ProductCategoryEntity)
+  @JoinColumn()
+  productCategory: ProductCategoryEntity;
+
   /** 关联的产品 */
   @ManyToOne(() => ProductEntity)
   @JoinColumn()
@@ -42,6 +48,7 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
 
   /** 产品价格 */
   @Column({
+    type: "float",
     default: 0,
   })
   price: number;
@@ -51,6 +58,12 @@ export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryPr
     default: 0,
   })
   count: number;
+
+  /** 产品分数 */
+  @Column({
+    default: 0,
+  })
+  times: number;
 
   /** 创建时间 */
   @CreateDateColumn({ type: "datetime", name: "create_time" })

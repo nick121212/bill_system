@@ -11,7 +11,6 @@ import {
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
-import { ProductCategoryEntity } from "./ProductCategory";
 import { ProductPriceEntity } from "./ProductPrice";
 import { ProductUnitEntity } from "./ProductUnit";
 
@@ -31,10 +30,14 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   @Column()
   desc: string;
 
-  @Column()
+  @Column({
+    type: "float"
+  })
   price: number;
 
-  @Column()
+  @Column({
+    type: "float"
+  })
   cost: number;
 
   @Column({
@@ -47,9 +50,9 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   })
   userId?: number;
 
-  @ManyToOne(() => ProductCategoryEntity)
-  @JoinColumn()
-  category: ProductCategoryEntity;
+  // @ManyToOne(() => ProductCategoryEntity)
+  // @JoinColumn()
+  // category: ProductCategoryEntity;
 
   @ManyToOne(() => ProductUnitEntity)
   @JoinColumn()

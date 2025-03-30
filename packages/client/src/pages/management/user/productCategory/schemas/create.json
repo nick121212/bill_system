@@ -3,8 +3,13 @@
   "type": "object",
   "properties": {
     "name": { "type": "string", "title": "名称" },
-    "label": { "type": "string", "title": "标签" },
-    "desc": { "type": "string", "title": "描述" }
+    "label": { "type": "string", "title": "标签", "default": "" },
+    "desc": { "type": "string", "title": "描述", "default": "" },
+    "products": {
+      "type": "array",
+      "title": "产品",
+      "items": { "type": "integer", "title": "产品" }
+    }
   },
-  "required": ["name"]
+  "required": ["name", "products"]
 }

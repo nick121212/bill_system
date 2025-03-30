@@ -8,6 +8,7 @@ import {
 import type { CheckboxGroupProps } from "antd/es/checkbox";
 import type { RadioGroupProps } from "antd/lib/radio";
 import { type FieldProps, connectField, filterDOMProps } from "uniforms";
+import { ReloadOutlined } from "@ant-design/icons";
 
 import type { Option } from "./types";
 import wrapField from "./wrapField";
@@ -46,6 +47,7 @@ export type SelectFieldProps = CheckboxesProps | SelectProps;
 function Select(props: SelectFieldProps) {
   const Group = props.fieldType === Array ? CheckboxGroup : RadioGroup;
   const filteredDOMProps = filterDOMProps(props);
+
   return wrapField(
     props,
     props.checkboxes ? (
@@ -85,6 +87,10 @@ function Select(props: SelectFieldProps) {
         }}
         style={{ minWidth: "164px" }}
         placeholder={props.placeholder}
+        suffixIcon={props.loading ? null : <ReloadOutlined onClick={()=>{
+          props.onSearch?.('');
+        }} />}
+        loading={props.loading}
         // @ts-expect-error: Incorrect `inputRef` type.
         ref={props.inputRef}
         value={

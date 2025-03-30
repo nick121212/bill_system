@@ -28,7 +28,10 @@ export class OrderProductEntity extends BaseEntity<OrderProductEntity> {
   @Column()
   name: string;
 
-  @Column()
+  @Column({
+    type: "float",
+    default: 0,
+  })
   price: number;
 
   @Column()
@@ -37,7 +40,15 @@ export class OrderProductEntity extends BaseEntity<OrderProductEntity> {
   @Column()
   count: number;
 
-  @Column()
+  @Column({
+    default: 0,
+  })
+  times: number;
+
+  @Column({
+    type: "float",
+    default: 0,
+  })
   totalPrice: number;
 
   @ManyToOne(() => ProductEntity)

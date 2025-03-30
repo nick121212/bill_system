@@ -25,11 +25,6 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const {
-    rows: categories,
-    loading: cateLoad,
-    onSearch: debouncedOnCateSearch,
-  } = useData<ProductCategoryEntity[]>('product/categories');
-  const {
     rows: units,
     loading: unitLoad,
     onSearch: debouncedOnUnitSearch,
@@ -69,22 +64,6 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
             filterOption={false}
             onSearch={(val: string) =>
               debouncedOnUnitSearch({ name: val === '' ? undefined : val })
-            }
-          />
-
-          <SelectField
-            loading={cateLoad}
-            name="category.id"
-            options={categories?.map((c) => {
-              return {
-                label: c.name,
-                value: c.id,
-              };
-            })??[]}
-            showSearch
-            filterOption={false}
-            onSearch={(val: string) =>
-              debouncedOnCateSearch({ name: val === '' ? undefined : val })
             }
           />
 

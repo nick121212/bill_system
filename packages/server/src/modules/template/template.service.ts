@@ -97,7 +97,6 @@ export class TemplateService {
         templateId: id,
       },
       relations: {
-        category: true,
       },
     })) as (TemplateCategoryEntity & {
       products: TemplateCategoryProductEntity[];
@@ -153,16 +152,7 @@ export class TemplateService {
       }
 
       for (const c of body.categories) {
-        const productCategory =
-          await entityManager.findOneByOrFail<ProductCategoryEntity>(
-            ProductCategoryEntity,
-            {
-              id: c.productCategoryId,
-            }
-          );
-
         const templateCategory = new TemplateCategoryEntity().extend({
-          category: productCategory,
           templateId: child.id,
           name: c.name,
         });
@@ -172,9 +162,17 @@ export class TemplateService {
           const product = await entityManager.findOneByOrFail(ProductEntity, {
             id: p.productId || p.id,
           });
+          const productCategory =
+          await entityManager.findOneByOrFail<ProductCategoryEntity>(
+            ProductCategoryEntity,
+            {
+              id: p.productCategoryId,
+            }
+          );
 
           const templateCategoryProduct =
             new TemplateCategoryProductEntity().extend({
+              productCategory: productCategory,
               product: product,
               price: p.price,
               count: p.count || 1,

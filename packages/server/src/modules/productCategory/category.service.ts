@@ -1,12 +1,17 @@
-import { EntityManager, ILike, Like, Repository } from "typeorm";
+import { EntityManager, ILike, In, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import { ProductCategoryEntity, UserEntity } from "@bill/database/dist/entities";
+import {
+  ProductCategoryEntity,
+  ProductEntity,
+  UserEntity,
+} from "@bill/database/dist/entities";
 import { HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
+import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import { BaseQuery } from "@/common/interfaces/query";
 import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
 
@@ -20,8 +25,8 @@ export class ProductCategoryService {
   constructor(
     @InjectRepository(ProductCategoryEntity)
     private repo: Repository<ProductCategoryEntity>,
-    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
-
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
+    @InjectEntityManager() private em: EntityManager
   ) {}
 
   async all(
@@ -50,16 +55,39 @@ export class ProductCategoryService {
       return null;
     }
 
-    const data = await this.repo.findOneBy({
-      id,
+    const data = await this.repo.findOne({
+      where: {
+        id,
+      },
+      relations: ["products"],
+      loadRelationIds: true,
     });
 
     return data || null;
   }
 
-  async getByIdWithError(
-    id?: number
-  ): Promise<ProductCategoryEntity> {
+  async getProducts(
+    id: number,
+    query: BaseQuery
+  ): Promise<{ rows: ProductEntity[]; count: number }> {
+    const category = await this.getByIdWithError(id);
+
+    const [rows, count] = await this.em.findAndCount(ProductEntity, {
+      where: {
+        id: In(category.products),
+        ...dataFilter(this.request.userEntity),
+      },
+      skip: query.skip,
+      take: query.take,
+    });
+
+    return {
+      rows,
+      count,
+    };
+  }
+
+  async getByIdWithError(id?: number): Promise<ProductCategoryEntity> {
     const category = await this.getById(id);
 
     if (!category) {
@@ -81,27 +109,56 @@ export class ProductCategoryService {
     body: ProductCategoryRequest,
     user?: ActiveUserData
   ): Promise<ProductCategoryEntity> {
-    const { ...rest } = body;
+    const { products, ...rest } = body;
     const category = new ProductCategoryEntity().extend({
       ...rest,
       companyId: user?.companyId,
       userId: user?.id,
     });
 
-    return await this.repo.save(category);
+    return await this.em.transaction(async (entityManager: EntityManager) => {
+      const savedCategory = await entityManager.save(category);
+
+      const ProductEntities = await entityManager.find(ProductEntity, {
+        where: {
+          id: In(products),
+        },
+      });
+
+      savedCategory.products = ProductEntities;
+
+      await entityManager.save(category);
+
+      return savedCategory;
+    });
   }
 
   async update(
     id: number,
     body: ProductCategoryRequest
   ): Promise<ProductCategoryEntity> {
+    const { products, ...rest } = body;
     const category = await this.getByIdWithError(id);
 
     category.extend({
-      ...body,
+      ...rest,
     });
 
-    return this.repo.save(category);
+    return await this.em.transaction(async (entityManager: EntityManager) => {
+      const savedCategory = await entityManager.save(category);
+
+      const ProductEntities = await entityManager.find(ProductEntity, {
+        where: {
+          id: In(products),
+        },
+      });
+
+      savedCategory.products = ProductEntities;
+
+      await entityManager.save(savedCategory);
+
+      return savedCategory;
+    });
   }
 
   async remove(id: number) {
