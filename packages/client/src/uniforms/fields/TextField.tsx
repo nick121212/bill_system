@@ -11,6 +11,8 @@ export type TextFieldProps = FieldProps<
 >;
 
 function Text(props: TextFieldProps) {
+  console.log(props);
+  
   return wrapField(
     props,
     <Input
