@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Col, Row, Space, Select } from 'antd';
-import AreaDownload from './area-download';
 import BannerCard from './banner-card';
 import AmountStatus from './amountStatus';
-import CurrentDownload from './current-download';
 import TotalCard, { IconType } from './total-card';
+import AmountTop from './amountTop';
+import OrderChart from './orderChart';
 
 import { getTotalAmount } from '@/api/services/statistics';
 
@@ -27,7 +27,7 @@ const processData = (cur: any, pre: any, key: string): DataItem => {
       : currentValue === previousValue
         ? 'steady'
         : 'decline';
-  const percent = (
+  const percent = previousValue === 0 ? '0.00' : (
     ((currentValue - previousValue) / previousValue) *
     100
   ).toFixed(2);
@@ -65,10 +65,6 @@ function Workbench() {
       setAmountData(processData(cur, pre, 'totalAmount'));
     });
   }, [dateType]);
-
-  // useEffect(() => {
-  //   console.log(111111, rows);
-  // }, [rows]);
 
   return (
     <div className="p-2">
@@ -131,10 +127,10 @@ function Workbench() {
 
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={12} lg={8}>
-          <CurrentDownload />
+          <AmountTop dateType={dateType} />
         </Col>
         <Col span={24} md={12} lg={16}>
-          <AreaDownload />
+          <OrderChart />
         </Col>
       </Row>
     </div>
