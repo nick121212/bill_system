@@ -7,6 +7,7 @@ import type {
   ProductCategoryEntity,
   ProductUnitEntity,
   ProductEntity,
+  TemplateCategoryEntity
 } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
@@ -31,9 +32,20 @@ interface IProps {
 type IDataSource = Partial<ProductEntity> & {
   count?: number;
   randomId?: number;
+  productCategoryId?: number;
+  times?: number;
+  isEdit?: boolean;
+  templateCategory?: TemplateCategoryEntity
 };
 
 const randomId = getRandomId();
+const initData = {
+  id: undefined,
+  name: '',
+  desc: '',
+  price: 0,
+  unit: undefined,
+};
 
 export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   const {
@@ -41,70 +53,50 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     loading: cateLoad,
     onSearch: debouncedOnCateSearch,
   } = useData<ProductCategoryEntity[]>('product/categories');
-  const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
-    {
-      url: '/products',
-    },
-    {
-      manual: true,
-    },
-  );
   const {
     rows: productList,
     loading: serachLoad,
     onSearch: debouncedOnProductSearch,
   } = useData<ProductCategoryEntity[]>('products');
   const [title, setTitle] = useState<string>(value?.name || `分类${index + 1}`);
-  const [categoryId, setCategoryId] = useState<number | undefined>(
-    value?.productCategoryId,
-  );
   const [products, setProducts] = useState<IDataSource[]>(
     value?.products?.map((item) => ({
       ...item,
+      isEdit: true,
       randomId: randomId(),
     })) || [],
   );
 
   useWatch(() => {
-    if (!categoryId) {
-      setProducts([]);
-      return;
-    }
-    refresh({ params: { whele: { category: { id: categoryId } } } });
-  }, [categoryId]);
-
-  useWatch(() => {
-    // 取第一条数据
-    const first = rows?.rows?.[0];
-    first && setProducts([{ ...first, randomId: randomId() }]);
-  }, [rows]);
-
-  useEffect(() => {
     onChange?.({
       name: title,
-      productCategoryId: categoryId,
-      products: products.map((product) => {
+      products: products?.map((product) => {
         return {
-          id: product?.id,
+          productCategoryId: product?.productCategoryId,
+          productId: product?.id,
           price: product?.price,
           count: product?.count,
+          times: product?.times
         };
       }),
     });
-  }, [categoryId, products, title]);
+  }, [products, title]);
 
   const columns: ColumnsType<IDataSource> = [
     {
       title: '分类',
-      dataIndex: 'categoryId',
-      render: () => {
+      dataIndex: 'productCategoryId',
+      align: 'center',
+      width: 150,
+      render: (val, record) => {
+        if (record.isEdit) {
+          return record?.templateCategory?.name
+        }
         return (
           <Select
+            allowClear
             loading={cateLoad}
-            value={categoryId}
-            onChange={(value) => {
-              setCategoryId(value);
-            }}
+            value={val}
             options={
               categories?.map((c) => {
                 return {
@@ -118,7 +110,12 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             onSearch={(val) =>
               debouncedOnCateSearch({ name: val === '' ? undefined : val })
             }
-            allowClear
+            onChange={(value) => {
+              debouncedOnProductSearch({
+                category: { id: value },
+              });
+              handleChangeData(record.randomId!, 'productCategoryId', value);
+            }}
           />
         );
       },
@@ -127,15 +124,20 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       title: '名称',
       dataIndex: 'name',
       align: 'center',
-      width: 200,
+      width: 170,
       render: (val: string, record: IDataSource) => {
+        if (record.isEdit) {
+          return val;
+        }
         return (
           <Select
+            allowClear
             loading={serachLoad}
+            disabled={!record.productCategoryId}
             value={Number(val) || undefined}
             showSearch
             filterOption={false}
-            options={productList.map((c) => {
+            options={productList?.map((c) => {
               return {
                 label: c.name,
                 value: Number(c.id),
@@ -144,11 +146,12 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             onSearch={(val) => {
               debouncedOnProductSearch({
                 name: val === '' ? undefined : val,
-                category: { id: categoryId },
+                category: { id: record.productCategoryId },
               });
             }}
-            onChange={(value: number) => handleProductSelectChange(value)}
-            allowClear
+            onChange={(value: number) => {
+              handleProductSelectChange(value);
+            }}
           />
         );
       },
@@ -162,6 +165,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       title: '价格',
       dataIndex: 'price',
       align: 'center',
+      width: 150,
       render: (val, record) => {
         return (
           <InputNumber
@@ -178,12 +182,14 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       title: '单位',
       dataIndex: 'unit',
       align: 'center',
+      width: 120,
       render: (obj: ProductUnitEntity) => obj?.name,
     },
     {
       title: '数量',
       dataIndex: 'count',
       align: 'center',
+      width: 150,
       render: (val, record) => (
         <InputNumber
           disabled={!record.id}
@@ -201,6 +207,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       title: '份数',
       dataIndex: 'copies',
       align: 'center',
+      width: 150,
       render: (val, record) => (
         <InputNumber
           disabled={!record.id}
@@ -209,7 +216,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           min={1}
           precision={0}
           onChange={(value) =>
-            handleChangeData(record.randomId!, 'copies', value)
+            handleChangeData(record.randomId!, 'times', value)
           }
         />
       ),
@@ -230,11 +237,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
                 updateProducts([
                   ...products,
                   {
-                    id: undefined,
-                    name: '',
-                    label: '',
-                    price: 0,
-                    unit: undefined,
+                    ...initData,
                     randomId: randomId(),
                   },
                 ]);
@@ -264,10 +267,10 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   // 选择产品
   const handleProductSelectChange = (value: number | string) => {
     const numericValue = Number(value);
-    productList.forEach((p) => {
+    productList?.forEach((p) => {
       if (p.id === numericValue) {
         updateProducts(
-          products.map((pro) => {
+          products?.map((pro) => {
             if (!pro.id) {
               return {
                 ...pro,
@@ -288,10 +291,17 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     value: number | undefined,
   ) => {
     updateProducts(
-      products.map((p) => {
+      products?.map((p) => {
+        let rest = {};
+        if (key === 'productCategoryId') {
+          rest = {
+            ...initData,
+          };
+        }
         if (p.randomId === id) {
           return {
             ...p,
+            ...rest,
             [key]: value,
           };
         }
@@ -324,33 +334,30 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         pagination={false}
         // scroll={{ x: 720 }}
         size="small"
-        footer={() => {
-          if (products?.length) return null;
-          return (
-            <Button
-              ghost
-              style={{ width: '100%' }}
-              type="primary"
-              icon={<PlusOutlined />}
-              disabled={products.some((item) => !item.id)}
-              onClick={() => {
-                updateProducts([
-                  ...products,
-                  {
-                    id: undefined,
-                    name: '',
-                    label: '',
-                    price: 0,
-                    unit: undefined,
-                    randomId: randomId(),
-                  },
-                ]);
-              }}
-            >
-              添加数据
-            </Button>
-          );
-        }}
+        {...(products?.length
+          ? {}
+          : {
+              footer: () => (
+                <Button
+                  ghost
+                  style={{ width: '100%' }}
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  disabled={products.some((item) => !item.id)}
+                  onClick={() => {
+                    updateProducts([
+                      ...products,
+                      {
+                        ...initData,
+                        randomId: randomId(),
+                      },
+                    ]);
+                  }}
+                >
+                  添加数据
+                </Button>
+              ),
+            })}
       />
     </Card>
   );

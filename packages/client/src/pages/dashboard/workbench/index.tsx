@@ -127,7 +127,7 @@ function Workbench() {
 
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={12} lg={8}>
-          <AmountTop dateType={dateType} />
+          <AmountTop />
         </Col>
         <Col span={24} md={12} lg={16}>
           <OrderChart />

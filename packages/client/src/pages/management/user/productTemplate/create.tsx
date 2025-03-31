@@ -72,13 +72,12 @@ export default function TemplateCreateModal({
           ...formValue,
           categories: categories?.map((item: TmpCategorys) => ({
             name: item.name,
-            productCategoryId: item.category?.id,
-            products: item.products?.map((product) => ({
-              ...product,
-              id: product.product?.id || product.id,
-              name: product.product.name,
-              label: product.product.label,
-              unit: product.product.unit,
+            products: item.products?.map((p) => ({
+              ...p,
+              id: p.product?.id || p.id,
+              name: p.product.name,
+              desc: p.product.desc,
+              unit: p.product.unit,
             })),
           })),
         };
