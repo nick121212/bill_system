@@ -176,6 +176,7 @@ export class TemplateService {
               product: product,
               price: p.price,
               count: p.count || 1,
+              times: p.times || 1,
               templateCategory: templateCategory,
               templateId: child.id,
             });

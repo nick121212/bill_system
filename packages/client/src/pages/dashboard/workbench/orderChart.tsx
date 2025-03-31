@@ -28,7 +28,7 @@ export default function OrderChart({ dateType }: Props) {
 	return (
 		<Card className="flex-col">
 			<header className="flex w-full justify-between self-start">
-				<Typography.Title level={5}>订单金额/订单量统计</Typography.Title>
+				<Typography.Title level={5}>订单金额&订单量统计</Typography.Title>
 			</header>
 			<main className="w-full">
 				<ChartArea series={series[year]} />
