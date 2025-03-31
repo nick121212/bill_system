@@ -44,4 +44,9 @@ export class StatisticsController {
   async totalAmountGroupByStatus(@Query() query: StatisticsQuery) {
     return this.roleService.totalAmountGroupByStatus(query);
   }
+
+  @Get("/totalAmountGroupByTime")
+  async totalAmountGroupByTime(@Query() query: StatisticsQuery) {
+    return this.roleService.totalAmountGroupByTime(query);
+  }
 }

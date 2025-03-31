@@ -15,6 +15,8 @@ import {
   ErrorsField,
   ListDelField,
   ListField,
+  ListViewField,
+  TableField,
   TextAreaField,
 } from '@/uniforms/fields';
 
@@ -53,6 +55,7 @@ function ProductSelect({ name }: { name: string }) {
           value: c.id,
         };
       })}
+      label={undefined}
       loading={productLoad}
       showSearch
       filterOption={false}
@@ -132,10 +135,17 @@ export default function CategoryDrawer({
             <ErrorsField />
             <AutoFields fields={['name']} />
             <TextAreaField name="desc" />
-            <ListField name="products">
-              <ListDelField name="$" />
+
+            <ListViewField
+              rowKey={(item) => {
+                return item;
+              }}
+              name="products"
+              label=" "
+            >
               <ProductSelect name="$" />
-            </ListField>
+              <ListDelField name="$" />
+            </ListViewField>
           </AutoForm>
         </Spin>
       </Form>

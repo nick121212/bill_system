@@ -50,7 +50,9 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
    * 订单总价
    * @type {number}
    */
-  @Column()
+  @Column({
+    type: "float",
+  })
   totalPrice: number;
 
   /**

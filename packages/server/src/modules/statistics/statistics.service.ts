@@ -90,6 +90,21 @@ export class StatisticsService {
       .getRawMany();
   }
 
+  async totalAmountGroupByTime(
+    query: StatisticsQuery
+  ): Promise<TotalAmountView[]> {
+    const where = this.getWhere(query);
+
+    return await this.repo
+      .createQueryBuilder("totalAmountView")
+      .select("DATE(totalAmountView.createTime)", "createTime")
+      .addSelect("SUM(totalAmountView.totalPrice)", "totalAmount")
+      .addSelect("COUNT(totalAmountView.no)", "totalCount")
+      .groupBy("DATE(totalAmountView.createTime)")
+      .where({ ...where })
+      .getRawMany();
+  }
+
   async totalAmountGroupByStatus(
     query: StatisticsQuery
   ): Promise<TotalAmountView[]> {
