@@ -20,6 +20,8 @@ export class TemplateCategoryProduct {
   price: number;
   @IsNumber()
   count: number;
+  @IsNumber()
+  times: number;
 }
 
 export class TemplateCategory {
