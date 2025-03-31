@@ -178,37 +178,32 @@ export default function TemplateCreateModal({
             >
               {(fields, { add, remove }, { errors }) => (
                 <Form.Item label="产品" required>
-                  <Space
-                    size={10}
-                    direction="vertical"
-                    style={{ width: '100%' }}
-                  >
-                    {fields.map((field, index) => (
-                      <Form.Item
-                        key={field.key}
-                        name={[field.name]}
-                        rules={[
-                          {
-                            validator(_, value, callback) {
-                              if (!value?.name) {
-                                callback('请输入名称');
-                              } else if (!value?.productCategoryId) {
-                                callback('请选择产品分类');
-                              } else if (!value?.products?.length) {
-                                callback('请添加产品');
-                              }
-                              callback();
-                            },
-                          },
-                        ]}
-                      >
-                        <CatProd
-                          onRemove={() => remove(field.name)}
-                          index={index}
-                        />
-                      </Form.Item>
-                    ))}
-                  </Space>
+                  {fields.map((field, index) => (
+                    <Form.Item
+                      key={field.key}
+                      name={[field.name]}
+                      style={{ marginBottom: 5 }}
+                      // rules={[
+                      //   {
+                      //     validator(_, value, callback) {
+                      //       if (!value?.name) {
+                      //         callback('请输入名称');
+                      //       } else if (!value?.productCategoryId) {
+                      //         callback('请选择产品分类');
+                      //       } else if (!value?.products?.length) {
+                      //         callback('请添加产品');
+                      //       }
+                      //       callback();
+                      //     },
+                      //   },
+                      // ]}
+                    >
+                      <CatProd
+                        onRemove={() => remove(field.name)}
+                        index={index}
+                      />
+                    </Form.Item>
+                  ))}
                   <Form.Item>
                     <Button
                       type="primary"

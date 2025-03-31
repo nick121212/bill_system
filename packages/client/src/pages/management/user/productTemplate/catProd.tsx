@@ -95,12 +95,40 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
 
   const columns: ColumnsType<IDataSource> = [
     {
+      title: '分类',
+      dataIndex: 'categoryId',
+      render: () => {
+        return (
+          <Select
+            loading={cateLoad}
+            value={categoryId}
+            onChange={(value) => {
+              setCategoryId(value);
+            }}
+            options={
+              categories?.map((c) => {
+                return {
+                  label: c.name,
+                  value: c.id,
+                };
+              }) ?? []
+            }
+            showSearch
+            filterOption={false}
+            onSearch={(val) =>
+              debouncedOnCateSearch({ name: val === '' ? undefined : val })
+            }
+            allowClear
+          />
+        );
+      },
+    },
+    {
       title: '名称',
       dataIndex: 'name',
       align: 'center',
       width: 200,
       render: (val: string, record: IDataSource) => {
-        if (record.id) return val;
         return (
           <Select
             loading={serachLoad}
@@ -120,13 +148,14 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
               });
             }}
             onChange={(value: number) => handleProductSelectChange(value)}
+            allowClear
           />
         );
       },
     },
     {
-      title: '标签',
-      dataIndex: 'label',
+      title: '描述',
+      dataIndex: 'desc',
       align: 'center',
     },
     {
@@ -169,21 +198,60 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       ),
     },
     {
+      title: '份数',
+      dataIndex: 'copies',
+      align: 'center',
+      render: (val, record) => (
+        <InputNumber
+          disabled={!record.id}
+          defaultValue={1}
+          value={val}
+          min={1}
+          precision={0}
+          onChange={(value) =>
+            handleChangeData(record.randomId!, 'copies', value)
+          }
+        />
+      ),
+    },
+    {
       title: '操作',
       key: 'operation',
       align: 'center',
       width: 80,
-      render: (_, record) => (
-        <Button
-          type="link"
-          danger
-          icon={<DeleteOutlined />}
-          onClick={() => {
-            updateProducts(
-              products.filter((p) => p.randomId !== record.randomId),
-            );
-          }}
-        />
+      render: (_, record, index) => (
+        <div className="flex w-full justify-center text-gray">
+          {products.filter((item) => item.id).length - 1 === index && (
+            <Button
+              type="link"
+              icon={<PlusOutlined />}
+              disabled={products.some((item) => !item.id)}
+              onClick={() => {
+                updateProducts([
+                  ...products,
+                  {
+                    id: undefined,
+                    name: '',
+                    label: '',
+                    price: 0,
+                    unit: undefined,
+                    randomId: randomId(),
+                  },
+                ]);
+              }}
+            />
+          )}
+          <Button
+            type="link"
+            danger
+            icon={<DeleteOutlined />}
+            onClick={() => {
+              updateProducts(
+                products.filter((p) => p.randomId !== record.randomId),
+              );
+            }}
+          />
+        </div>
       ),
     },
   ];
@@ -249,41 +317,22 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
         />
       }
     >
-      <Space direction="vertical" size={10} style={{ width: '100%' }}>
-        <Select
-          loading={cateLoad}
-          value={categoryId}
-          onChange={(value) => {
-            setCategoryId(value);
-          }}
-          options={
-            categories?.map((c) => {
-              return {
-                label: c.name,
-                value: c.id,
-              };
-            }) ?? []
-          }
-          showSearch
-          filterOption={false}
-          onSearch={(val) =>
-            debouncedOnCateSearch({ name: val === '' ? undefined : val })
-          }
-          allowClear
-        />
-        <Table
-          rowKey="randomId"
-          dataSource={products || []}
-          columns={columns}
-          pagination={false}
-          // scroll={{ x: 720 }}
-          footer={() => (
+      <Table
+        rowKey="randomId"
+        dataSource={products || []}
+        columns={columns}
+        pagination={false}
+        // scroll={{ x: 720 }}
+        size="small"
+        footer={() => {
+          if (products?.length) return null;
+          return (
             <Button
               ghost
               style={{ width: '100%' }}
               type="primary"
               icon={<PlusOutlined />}
-              disabled={!categoryId || products.some((item) => !item.id)}
+              disabled={products.some((item) => !item.id)}
               onClick={() => {
                 updateProducts([
                   ...products,
@@ -300,9 +349,9 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             >
               添加数据
             </Button>
-          )}
-        />
-      </Space>
+          );
+        }}
+      />
     </Card>
   );
 }
