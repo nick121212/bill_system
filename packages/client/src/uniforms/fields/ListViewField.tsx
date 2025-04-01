@@ -11,32 +11,34 @@ import classNames from 'classnames';
 import { connectField, FieldProps, filterDOMProps } from 'uniforms';
 
 import ListAddField from './ListAddField';
-import ListDelField from './ListDelField';
-import wrapField from './wrapField';
 
 export type ListViewFieldProps<T> = FieldProps<
   AnyObject[],
   Omit<ListProps<T>, 'onReset'>,
-  { inputRef?: Ref<typeof List>; labelCol?: any; wrapperCol?: any }
+  {
+    inputRef?: Ref<typeof List>;
+    labelCol?: any;
+    wrapperCol?: any;
+    addButton?: any;
+  }
 >;
 
-function ListViewField<T>(props: ListViewFieldProps<T>) {
-  const {
-    className,
-    error,
-    errorMessage,
-    label,
-    children,
-    showInlineError,
-    labelCol,
-    wrapperCol,
-    value,
-    ...extraProps
-  } = props;
-
-  return wrapField(
-    props,
-    <div>
+function ListViewField<T>({
+  className,
+  error,
+  errorMessage,
+  label,
+  children,
+  addButton,
+  showInlineError,
+  labelCol,
+  wrapperCol,
+  value,
+  ...props
+}: ListViewFieldProps<T>) {
+  return (
+    <div className={classNames([className, 'ant-list', 'ant-list-bordered'])}>
+      {!!label && <div>{label}</div>}
       <List
         {...filterDOMProps(props)}
         dataSource={value}
@@ -55,13 +57,15 @@ function ListViewField<T>(props: ListViewFieldProps<T>) {
           </List.Item>
         )}
       />
-      <ListAddField shape="default" name="$">
-        添加
-      </ListAddField>
-    </div>,
+      {addButton || (
+        <ListAddField type="link" shape="default" name="$">
+          添加
+        </ListAddField>
+      )}
+
+      {!!(error && showInlineError) && <div>{errorMessage}</div>}
+    </div>
   );
 }
 
-export default connectField<ListViewFieldProps<any>>(ListViewField, {
-  kind: 'node',
-});
+export default connectField<ListViewFieldProps<any>>(ListViewField);

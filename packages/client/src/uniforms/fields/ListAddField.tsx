@@ -8,7 +8,8 @@ import {
   joinName,
   useField,
 } from "uniforms";
-import PlusSquareOutlined from "@ant-design/icons/PlusSquareOutlined";
+import { PlusOutlined } from "@ant-design/icons";
+
 
 export type ListAddFieldProps = FieldProps<unknown, ButtonProps>;
 
@@ -16,12 +17,12 @@ const defaultStyle = { width: "100%" };
 
 function ListAdd({
   disabled,
-  icon = <PlusSquareOutlined />,
+  icon = <PlusOutlined />,
   name,
   readOnly,
   size = "small",
   style = defaultStyle,
-  type = "dashed",
+  type = "default",
   value,
   ...props
 }: ListAddFieldProps) {
@@ -39,6 +40,7 @@ function ListAdd({
 
   return (
     <Button
+    shape="circle"
       {...filterDOMProps(props)}
       disabled={!limitNotReached}
       icon={icon}
