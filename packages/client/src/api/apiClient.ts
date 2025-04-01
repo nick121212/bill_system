@@ -6,6 +6,7 @@ import { ApiStatusCode } from "@bill/database/esm";
 import { t } from "@/locales/i18n";
 import userStore from "@/store/userStore";
 
+import cache from "./cache";
 import type { Result } from "#/api";
 
 // 创建 axios 实例
@@ -66,7 +67,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-configure({ axios: axiosInstance });
+configure({ axios: axiosInstance, cache: cache as any });
 
 class APIClient {
   get<T = unknown>(config: AxiosRequestConfig): Promise<T> {

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, Space, Spin } from 'antd';
+import { Button, Divider, Drawer, Form, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useField, useForm } from 'uniforms';
 import type { ProductCategoryEntity, ProductEntity } from '@bill/database/esm';
@@ -13,6 +13,7 @@ import {
   AutoFields,
   AutoForm,
   ErrorsField,
+  ListAddField,
   ListDelField,
   ListField,
   ListViewField,
@@ -47,25 +48,27 @@ function ProductSelect({ name }: { name: string }) {
   });
 
   return (
-    <AutoField
-      name={name}
-      options={products?.map((c) => {
-        return {
-          label: c.name,
-          value: c.id,
-        };
-      })}
-      label={undefined}
-      loading={productLoad}
-      showSearch
-      filterOption={false}
-      onSearch={(val: string) =>
-        debouncedOnProductSearch({
-          excludeIds,
-          name: val === '' ? undefined : val,
-        })
-      }
-    ></AutoField>
+    <div className="w-full">
+      <AutoField
+        name={name}
+        options={products?.map((c) => {
+          return {
+            label: c.name,
+            value: c.id,
+          };
+        })}
+        label={undefined}
+        loading={productLoad}
+        showSearch
+        filterOption={false}
+        onSearch={(val: string) =>
+          debouncedOnProductSearch({
+            excludeIds,
+            name: val === '' ? undefined : val,
+          })
+        }
+      ></AutoField>
+    </div>
   );
 }
 
@@ -135,13 +138,19 @@ export default function CategoryDrawer({
             <ErrorsField />
             <AutoFields fields={['name']} />
             <TextAreaField name="desc" />
-
+            <Divider>商品列表</Divider>
             <ListViewField
               rowKey={(item) => {
                 return item;
               }}
+              size="small"
               name="products"
               label=" "
+              addButton={
+                <ListAddField type="primary" size="middle" shape="default" name="$">
+                  添加商品
+                </ListAddField>
+              }
             >
               <ProductSelect name="$" />
               <ListDelField name="$" />

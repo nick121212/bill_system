@@ -113,6 +113,7 @@ export class TemplateService {
         product: {
           unit: true,
         },
+        productCategory: true,
       },
     });
 
