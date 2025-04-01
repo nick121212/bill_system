@@ -1,6 +1,7 @@
-import { Select, Typography } from 'antd';
-import { useState } from 'react';
+import { Typography } from 'antd';
+import { useEffect } from 'react';
 import useAxios from 'axios-hooks';
+import dayjs from 'dayjs';
 
 import Card from '@/components/card';
 import Chart from '@/components/chart/chart';
@@ -8,30 +9,46 @@ import useChart from '@/components/chart/useChart';
 
 import { getDateRanges, DateType } from './util';
 
+interface DataItem {
+  createTime: Date;
+  totalCount: number;
+  totalAmount: string;
+}
+
 export default function OrderChart() {
+  const [{ data: rows, loading }, refresh] = useAxios(
+    {
+      url: '/statistics/totalAmountGroupByTime',
+    },
+    {
+      manual: true,
+    },
+  );
+  useEffect(() => {
+    const { currentRange } = getDateRanges(DateType.Month);
+    refresh({
+      params: {
+        createTimeStart: currentRange[0],
+        createTimeEnd: currentRange[1],
+      },
+    });
+  }, []);
+
   const chartOptions = useChart({
     xaxis: {
       type: 'category',
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jut',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-      ],
+      categories: rows?.map(({ createTime }: DataItem) =>
+        dayjs(createTime).format('MM/DD'),
+      ),
     },
     tooltip: {},
   });
   const series: ApexAxisChartSeries = [
-    { name: '订单', data: [51, 35, 41, 10, 91, 69, 62, 148, 91, 35, 51] },
-    { name: '金额', data: [56, 13, 34, 10, 77, 99, 88, 45, 13, 56, 77] },
+    { name: '订单', data: rows?.map(({ totalCount }: DataItem) => totalCount) },
+    {
+      name: '金额',
+      data: rows?.map(({ totalAmount }: DataItem) => totalAmount),
+    },
   ];
   return (
     <Card className="flex-col">

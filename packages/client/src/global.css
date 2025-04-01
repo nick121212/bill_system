@@ -53,3 +53,18 @@ html.dark {
   border-radius: 10px;
   background: var(--c-scrollbar-hover);
 }
+
+/* .custom-table .ant-input,
+.custom-table .ant-input-number,
+.custom-table .ant-select-selector {
+  height: 26px !important;;
+  line-height: 24px !important;
+}
+
+.custom-table .ant-input-number-input {
+  height: 26px !important;
+}
+
+.custom-table .ant-select-arrow {
+  line-height: 26px !important;
+}     */
