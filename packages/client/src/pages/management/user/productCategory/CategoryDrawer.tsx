@@ -143,10 +143,11 @@ export default function CategoryDrawer({
               rowKey={(item) => {
                 return item;
               }}
+              size="small"
               name="products"
               label=" "
               addButton={
-                <ListAddField type="primary" size="normal" shape="default" name="$">
+                <ListAddField type="primary" size="middle" shape="default" name="$">
                   添加商品
                 </ListAddField>
               }

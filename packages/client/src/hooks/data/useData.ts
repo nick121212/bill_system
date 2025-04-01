@@ -9,7 +9,7 @@ export default function useData<T = unknown>(name: string, params?: unknown) {
       params:{ where: params },
     },
     {
-      useCache: false,
+      useCache: true,
     }
   );
 
