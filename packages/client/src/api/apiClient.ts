@@ -10,20 +10,25 @@ import cache from "./cache";
 import type { Result } from "#/api";
 
 // 创建 axios 实例
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_API,
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
 });
 
+export const getAuthHeader = function(){
+  const userInfo = userStore.getState();
+
+  return {
+    Authorization: `Bearer ${userInfo.userToken?.accessToken}` || "",
+  }
+}
+
 // 请求拦截
 axiosInstance.interceptors.request.use(
   (config) => {
-    const userInfo = userStore.getState();
-
     // 在请求被发送之前做些什么
-    config.headers.Authorization =
-      `Bearer ${userInfo.userToken?.accessToken}` || "";
+    config.headers.Authorization =getAuthHeader().Authorization;
     return config;
   },
   (error) => {

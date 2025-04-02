@@ -31,7 +31,8 @@
       "modal": {
         "cTitle": "新建商品",
         "eTitle": "编辑商品",
-        "dTitle": "删除商品"
+        "dTitle": "删除商品",
+        "uTitle": "上传商品"
       }
     },
     "proCategory": {

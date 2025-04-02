@@ -3,6 +3,9 @@
     "create": {
       "buttonText": "新建"
     },
+    "upload": {
+      "buttonText": "上传"
+    },
     "edit": {},
     "remove": {},
     "error": {

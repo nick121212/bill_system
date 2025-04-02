@@ -1,3 +1,4 @@
+import xlsx from "node-xlsx";
 import { Like, Repository, Not, In } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { ProductEntity, UserEntity } from "@bill/database/dist/entities";
@@ -19,7 +20,6 @@ export class ProductService {
   constructor(
     private logger: Log4jsService,
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
-    private productCategoryService: ProductCategoryService,
     private productUnitService: ProductUnitService,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
   ) {}
@@ -118,5 +118,43 @@ export class ProductService {
     const child = await this.getByIdWithError(id);
 
     return this.repo.softRemove(child);
+  }
+
+  async uploadFile(file: Express.Multer.File) {
+    const workSheetsFromBuffer = xlsx.parse(file.buffer);
+
+    if (workSheetsFromBuffer.length <= 0) {
+      throw new ApiException(
+        "can not find recoed",
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          type: "ProductEntity",
+        }
+      );
+    }
+
+    const workSheet = workSheetsFromBuffer[0];
+    const rows = workSheet.data.splice(1);
+    const products: ProductEntity[] = [];
+
+    for (const row of rows) {
+      const unit = await this.productUnitService.findOrCreate(row[3]);
+
+      products.push(
+        new ProductEntity().extend({
+          name: row[0],
+          price: row[5],
+          cost: row[4],
+          desc: row[1] || '',
+          label: row[0] || '',
+          companyId: this.request.userEntity.company?.id,
+          userId: this.request.userEntity.id,
+          unit,
+        })
+      );
+    }
+
+    return await this.repo.save(products);
   }
 }

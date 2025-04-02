@@ -41,6 +41,22 @@ export class ProductUnitService {
     };
   }
 
+  async findOrCreate(name: string) {
+    const data = await this.repo.findOneBy({
+      name,
+    });
+
+    if (data) {
+      return data;
+    }
+
+    return this.create({
+      name,
+      label: name,
+      desc: name,
+    });
+  }
+
   async getById(id?: number): Promise<ProductUnitEntity | null> {
     if (!id) {
       return null;

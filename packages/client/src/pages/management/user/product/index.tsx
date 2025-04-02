@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { Button, Space, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
@@ -15,6 +15,7 @@ import Create from './create';
 import Edit from './edit';
 import Remove from './remove';
 import Search from './search';
+import Upload from './upload';
 
 export default function PermissionPage() {
   const { t } = useTranslation();
@@ -74,7 +75,7 @@ export default function PermissionPage() {
       title: t('cls.com.desc'),
       dataIndex: 'desc',
       align: 'center',
-      width: "15%",
+      width: '15%',
       ellipsis: true,
     },
     {
@@ -116,6 +117,10 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
+          <Upload
+            title={t('cls.product.modal.uTitle')}
+            onSuccess={pag.refresh}
+          />
           <Create
             title={t('cls.product.modal.cTitle')}
             onSuccess={pag.refresh}

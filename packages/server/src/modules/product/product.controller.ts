@@ -9,7 +9,13 @@ import {
   Put,
   Delete,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  MaxFileSizeValidator,
+  FileTypeValidator,
+  ParseFilePipe,
 } from "@nestjs/common";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { Roles } from "@/common/decorators/roles.decorator";
@@ -55,5 +61,21 @@ export class ProductController {
   @Delete("/:id")
   async remote(@Param("id") id: number) {
     return this.productService.remove(id);
+  }
+
+  @Post("upload")
+  @UseInterceptors(FileInterceptor("file"))
+  uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+          new FileTypeValidator({ fileType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+        ],
+      })
+    )
+    file: Express.Multer.File
+  ) {
+    return this.productService.uploadFile(file);
   }
 }
