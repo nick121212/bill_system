@@ -6,7 +6,6 @@ import type {
   ProductCategoryEntity,
   ProductUnitEntity,
   ProductEntity,
-  TemplateCategoryEntity,
 } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
@@ -34,7 +33,7 @@ type IDataSource = Partial<ProductEntity> & {
   productCategoryId?: number;
   times?: number;
   isEdit?: boolean;
-  templateCategory?: TemplateCategoryEntity;
+  productCategory?: ProductCategoryEntity;
 };
 
 const randomId = getRandomId();
@@ -52,11 +51,12 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     loading: cateLoad,
     onSearch: debouncedOnCateSearch,
   } = useData<ProductCategoryEntity[]>('product/categories');
+
   const {
     rows: productList,
     loading: serachLoad,
     onSearch: debouncedOnProductSearch,
-  } = useData<ProductCategoryEntity[]>('products');
+  } = useData<ProductCategoryEntity[]>('product/categories/products/list');
   const [title, setTitle] = useState<string>(value?.name || `分类${index + 1}`);
   const [products, setProducts] = useState<IDataSource[]>(
     value?.products?.map((item) => ({
@@ -97,17 +97,17 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
               value: c.id,
             };
           }) || [];
-        if (!isExist && record.templateCategory) {
+        if (!isExist && record.productCategory) {
           options.push({
-            label: record.templateCategory.name,
-            value: record.templateCategory.id,
+            label: record.productCategory.name,
+            value: record.productCategory.id,
           });
         }
         return (
           <Select
             allowClear
             loading={cateLoad}
-            value={val || record.templateCategory?.id}
+            value={val || record.productCategory?.id}
             options={options}
             showSearch
             filterOption={false}
@@ -116,7 +116,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             }}
             onChange={(value) => {
               debouncedOnProductSearch({
-                category: { id: value },
+                categoryId: value,
               });
               handleChangeData(record.randomId!, 'productCategoryId', value);
             }}
@@ -139,9 +139,9 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
               value: c.id,
             };
           }) || [];
-        if (!isExist) {
+        if (!isExist && record.name) {
           options.push({
-            label: record.name!,
+            label: record.name,
             value: record.id!,
           });
         }
@@ -149,7 +149,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           <Select
             allowClear
             loading={serachLoad}
-            disabled={!record.productCategoryId && !record.templateCategory?.id}
+            disabled={!record.productCategoryId && !record.productCategory?.id}
             value={val || undefined}
             showSearch
             filterOption={false}
@@ -157,14 +157,13 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
             onSearch={(val) => {
               debouncedOnProductSearch({
                 name: val === '' ? undefined : val,
-                category: {
-                  id: record.productCategoryId || record.templateCategory?.id,
-                },
+                categoryId:
+                  record.productCategoryId || record.productCategory?.id,
               });
             }}
             onChange={(value: number) => {
               handleProductSelectChange(value);
-              handleChangeData(record.randomId!, 'id', value);
+              // handleChangeData(record.randomId!, 'id', value);
             }}
           />
         );
@@ -219,7 +218,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     },
     {
       title: '份数',
-      dataIndex: 'copies',
+      dataIndex: 'times',
       align: 'center',
       width: 150,
       render: (val, record) => (
@@ -307,6 +306,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       products?.map((p) => {
         let rest = {};
         if (key === 'productCategoryId') {
+          // 切换分类，清空产品数据
           rest = {
             ...initData,
           };
@@ -341,7 +341,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       }
     >
       <Table
-        className='custom-table'
+        className="custom-table"
         rowKey="randomId"
         dataSource={products || []}
         columns={columns}
