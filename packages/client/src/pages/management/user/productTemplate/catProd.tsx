@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Select, Table, Space, Button, Card, InputNumber, Input } from 'antd';
+import { Select, Table, Button, Card, InputNumber, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import useAxios from 'axios-hooks';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import type {
   ProductCategoryEntity,
   ProductUnitEntity,
   ProductEntity,
-  TemplateCategoryEntity
+  TemplateCategoryEntity,
 } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
@@ -35,7 +34,7 @@ type IDataSource = Partial<ProductEntity> & {
   productCategoryId?: number;
   times?: number;
   isEdit?: boolean;
-  templateCategory?: TemplateCategoryEntity
+  templateCategory?: TemplateCategoryEntity;
 };
 
 const randomId = getRandomId();
@@ -76,7 +75,7 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
           productId: product?.id,
           price: product?.price,
           count: product?.count,
-          times: product?.times
+          times: product?.times,
         };
       }),
     });
@@ -89,27 +88,32 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       align: 'center',
       width: 150,
       render: (val, record) => {
-        if (record.isEdit) {
-          return record?.templateCategory?.name
+        const isExist =
+          (categories || [])?.findIndex((item) => item.id === val) > -1;
+        const options =
+          categories?.map((c) => {
+            return {
+              label: c.name,
+              value: c.id,
+            };
+          }) || [];
+        if (!isExist && record.templateCategory) {
+          options.push({
+            label: record.templateCategory.name,
+            value: record.templateCategory.id,
+          });
         }
         return (
           <Select
             allowClear
             loading={cateLoad}
-            value={val}
-            options={
-              categories?.map((c) => {
-                return {
-                  label: c.name,
-                  value: c.id,
-                };
-              }) ?? []
-            }
+            value={val || record.templateCategory?.id}
+            options={options}
             showSearch
             filterOption={false}
-            onSearch={(val) =>
-              debouncedOnCateSearch({ name: val === '' ? undefined : val })
-            }
+            onSearch={(val) => {
+              debouncedOnCateSearch({ name: val === '' ? undefined : val });
+            }}
             onChange={(value) => {
               debouncedOnProductSearch({
                 category: { id: value },
@@ -122,35 +126,45 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
     },
     {
       title: '名称',
-      dataIndex: 'name',
+      dataIndex: 'id',
       align: 'center',
       width: 170,
-      render: (val: string, record: IDataSource) => {
-        if (record.isEdit) {
-          return val;
+      render: (val: number, record: IDataSource) => {
+        const isExist =
+          (productList || [])?.findIndex((item) => item.id === val) > -1;
+        const options =
+          productList?.map((c) => {
+            return {
+              label: c.name,
+              value: c.id,
+            };
+          }) || [];
+        if (!isExist) {
+          options.push({
+            label: record.name!,
+            value: record.id!,
+          });
         }
         return (
           <Select
             allowClear
             loading={serachLoad}
-            disabled={!record.productCategoryId}
-            value={Number(val) || undefined}
+            disabled={!record.productCategoryId && !record.templateCategory?.id}
+            value={val || undefined}
             showSearch
             filterOption={false}
-            options={productList?.map((c) => {
-              return {
-                label: c.name,
-                value: Number(c.id),
-              };
-            })}
+            options={options}
             onSearch={(val) => {
               debouncedOnProductSearch({
                 name: val === '' ? undefined : val,
-                category: { id: record.productCategoryId },
+                category: {
+                  id: record.productCategoryId || record.templateCategory?.id,
+                },
               });
             }}
             onChange={(value: number) => {
               handleProductSelectChange(value);
+              handleChangeData(record.randomId!, 'id', value);
             }}
           />
         );
@@ -265,10 +279,9 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
   };
 
   // 选择产品
-  const handleProductSelectChange = (value: number | string) => {
-    const numericValue = Number(value);
+  const handleProductSelectChange = (value: number) => {
     productList?.forEach((p) => {
-      if (p.id === numericValue) {
+      if (p.id === value) {
         updateProducts(
           products?.map((pro) => {
             if (!pro.id) {
@@ -328,11 +341,12 @@ export default function CatProd({ value, onChange, index, onRemove }: IProps) {
       }
     >
       <Table
+        className='custom-table'
         rowKey="randomId"
         dataSource={products || []}
         columns={columns}
         pagination={false}
-        // scroll={{ x: 720 }}
+        scroll={{ x: 1080 }}
         size="small"
         {...(products?.length
           ? {}
