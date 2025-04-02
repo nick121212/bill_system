@@ -42,7 +42,7 @@ export class ProductCategoryController {
     return this.productCategoryService.all(query, user);
   }
 
-  @Get("/products")
+  @Get("/products/list")
   async products(@Query() query: ProductCategoryProductQuery) {
     return this.productCategoryService.getProducts(query.where?.categoryId||0, query);
   }

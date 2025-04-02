@@ -52,36 +52,9 @@ function TableField({
 
   return (
     <div className={classNames([className, 'ant-list', 'ant-list-bordered'])}>
-      {/* {!!label && (
-        <div>
-          {label}
-          {!!info && (
-            <span>
-              &nbsp;
-              <Tooltip title={info}>
-                <QuestionCircleOutlined />
-              </Tooltip>
-            </span>
-          )}
-        </div>
-      )} */}
-
       <Table {...filterDOMProps(props)} columns={columns} dataSource={value} />
       <ListAddField name="$" />
       {!!(error && showInlineError) && <div>{errorMessage}</div>}
-      {/* {value?.map((_item, itemIndex) =>
-        Children.map(children, (child, childIndex) =>
-          isValidElement(child)
-            ? cloneElement(child as ReactElement, {
-                key: `${itemIndex}-${childIndex.toString()}`,
-                name: child.props.name?.replace('$', `${itemIndex}`),
-                labelCol,
-                wrapperCol,
-                ...itemProps,
-              })
-            : child,
-        ),
-      )} */}
     </div>
   );
 }
