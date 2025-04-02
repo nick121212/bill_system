@@ -42,17 +42,14 @@ export class ProductCategoryController {
     return this.productCategoryService.all(query, user);
   }
 
+  @Get("/products")
+  async products(@Query() query: ProductCategoryProductQuery) {
+    return this.productCategoryService.getProducts(query.where?.categoryId||0, query);
+  }
+
   @Get("/:id")
   async one(@Param("id") id: number) {
     return this.productCategoryService.getById(id);
-  }
-
-  @Get("/products")
-  async products(@Query() query: ProductCategoryProductQuery) {
-    return this.productCategoryService.getProducts(
-      query.where?.categoryId || 0,
-      query
-    );
   }
 
   @Post("/")
