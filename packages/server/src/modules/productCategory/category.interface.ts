@@ -18,3 +18,8 @@ export class ProductCategoryRequest {
 }
 
 export class ProductCategoryQuery extends BaseQuery {}
+
+export class ProductCategoryProductQuery extends BaseQuery {
+  categoryId: number;
+}
+

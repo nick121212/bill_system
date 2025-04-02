@@ -20,6 +20,7 @@ import { Log4jsService } from "@/modules/log4js";
 import {
   ProductCategoryRequest,
   ProductCategoryQuery,
+  ProductCategoryProductQuery,
 } from "./category.interface";
 import { ProductCategoryService } from "./category.service";
 
@@ -46,9 +47,9 @@ export class ProductCategoryController {
     return this.productCategoryService.getById(id);
   }
 
-  @Get("/:id/products")
-  async products(@Param("id") id: number, @Query() query: BaseQuery) {
-    return this.productCategoryService.getProducts(id, query);
+  @Get("/products")
+  async products(@Query() query: ProductCategoryProductQuery) {
+    return this.productCategoryService.getProducts(query.categoryId, query);
   }
 
   @Post("/")

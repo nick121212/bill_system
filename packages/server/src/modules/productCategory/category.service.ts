@@ -16,6 +16,7 @@ import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
 
 import {
+  ProductCategoryProductQuery,
   ProductCategoryQuery,
   ProductCategoryRequest,
 } from "./category.interface";
@@ -68,13 +69,15 @@ export class ProductCategoryService {
 
   async getProducts(
     id: number,
-    query: BaseQuery
+    query: ProductCategoryProductQuery
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const category = await this.getByIdWithError(id);
+    const { name, ...rest } = query.where || {};
 
     const [rows, count] = await this.em.findAndCount(ProductEntity, {
       where: {
         id: In(category.products),
+        ...(name ? { name: ILike(`%${name}%`) } : {}),
         ...dataFilter(this.request.userEntity),
       },
       skip: query.skip,
