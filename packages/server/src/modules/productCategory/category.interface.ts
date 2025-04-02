@@ -19,7 +19,9 @@ export class ProductCategoryRequest {
 
 export class ProductCategoryQuery extends BaseQuery {}
 
-export class ProductCategoryProductQuery extends BaseQuery {
+export class ProductCategoryProductWhere {
   categoryId: number;
+  name?: string;
 }
 
+export class ProductCategoryProductQuery extends BaseQuery<ProductCategoryProductWhere> {}

@@ -49,7 +49,10 @@ export class ProductCategoryController {
 
   @Get("/products")
   async products(@Query() query: ProductCategoryProductQuery) {
-    return this.productCategoryService.getProducts(query.categoryId, query);
+    return this.productCategoryService.getProducts(
+      query.where?.categoryId || 0,
+      query
+    );
   }
 
   @Post("/")
