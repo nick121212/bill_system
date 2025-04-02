@@ -82,6 +82,7 @@ export class ProductCategoryService {
       },
       skip: query.skip,
       take: query.take,
+      relations: ["unit"],
     });
 
     return {
