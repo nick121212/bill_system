@@ -1,5 +1,5 @@
-import { Ref, type ReactNode } from 'react';
-import { Space, Table, TableProps } from 'antd';
+import { Ref } from 'react';
+import { Table, TableProps } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
 import classNames from 'classnames';
 import { connectField, FieldProps, filterDOMProps } from 'uniforms';
@@ -17,45 +17,17 @@ function TableField({
   error,
   errorMessage,
   label,
+  columns,
   showInlineError,
   value,
   ...props
 }: TableFieldProps) {
-  const columns: TableProps<any>['columns'] = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text) => <a>{text}</a>,
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
-  ];
-
   return (
-    <div className={classNames([className, 'ant-list', 'ant-list-bordered'])}>
+    <>
       <Table {...filterDOMProps(props)} columns={columns} dataSource={value} />
       <ListAddField name="$" />
       {!!(error && showInlineError) && <div>{errorMessage}</div>}
-    </div>
+    </>
   );
 }
 
