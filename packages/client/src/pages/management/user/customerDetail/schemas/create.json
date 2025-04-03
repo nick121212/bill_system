@@ -1,0 +1,25 @@
+{
+  "title": "Customer",
+  "type": "object",
+  "properties": {
+    "prices": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "productId": { "type": "number", "title": "商品" },
+          "price": { "type": "number", "title": "商品价格", "default": 0 },
+          "discount": {
+            "type": "number",
+            "title": "商品折扣",
+            "default": 100,
+            "minimum": 10,
+            "maximum": 100
+          }
+        },
+        "required": ["productId", "price", "discount"]
+      }
+    }
+  },
+  "required": ["prices"]
+}

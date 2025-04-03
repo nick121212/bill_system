@@ -1,17 +1,17 @@
-import type { Ref } from "react";
+import type { Ref } from 'react';
 import {
   Checkbox,
   Radio,
   Select as SelectAntD,
   type SelectProps as SelectAntDProps,
-} from "antd";
-import type { CheckboxGroupProps } from "antd/es/checkbox";
-import type { RadioGroupProps } from "antd/lib/radio";
-import { type FieldProps, connectField, filterDOMProps } from "uniforms";
-import { ReloadOutlined } from "@ant-design/icons";
+} from 'antd';
+import type { CheckboxGroupProps } from 'antd/es/checkbox';
+import type { RadioGroupProps } from 'antd/lib/radio';
+import { type FieldProps, connectField, filterDOMProps } from 'uniforms';
+import { ReloadOutlined } from '@ant-design/icons';
 
-import type { Option } from "./types";
-import wrapField from "./wrapField";
+import type { Option } from './types';
+import wrapField from './wrapField';
 
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
@@ -24,6 +24,7 @@ type CheckboxesProps = FieldProps<
     checkboxes: true;
     inputRef?: Ref<typeof CheckboxGroup | typeof RadioGroup>;
     required?: boolean;
+    onChangeData?: (value: SelectFieldValue, option: any) => void;
   }
 >;
 
@@ -35,6 +36,7 @@ type SelectProps = FieldProps<
     checkboxes?: false;
     inputRef?: Ref<typeof SelectAntD>;
     required?: boolean;
+    onChangeData?: (value: SelectFieldValue, option: any) => void;
   }
 >;
 
@@ -44,7 +46,7 @@ type SelectFieldValue = (string | undefined)[];
 
 export type SelectFieldProps = CheckboxesProps | SelectProps;
 
-function Select(props: SelectFieldProps) {
+function Select({ onChangeData, ...props }: SelectFieldProps) {
   const Group = props.fieldType === Array ? CheckboxGroup : RadioGroup;
   const filteredDOMProps = filterDOMProps(props);
 
@@ -63,7 +65,13 @@ function Select(props: SelectFieldProps) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 props.fieldType === Array
                   ? eventOrValue
-                  : eventOrValue.target.value
+                  : eventOrValue.target.value,
+              );
+              onChangeData?.(
+                props.fieldType === Array
+                  ? eventOrValue
+                  : eventOrValue.target.value,
+                eventOrValue,
               );
             }
           }}
@@ -78,18 +86,25 @@ function Select(props: SelectFieldProps) {
       <SelectAntD<SelectFieldValue>
         allowClear={!props.required}
         disabled={props.disabled}
-        mode={props.fieldType === Array ? "multiple" : undefined}
+        mode={props.fieldType === Array ? 'multiple' : undefined}
         name={props.name}
-        onChange={(value: SelectFieldValue) => {
+        onChange={(value: SelectFieldValue, option: any) => {
           if (!props.readOnly) {
+            onChangeData?.(value, option);
             props.onChange(value);
           }
         }}
-        style={{ minWidth: "164px" }}
+        style={{ minWidth: '164px' }}
         placeholder={props.placeholder}
-        suffixIcon={props.loading ? null : <ReloadOutlined onClick={()=>{
-          props.onSearch?.('');
-        }} />}
+        suffixIcon={
+          props.loading ? null : (
+            <ReloadOutlined
+              onClick={() => {
+                props.onSearch?.('');
+              }}
+            />
+          )
+        }
         loading={props.loading}
         // @ts-expect-error: Incorrect `inputRef` type.
         ref={props.inputRef}
@@ -101,6 +116,7 @@ function Select(props: SelectFieldProps) {
             : props.value
         }
         {...filteredDOMProps}
+        label={props.label}
       >
         {props.options?.map((option) => (
           <SelectAntD.Option
@@ -113,8 +129,8 @@ function Select(props: SelectFieldProps) {
           </SelectAntD.Option>
         ))}
       </SelectAntD>
-    )
+    ),
   );
 }
 
-export default connectField<SelectFieldProps>(Select, { kind: "leaf" });
+export default connectField<SelectFieldProps>(Select, { kind: 'leaf' });

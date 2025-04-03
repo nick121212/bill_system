@@ -2,11 +2,16 @@ import { useCallback } from "react";
 import useAxios from "axios-hooks";
 import debounce from "lodash/debounce";
 
-export default function useData<T = unknown>(name: string, params?: unknown) {
+import { objectIsEmpty } from "@/utils";
+
+export default function useData<T = unknown>(
+  name: string,
+  params?: Record<string, unknown>
+) {
   const [{ data: rows, loading }, refetch] = useAxios(
     {
       url: `/${name}`,
-      params:{ where: params },
+      params: { take: 10, where: params },
     },
     {
       useCache: true,
@@ -14,15 +19,18 @@ export default function useData<T = unknown>(name: string, params?: unknown) {
   );
 
   const onSearch = useCallback(
-    (formData?: unknown) => {
+    (formData?: Record<string, unknown>) => {
       refetch({
-        params: { where: formData },
+        params: {
+          take: 10,
+          where: objectIsEmpty(formData || {}) ? params : formData,
+        },
       });
     },
     [refetch]
   );
 
-  const onSearchDeb = debounce((formData) => {
+  const onSearchDeb = debounce((formData?: Record<string, unknown>) => {
     onSearch(formData);
   }, 800);
 

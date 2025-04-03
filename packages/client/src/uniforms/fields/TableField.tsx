@@ -25,7 +25,7 @@ function TableField({
   return (
     <>
       <Table {...filterDOMProps(props)} columns={columns} dataSource={value} />
-      <ListAddField name="$" />
+      {props.children}
       {!!(error && showInlineError) && <div>{errorMessage}</div>}
     </>
   );

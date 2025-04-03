@@ -33,7 +33,7 @@ export class CustomerService {
     @InjectRepository(ProductPriceEntity)
     private repoForPrice: Repository<ProductPriceEntity>,
     private productService: ProductService,
-    @Inject(REQUEST) private request: Request & {userEntity: UserEntity}
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
   ) {}
 
   async all(
@@ -45,7 +45,7 @@ export class CustomerService {
       take: query.take,
       where: {
         ...query.where,
-        ...dataFilter(this.request.userEntity)
+        ...dataFilter(this.request.userEntity),
       },
       loadRelationIds: true,
       withDeleted: false,
@@ -92,20 +92,21 @@ export class CustomerService {
   async getPriceById(id?: number) {
     const customer = await this.getByIdWithError(id);
 
-    return this.repoForProduct
+    const [rows, count] = await this.repoForProduct
       .createQueryBuilder("product")
       .where({
         deletedDate: IsNull(),
       })
       .innerJoinAndSelect("product.unit", "unit")
-      .innerJoinAndSelect("product.category", "category")
-      .leftJoinAndSelect(
+      .innerJoinAndSelect(
         "product.customerPrices",
         "prices",
         "prices.customerId = :customerId",
-        { customerId: id }
+        { customerId: customer.id }
       )
       .getManyAndCount();
+
+    return { rows, count };
   }
 
   async savePrices(id: number, body: CustomerPriceRequest) {
