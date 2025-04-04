@@ -13,10 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useField } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  CustomerEntity,
-  type ProductEntity,
-} from '@bill/database/esm';
+import { CustomerEntity, type ProductEntity } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
@@ -27,6 +24,7 @@ import {
   AutoForm,
   ErrorsField,
   ListAddField,
+  ListDelField,
   TableField,
 } from '@/uniforms/fields';
 
@@ -223,6 +221,13 @@ export default function CategoryDrawer({
                   width: 200,
                   render: (val, record, index) => {
                     return <AutoField name={`${index}.discount`} />;
+                  },
+                },
+                {
+                  title: '',
+                  width: 100,
+                  render: (val, record, index) => {
+                    return <ListDelField name={`${index}`} />;
                   },
                 },
               ]}

@@ -196,6 +196,13 @@ function CategoryItem(props: any) {
                       );
                     },
                   },
+                  {
+                    title: '',
+                    width: 100,
+                    render: (val, record, index) => {
+                      return <ListDelField name={`${index}`} />;
+                    },
+                  },
                 ]}
               >
                 <ListAddField
