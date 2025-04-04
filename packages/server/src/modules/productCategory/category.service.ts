@@ -72,12 +72,13 @@ export class ProductCategoryService {
     query: ProductCategoryProductQuery
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const category = await this.getByIdWithError(id);
-    const { name, ...rest } = query.where || {};
+    const { name,productId, ...rest } = query.where || {};
 
     const [rows, count] = await this.em.findAndCount(ProductEntity, {
       where: {
         id: In(category.products),
         ...(name ? { name: ILike(`%${name}%`) } : {}),
+        ...(productId ? { id: In([productId]) } : {}),
         ...dataFilter(this.request.userEntity),
       },
       skip: query.skip,

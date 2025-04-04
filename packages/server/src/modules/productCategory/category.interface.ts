@@ -22,6 +22,7 @@ export class ProductCategoryQuery extends BaseQuery {}
 export class ProductCategoryProductWhere {
   categoryId: number;
   name?: string;
+  productId?: number;
 }
 
 export class ProductCategoryProductQuery extends BaseQuery<ProductCategoryProductWhere> {}

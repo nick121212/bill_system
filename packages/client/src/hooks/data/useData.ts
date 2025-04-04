@@ -29,7 +29,7 @@ export default function useData<T = unknown>(
   // }, dependencies);
 
   const onSearch = useCallback(
-    (formData?: Record<string, unknown>) => {
+    (formData?: Record<string, unknown>, excludeKeys: string[] = []) => {
       refetch({
         params: {
           take: 10,
@@ -42,7 +42,7 @@ export default function useData<T = unknown>(
 
   const onSearchDeb = debounce((formData?: Record<string, unknown>) => {
     onSearch(formData);
-  }, 800);
+  }, 400);
 
   return { rows: rows?.rows as T, loading, onSearch: onSearchDeb };
 }

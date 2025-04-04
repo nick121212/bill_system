@@ -1,21 +1,10 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import {
-  Button,
-  Card,
-  Collapse,
-  Descriptions,
-  Divider,
-  Drawer,
-  Form,
-  Space,
-  Spin,
-} from 'antd';
+import { Button, Collapse, Drawer, Form, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useField } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
 import {
-  CustomerEntity,
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
   TemplateEntity,
@@ -23,7 +12,6 @@ import {
 } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
-import useDetailData from '@/hooks/data/useDetailData';
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
 import {
@@ -99,7 +87,9 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     onSearch: debouncedOnProductSearch,
   } = useData<ProductEntity[]>(
     'product/categories/products/list',
-    id ? { id, categoryId: field.value } : { categoryId: field.value },
+    id
+      ? { productId: id, categoryId: field.value }
+      : { categoryId: field.value },
     field.value,
   );
 
@@ -125,7 +115,10 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         onSearch={(val: string) =>
           debouncedOnProductSearch({
             categoryId: field.value,
-            name: val === '' ? undefined : convertEmptyToSearchAll(val),
+            ...{
+              name: val === '' ? undefined : convertEmptyToSearchAll(val),
+              productId: !val ? id : undefined,
+            },
           })
         }
       ></AutoField>
