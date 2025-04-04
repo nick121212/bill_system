@@ -9,14 +9,12 @@ import {
   Form,
   Space,
   Spin,
-  Table,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useField, useForm } from 'uniforms';
+import { useField } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
-  ProductPriceEntity,
   type ProductEntity,
 } from '@bill/database/esm';
 
@@ -96,7 +94,7 @@ export default function CategoryDrawer({
       onCloseProps();
     },
   );
-  const { rows, loading } = useData<ProductPriceEntity[]>(
+  const { rows, loading } = useData<ProductEntity[]>(
     `customers/${customerId}/products`,
   );
   const { data: info } = useDetailData<CustomerEntity>(
@@ -135,8 +133,14 @@ export default function CategoryDrawer({
             showInlineError
             schema={bridge}
             model={{
-              prices: (rows || []).map((r: ProductPriceEntity) => {
-                return { ...r, productId: r.id };
+              prices: (rows || []).map((r: ProductEntity) => {
+                let price = r.price;
+
+                if (r.customerPrices && r.customerPrices.length > 0) {
+                  price = r.customerPrices[0].price;
+                }
+
+                return { ...r, productId: r.id, price };
               }),
             }}
             onSubmit={(formData) => {
