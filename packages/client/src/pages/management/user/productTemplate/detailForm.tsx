@@ -1,0 +1,294 @@
+import { useRef } from 'react';
+import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
+import {
+  Button,
+  Card,
+  Collapse,
+  Descriptions,
+  Divider,
+  Drawer,
+  Form,
+  Space,
+  Spin,
+} from 'antd';
+import { useTranslation } from 'react-i18next';
+import { useField } from 'uniforms';
+import { PlusOutlined } from '@ant-design/icons';
+import { CustomerEntity, type ProductEntity } from '@bill/database/esm';
+
+import useData from '@/hooks/data/useData';
+import useDetailData from '@/hooks/data/useDetailData';
+import useFormAction from '@/hooks/form/useFormAction';
+import { getBridge } from '@/uniforms/ajv';
+import {
+  AutoField,
+  AutoForm,
+  EmptyField,
+  ErrorsField,
+  ListAddField,
+  ListDelField,
+  ListViewField,
+  LongTextField,
+  TableField,
+} from '@/uniforms/fields';
+
+import schema from './schemas/create.json';
+
+export type DetailFormProps = {
+  onSuccess: () => void;
+  onClose: () => void;
+  templateId: number;
+  title: string;
+};
+
+const bridge = getBridge(schema as SomeJSONSchema);
+
+function CategorySelect({ name, id }: { name: string; id?: number }) {
+  const {
+    rows: categories,
+    loading: categoryLoad,
+    onSearch: debouncedOnCategorySearch,
+  } = useData<ProductEntity[]>('product/categories', id ? { id } : {});
+  const [field] = useField(`${name}.productId`, {});
+
+  return (
+    <div className="w-full">
+      <AutoField
+        name={`${name}.productCategoryId`}
+        options={categories?.map((c) => {
+          return {
+            label: c.name,
+            value: c.id,
+            data: c,
+          };
+        })}
+        label={''}
+        loading={categoryLoad}
+        showSearch
+        filterOption={false}
+        onChangeData={(id: number, data: ProductEntity) => {
+          field.onChange(undefined, field.name);
+        }}
+        onSearch={(val: string) =>
+          debouncedOnCategorySearch({
+            name: val === '' ? undefined : val,
+          })
+        }
+      ></AutoField>
+    </div>
+  );
+}
+
+function ProductSelect({ name, id }: { name: string; id?: number }) {
+  const [field] = useField(`${name}.productCategoryId`, {});
+  const [fieldPrice] = useField(`${name}.price`, {});
+  const [fieldDesc] = useField(`${name}.desc`, {});
+  const {
+    rows: products,
+    loading: productLoad,
+    onSearch: debouncedOnProductSearch,
+  } = useData<ProductEntity[]>(
+    'product/categories/products/list',
+    id ? { id, categoryId: field.value } : { categoryId: field.value },
+    field.value,
+  );
+
+  return (
+    <div className="w-full">
+      <AutoField
+        name={`${name}.productId`}
+        options={products?.map((c) => {
+          return {
+            label: c.name,
+            value: c.id,
+            data: c,
+          };
+        })}
+        onChangeData={(e: number, data: {data: ProductEntity}) => {
+          fieldDesc.onChange(data.data.desc, fieldDesc.name);
+          fieldPrice.onChange(data.data.price, fieldPrice.name);
+        }}
+        label={''}
+        loading={productLoad}
+        showSearch
+        filterOption={false}
+        onSearch={(val: string) =>
+          debouncedOnProductSearch({
+            categoryId: field.value,
+            name: val === '' ? undefined : val,
+          })
+        }
+      ></AutoField>
+    </div>
+  );
+}
+
+function CategoryItem(props: any) {
+  return (
+    <>
+      <Collapse
+        className="w-full"
+        activeKey={[props.name]}
+        expandIconPosition="start"
+        items={[
+          {
+            key: props.name,
+            label: <AutoField name={`${props.name}.name`} />,
+            extra: <ListDelField name={`$`} />,
+            children: (
+              <TableField
+                size="small"
+                name={`${props.name}.products`}
+                pagination={false}
+                columns={[
+                  // 分类， 名称，描述，价格，单位，数量，分数，操作
+                  {
+                    title: '分类',
+                    dataIndex: 'productCategoryId',
+                    align: 'center',
+                    width: 200,
+                    render: (val, record, index) => {
+                      return <CategorySelect name={`${index}`} id={val || 0} />;
+                    },
+                  },
+                  {
+                    title: '商品',
+                    dataIndex: 'productId',
+                    align: 'center',
+                    width: 200,
+                    render: (val, record, index) => {
+                      return <ProductSelect name={`${index}`} id={val || 0} />;
+                    },
+                  },
+                  {
+                    title: '描述',
+                    dataIndex: 'desc',
+                    align: 'center',
+                  },
+                  {
+                    title: '价格',
+                    dataIndex: 'price',
+                    align: 'center',
+                    width: 200,
+                    render: (val, record, index) => {
+                      return <AutoField label="" name={`${index}.price`} />;
+                    },
+                  },
+                  {
+                    title: '数量',
+                    dataIndex: 'count',
+                    align: 'center',
+                    width: 200,
+                    render: (val, record, index) => {
+                      return <AutoField step={1} label="" name={`${index}.count`} />;
+                    },
+                  },
+                  {
+                    title: '份数',
+                    dataIndex: 'times',
+                    align: 'center',
+                    render: (val, record, index) => {
+                      return <AutoField step={1} label="" name={`${index}.times`} />;
+                    },
+                  },
+                ]}
+              >
+                <ListAddField
+                  name="$"
+                  shape="default"
+                  ghost
+                  size="large"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                >
+                  添加商品
+                </ListAddField>
+              </TableField>
+            ),
+          },
+        ]}
+      />
+    </>
+  );
+}
+
+export default function DetailForm({
+  onSuccess,
+  onClose: onCloseProps,
+  templateId,
+  title,
+}: DetailFormProps) {
+  const { t } = useTranslation();
+  const formRef = useRef<any>();
+  const { onSubmit, callAjax, loadingAjax } = useFormAction(
+    formRef,
+    {
+      url: templateId ? `/templates/${templateId}` : '/templates',
+      method: templateId ? 'PUT' : 'POST',
+    },
+    () => {
+      onSuccess?.();
+      onCloseProps();
+    },
+  );
+
+  return (
+    <Drawer
+      destroyOnClose
+      width={'100%'}
+      onClose={onCloseProps}
+      open={true}
+      title={title}
+      extra={
+        <Space>
+          <Button loading={loadingAjax} onClick={onCloseProps}>
+            {t('crud.cancel')}
+          </Button>
+          <Button loading={loadingAjax} onClick={onSubmit} type="primary">
+            {t('crud.confirm')}
+          </Button>
+        </Space>
+      }
+    >
+      <Form
+        labelCol={{ span: 5 }}
+        wrapperCol={{ span: 14 }}
+        preserve={false}
+        layout="horizontal"
+        labelAlign="right"
+      >
+        <Spin spinning={loadingAjax}>
+          <AutoForm
+            ref={formRef as any}
+            showInlineError
+            schema={bridge}
+            model={{}}
+            onSubmit={(formData) => {
+              callAjax({
+                data: formData,
+              });
+            }}
+          >
+            <ErrorsField />
+
+            <AutoField name="name" />
+
+            <EmptyField name="categories">
+              <ListViewField
+                label=""
+                name="categories"
+                rowKey={(item) => {
+                  return item;
+                }}
+              >
+                <CategoryItem name="$" />
+              </ListViewField>
+            </EmptyField>
+
+            <LongTextField name="desc" />
+          </AutoForm>
+        </Spin>
+      </Form>
+    </Drawer>
+  );
+}

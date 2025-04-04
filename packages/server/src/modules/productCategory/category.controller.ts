@@ -44,12 +44,10 @@ export class ProductCategoryController {
 
   @Get("/products/list")
   async products(@Query() query: ProductCategoryProductQuery) {
-    return this.productCategoryService.getProducts(query.where?.categoryId||0, query);
-  }
-
-  @Get("/:id")
-  async one(@Param("id") id: number) {
-    return this.productCategoryService.getById(id);
+    return this.productCategoryService.getProducts(
+      query.where?.categoryId || 0,
+      query
+    );
   }
 
   @Post("/")
@@ -68,5 +66,10 @@ export class ProductCategoryController {
   @Delete("/:id")
   async remote(@Param("id") id: number) {
     return this.productCategoryService.remove(id);
+  }
+
+  @Get("/:id")
+  async one(@Param("id") id: number) {
+    return this.productCategoryService.getById(id);
   }
 }

@@ -17,8 +17,6 @@ import type { ProductCategoryEntity, ProductUnitEntity, ProductEntity } from '@b
 import TablePage from '@/components/table';
 import { useParams } from '@/router/hooks';
 
-import Remove from './remove';
-
 const { Title } = Typography;
 
 interface IDataSource extends ProductEntity {

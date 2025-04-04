@@ -10,6 +10,7 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
+import Create1 from './create1';
 import Remove from './remove';
 import Search from './search';
 
@@ -78,6 +79,11 @@ export default function PermissionPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
+          <Create1
+            title={t('cls.proTemp.modal.eTitle')}
+            templateId={0}
+            onSuccess={pag.refresh}
+          />
           <Create
             title={t('cls.proTemp.modal.cTitle')}
             onSuccess={pag.refresh}
