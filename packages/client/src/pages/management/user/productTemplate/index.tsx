@@ -60,9 +60,10 @@ export default function PermissionPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Create
+          <Create1
             title={t('cls.proTemp.modal.eTitle')}
-            formValue={record}
+            templateId={record.id}
+            btnType="text"
             onSuccess={pag.refresh}
           />
           <Remove
@@ -80,12 +81,8 @@ export default function PermissionPage() {
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
           <Create1
-            title={t('cls.proTemp.modal.eTitle')}
-            templateId={0}
-            onSuccess={pag.refresh}
-          />
-          <Create
             title={t('cls.proTemp.modal.cTitle')}
+            templateId={0}
             onSuccess={pag.refresh}
           />
           <Button

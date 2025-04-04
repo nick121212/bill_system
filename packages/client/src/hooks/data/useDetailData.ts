@@ -4,7 +4,7 @@ import debounce from "lodash/debounce";
 
 export default function useDetailData<T = unknown>(
   name: string,
-  id: number,
+  id: number | string,
   condition: boolean
 ) {
   const [{ data, loading }, refetch] = useAxios(

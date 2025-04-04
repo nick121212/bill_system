@@ -19,15 +19,14 @@ export default function useData<T = unknown>(
     }
   );
 
-  useEffect(() => {
-    // refetch({
-    //   params: {
-    //     take: 10,
-    //     where: params,
-    //   },
-    // });
-    console.log("dfjkldjlkflkjdklf");
-  }, dependencies);
+  // useEffect(() => {
+  //   // refetch({
+  //   //   params: {
+  //   //     take: 10,
+  //   //     where: params,
+  //   //   },
+  //   // });
+  // }, dependencies);
 
   const onSearch = useCallback(
     (formData?: Record<string, unknown>) => {

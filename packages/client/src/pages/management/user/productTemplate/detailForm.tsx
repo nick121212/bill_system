@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import {
   Button,
@@ -14,7 +14,13 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useField } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
-import { CustomerEntity, type ProductEntity } from '@bill/database/esm';
+import {
+  CustomerEntity,
+  TemplateCategoryEntity,
+  TemplateCategoryProductEntity,
+  TemplateEntity,
+  type ProductEntity,
+} from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
@@ -31,13 +37,17 @@ import {
   LongTextField,
   TableField,
 } from '@/uniforms/fields';
+import { convertEmptyToSearchAll } from '@/utils';
 
 import schema from './schemas/create.json';
 
 export type DetailFormProps = {
   onSuccess: () => void;
   onClose: () => void;
-  templateId: number;
+  template: TemplateEntity;
+  categories: (TemplateCategoryEntity & {
+    products: TemplateCategoryProductEntity[];
+  })[];
   title: string;
 };
 
@@ -71,7 +81,7 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
         }}
         onSearch={(val: string) =>
           debouncedOnCategorySearch({
-            name: val === '' ? undefined : val,
+            name: val === '' ? undefined : convertEmptyToSearchAll(val),
           })
         }
       ></AutoField>
@@ -99,12 +109,12 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         name={`${name}.productId`}
         options={products?.map((c) => {
           return {
-            label: c.name,
+            label: c.name + '- ￥' + c.price + '元',
             value: c.id,
             data: c,
           };
         })}
-        onChangeData={(e: number, data: {data: ProductEntity}) => {
+        onChangeData={(e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
           fieldPrice.onChange(data.data.price, fieldPrice.name);
         }}
@@ -115,7 +125,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         onSearch={(val: string) =>
           debouncedOnProductSearch({
             categoryId: field.value,
-            name: val === '' ? undefined : val,
+            name: val === '' ? undefined : convertEmptyToSearchAll(val),
           })
         }
       ></AutoField>
@@ -128,13 +138,20 @@ function CategoryItem(props: any) {
     <>
       <Collapse
         className="w-full"
-        activeKey={[props.name]}
+        defaultActiveKey={[props.name]}
         expandIconPosition="start"
         items={[
           {
             key: props.name,
-            label: <AutoField name={`${props.name}.name`} />,
-            extra: <ListDelField name={`$`} />,
+            classNames: {
+              body: 'p-0',
+            },
+            label: (
+              <div onClick={(e) => e.stopPropagation()}>
+                <AutoField name={`${props.name}.name`} />
+              </div>
+            ),
+            extra: <ListDelField color="danger" className="ml-2" name={`$`} />,
             children: (
               <TableField
                 size="small"
@@ -145,8 +162,6 @@ function CategoryItem(props: any) {
                   {
                     title: '分类',
                     dataIndex: 'productCategoryId',
-                    align: 'center',
-                    width: 200,
                     render: (val, record, index) => {
                       return <CategorySelect name={`${index}`} id={val || 0} />;
                     },
@@ -154,8 +169,6 @@ function CategoryItem(props: any) {
                   {
                     title: '商品',
                     dataIndex: 'productId',
-                    align: 'center',
-                    width: 200,
                     render: (val, record, index) => {
                       return <ProductSelect name={`${index}`} id={val || 0} />;
                     },
@@ -168,8 +181,6 @@ function CategoryItem(props: any) {
                   {
                     title: '价格',
                     dataIndex: 'price',
-                    align: 'center',
-                    width: 200,
                     render: (val, record, index) => {
                       return <AutoField label="" name={`${index}.price`} />;
                     },
@@ -177,18 +188,19 @@ function CategoryItem(props: any) {
                   {
                     title: '数量',
                     dataIndex: 'count',
-                    align: 'center',
-                    width: 200,
                     render: (val, record, index) => {
-                      return <AutoField step={1} label="" name={`${index}.count`} />;
+                      return (
+                        <AutoField step={1} label="" name={`${index}.count`} />
+                      );
                     },
                   },
                   {
                     title: '份数',
                     dataIndex: 'times',
-                    align: 'center',
                     render: (val, record, index) => {
-                      return <AutoField step={1} label="" name={`${index}.times`} />;
+                      return (
+                        <AutoField step={1} label="" name={`${index}.times`} />
+                      );
                     },
                   },
                 ]}
@@ -199,6 +211,7 @@ function CategoryItem(props: any) {
                   ghost
                   size="large"
                   type="primary"
+                  variant="link"
                   icon={<PlusOutlined />}
                 >
                   添加商品
@@ -215,7 +228,8 @@ function CategoryItem(props: any) {
 export default function DetailForm({
   onSuccess,
   onClose: onCloseProps,
-  templateId,
+  template,
+  categories,
   title,
 }: DetailFormProps) {
   const { t } = useTranslation();
@@ -223,8 +237,8 @@ export default function DetailForm({
   const { onSubmit, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
-      url: templateId ? `/templates/${templateId}` : '/templates',
-      method: templateId ? 'PUT' : 'POST',
+      url: template?.id ? `/templates/${template?.id}` : '/templates',
+      method: template?.id ? 'PUT' : 'POST',
     },
     () => {
       onSuccess?.();
@@ -262,7 +276,24 @@ export default function DetailForm({
             ref={formRef as any}
             showInlineError
             schema={bridge}
-            model={{}}
+            model={{
+              ...template,
+              categories: categories?.map((cate) => {
+                return {
+                  name: cate.name,
+                  products: cate.products.map((product) => {
+                    return {
+                      productId: product.product.id,
+                      productCategoryId: product.productCategory.id,
+                      count: product.count,
+                      times: product.times,
+                      desc: product.product.desc,
+                      price: product.price,
+                    };
+                  }),
+                };
+              }),
+            }}
             onSubmit={(formData) => {
               callAjax({
                 data: formData,
@@ -280,6 +311,19 @@ export default function DetailForm({
                 rowKey={(item) => {
                   return item;
                 }}
+                addButton={
+                  <ListAddField
+                    name="$"
+                    shape="default"
+                    ghost
+                    size="large"
+                    color="danger"
+                    variant="text"
+                    icon={<PlusOutlined />}
+                  >
+                    添加分类
+                  </ListAddField>
+                }
               >
                 <CategoryItem name="$" />
               </ListViewField>
