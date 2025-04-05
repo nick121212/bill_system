@@ -26,6 +26,10 @@ export class RedisService {
     await this.redisClient.del(key);
   }
 
+  async incr(key: string): Promise<number> {
+    return await this.redisClient.incr(key);
+  }
+
   async validate(key: string, value: string): Promise<boolean> {
     const storedValue = await this.redisClient.get(key);
     return storedValue === value;

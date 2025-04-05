@@ -72,7 +72,11 @@ export default function OrderPage() {
       title: t('cls.order.status'),
       dataIndex: 'status',
       align: 'center',
-      render: (val) => {
+      render: (val, record) => {
+        if (record.status === 0) {
+          return <OrderStatus record={record} onSuccess={pag.refresh} />;
+        }
+
         return (
           <Tag color={colorStatus[val]}>{t(`cls.order.statusStr.${val}`)}</Tag>
         );
@@ -95,15 +99,9 @@ export default function OrderPage() {
           <Create1
             title={t('cls.order.modal.eTitle')}
             orderId={record.id}
+            btnType="text"
             onSuccess={pag.refresh}
           />
-          {record.status === 0 && (
-            <OrderStatus
-              title={t('cls.order.modal.sTitle')}
-              record={record}
-              onSuccess={pag.refresh}
-            />
-          )}
           <Remove
             title={t('cls.order.modal.dTitle')}
             record={record}
@@ -118,7 +116,11 @@ export default function OrderPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create1 orderId={0} title={t('cls.order.modal.cTitle')} onSuccess={pag.refresh} />
+          <Create1
+            orderId={0}
+            title={t('cls.order.modal.cTitle')}
+            onSuccess={pag.refresh}
+          />
           <Button
             icon={<ReloadOutlined />}
             type="text"

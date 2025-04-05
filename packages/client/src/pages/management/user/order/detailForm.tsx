@@ -321,7 +321,7 @@ function CategoryItem(props: any) {
                   name="$"
                   shape="default"
                   ghost
-                  size="large"
+                  size="small"
                   type="primary"
                   variant="link"
                   icon={<PlusOutlined />}

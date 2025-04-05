@@ -1,5 +1,6 @@
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import tinyPinyin from "tiny-pinyin";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -31,4 +32,23 @@ export function convertEmptyToSearchAll(val: string) {
     return "%";
   }
   return val;
+}
+
+export function fixStrLen(str: string, len: number) {
+  if (str.length >= len) {
+    return str;
+  }
+
+  return "0".repeat(len - str.length) + str;
+}
+
+export function getPinYinFirstChar(str: string, lowerCase = true) {
+  const pinyin = tinyPinyin.convertToPinyin(str, "-", lowerCase);
+
+  return pinyin
+    .split("-")
+    .map((str) => {
+      return str.charAt(0);
+    })
+    .join("");
 }

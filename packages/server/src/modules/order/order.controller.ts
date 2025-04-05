@@ -11,6 +11,7 @@ import {
   Query,
   Req,
   Res,
+  Patch,
 } from "@nestjs/common";
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
@@ -48,10 +49,7 @@ export class OrderController {
   }
 
   @Post("/")
-  async create(
-    @Body() body: OrderRequest,
-    @ActiveUser() user: ActiveUserData
-  ) {
+  async create(@Body() body: OrderRequest, @ActiveUser() user: ActiveUserData) {
     return this.orderService.create(body, user);
   }
 
@@ -76,5 +74,10 @@ export class OrderController {
   @Delete("/:id")
   async remote(@Param("id") id: number) {
     return this.orderService.remove(id);
+  }
+
+  @Patch("/uuid/:key")
+  async getUUID(@Param("key") key: string) {
+    return this.orderService.generateIndex(key);
   }
 }

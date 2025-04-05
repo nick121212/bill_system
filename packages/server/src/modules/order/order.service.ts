@@ -26,6 +26,7 @@ import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
 
 import { CustomerService } from "../customer/customer.service";
+import { RedisService } from "../redis/redis.service";
 import {
   OrderProduct,
   OrderQuery,
@@ -43,7 +44,8 @@ export class OrderService {
     @InjectRepository(OrderProductEntity)
     private repoPro: Repository<OrderProductEntity>,
     private customerService: CustomerService,
-    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
+    private readonly redisService: RedisService
   ) {}
 
   async all(
@@ -123,8 +125,7 @@ export class OrderService {
       where: {
         orderId: id,
       },
-      relations: {
-      },
+      relations: {},
     })) as (OrderCategoryEntity & {
       products: OrderProduct[];
     })[];
@@ -231,9 +232,15 @@ export class OrderService {
         ...categories,
         ...products,
         // entityManager.save(order),
-      ]).catch((e) => {
-        throw e;
-      });
+      ])
+        .then(() => {
+          const orderKey = order.no.split("-");
+          orderKey.shift();
+          return this.redisService.incr(orderKey.join("-"));
+        })
+        .catch((e) => {
+          throw e;
+        });
 
       return order;
     });
@@ -300,5 +307,9 @@ export class OrderService {
     const customer = await this.getByIdWithError(id);
 
     return this.repo.softRemove(customer);
+  }
+
+  async generateIndex(key: string) {
+    return `${key}-${parseInt((await this.redisService.get(key)) || "0") || 1}`;
   }
 }

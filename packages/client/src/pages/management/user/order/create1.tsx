@@ -12,6 +12,8 @@ import {
 } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
+import { useUUID } from '@/hooks/data/useUUID';
+import { uuid, uuidCompact } from '@/utils/uuid';
 
 import DetailForm from './detailForm';
 
@@ -47,6 +49,7 @@ export default function ProductTemplateDetail({
     'products',
     showModal && !!data?.customer?.id,
   );
+  const { uuid, loading: uuidLoading } = useUUID(showModal);
 
   return (
     <>
@@ -54,7 +57,9 @@ export default function ProductTemplateDetail({
         <Button
           type={btnType}
           shape="circle"
-          loading={loading && categoriesLoading && productsLoading}
+          loading={
+            loading && categoriesLoading && productsLoading && uuidLoading
+          }
           icon={<EditOutlined />}
           onClick={() => {
             setShowModal(true);
@@ -62,7 +67,9 @@ export default function ProductTemplateDetail({
         />
       ) : (
         <Button
-          loading={loading && categoriesLoading && productsLoading}
+          loading={
+            loading && categoriesLoading && productsLoading && uuidLoading
+          }
           type={btnType}
           icon={<PlusOutlined />}
           onClick={() => {
@@ -73,10 +80,12 @@ export default function ProductTemplateDetail({
         </Button>
       )}
 
-      {showModal && ((data && categories && products) || !orderId) && (
+      {showModal && uuid && ((data && categories && products) || !orderId) && (
         <DetailForm
           title={title}
-          order={{ ...data, customerProducts: products?.map||{} } as  any}
+          order={
+            { no: uuid, ...data, customerProducts: products?.map || {} } as any
+          }
           categories={categories as any}
           onSuccess={() => {
             setShowModal(false);
