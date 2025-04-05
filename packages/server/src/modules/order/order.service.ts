@@ -232,15 +232,9 @@ export class OrderService {
         ...categories,
         ...products,
         // entityManager.save(order),
-      ])
-        .then(() => {
-          const orderKey = order.no.split("-");
-          orderKey.shift();
-          return this.redisService.incr(orderKey.join("-"));
-        })
-        .catch((e) => {
-          throw e;
-        });
+      ]).catch((e) => {
+        throw e;
+      });
 
       return order;
     });
@@ -268,7 +262,14 @@ export class OrderService {
       );
     }
 
-    return this.saveData(order, body);
+    return this.saveData(order, body).then(async(order) => {
+      const orderKey = order.no.split("-");
+      orderKey.pop();
+
+      const no = await this.redisService.incr(orderKey.join("-"));
+
+      return order;
+    });
   }
 
   async update(id: number, body: OrderRequest): Promise<OrderEntity> {
@@ -310,6 +311,8 @@ export class OrderService {
   }
 
   async generateIndex(key: string) {
-    return `${key}-${parseInt((await this.redisService.get(key)) || "0") || 1}`;
+    const index = await this.redisService.get(key);
+
+    return `${key}-${index || 1}`;
   }
 }

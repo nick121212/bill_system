@@ -396,7 +396,14 @@ function TotalPrice() {
     });
   });
 
-  return <div style={{color:"red", fontSize: 18}} className="text-red-600 mb-2 text-right">总价：{totalPrice}</div>;
+  return (
+    <div
+      style={{ color: 'red', fontSize: 18 }}
+      className="text-red-600 mb-2 text-right"
+    >
+      总价：{totalPrice}
+    </div>
+  );
 }
 
 export default function DetailForm({
@@ -415,8 +422,8 @@ export default function DetailForm({
       method: order?.id ? 'PUT' : 'POST',
     },
     () => {
-      onSuccess?.();
       onCloseProps();
+      onSuccess?.();
     },
   );
 
@@ -453,22 +460,23 @@ export default function DetailForm({
             model={{
               ...order,
               customerId: order?.customer?.id,
-              categories: categories?.map((cate) => {
-                return {
-                  name: cate.name,
-                  products: cate.products.map((product) => {
-                    return {
-                      product: product.product,
-                      productId: product.product.id,
-                      productCategoryId: product.productCategory.id,
-                      count: product.count,
-                      times: product.times,
-                      desc: product.product.desc,
-                      price: product.price,
-                    };
-                  }),
-                };
-              }),
+              categories:
+                categories?.map((cate) => {
+                  return {
+                    name: cate.name,
+                    products: cate.products.map((product) => {
+                      return {
+                        product: product.product,
+                        productId: product.product.id,
+                        productCategoryId: product.productCategory.id,
+                        count: product.count,
+                        times: product.times,
+                        desc: product.product.desc,
+                        price: product.price,
+                      };
+                    }),
+                  };
+                }) || [],
             }}
             onSubmit={(formData) => {
               callAjax({
