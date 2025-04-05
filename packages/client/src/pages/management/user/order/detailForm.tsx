@@ -1,6 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Collapse, Drawer, Form, Space, Spin } from 'antd';
+import {
+  Button,
+  Collapse,
+  Descriptions,
+  Drawer,
+  Form,
+  Space,
+  Spin,
+} from 'antd';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { useMount, useMountedState } from 'react-use';
@@ -373,6 +381,24 @@ function CustomerSelect() {
   );
 }
 
+function TotalPrice() {
+  const [field] = useField<
+    {},
+    (OrderCategoryEntity & { products: OrderProductEntity[] })[]
+  >(`categories`, {});
+
+  let totalPrice = 0;
+
+  field.value?.forEach((category) => {
+    category.products.forEach((product) => {
+      if (product?.count && product?.price && product?.times)
+        totalPrice += product.count * product.price * product.times;
+    });
+  });
+
+  return <div style={{color:"red", fontSize: 18}} className="text-red-600 mb-2 text-right">总价：{totalPrice}</div>;
+}
+
 export default function DetailForm({
   onSuccess,
   onClose: onCloseProps,
@@ -457,6 +483,8 @@ export default function DetailForm({
             }}
           >
             <ErrorsField />
+
+            <TotalPrice />
 
             <AutoField name="no" />
 
