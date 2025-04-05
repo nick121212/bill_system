@@ -92,6 +92,9 @@ export class OrderService {
       where: {
         id,
       },
+      relations: {
+        customer: true,
+      },
     });
 
     return data || null;
@@ -116,14 +119,11 @@ export class OrderService {
   }
 
   async getByIdWithCategories(id?: number) {
-    await this.getByIdWithError(id);
-
     const categories = (await this.repoCate.find({
       where: {
         orderId: id,
       },
       relations: {
-        category: true,
       },
     })) as (OrderCategoryEntity & {
       products: OrderProduct[];
@@ -140,6 +140,7 @@ export class OrderService {
         product: {
           unit: true,
         },
+        productCategory: true,
       },
     });
 
@@ -171,6 +172,7 @@ export class OrderService {
         discount: customer.discount,
         status: OrderStatus.UNPAYED,
         customer: customer,
+        templateId: body.templateId,
       });
       const categories: Promise<unknown>[] = [];
       const products: Promise<unknown>[] = [];
@@ -187,16 +189,7 @@ export class OrderService {
       order.totalPrice = 0;
 
       for (const c of body.categories) {
-        const productCategory =
-          await entityManager.findOneByOrFail<ProductCategoryEntity>(
-            ProductCategoryEntity,
-            {
-              id: c.productCategoryId,
-            }
-          );
-
         const orderCategory = new OrderCategoryEntity().extend({
-          category: productCategory,
           orderId: order.id,
           name: c.name,
         });
@@ -206,16 +199,26 @@ export class OrderService {
           const product = await entityManager.findOneByOrFail(ProductEntity, {
             id: p.productId,
           });
+          const productCategory =
+            await entityManager.findOneByOrFail<ProductCategoryEntity>(
+              ProductCategoryEntity,
+              {
+                id: p.productCategoryId,
+              }
+            );
 
           const orderProduct = new OrderProductEntity().extend({
             productId: p.productId,
             name: product.name,
             price: p.price,
-            discount: p.discount,
+            discount: p.discount || 100,
             count: p.count,
             orderCategory: orderCategory,
+            productCategory: productCategory,
             orderId: order.id,
-            totalPrice: p.count * p.price * (p.discount / 100),
+            times: p.times,
+            totalPrice: p.count * p.price,
+            // categoryId: p.productCategoryId,
           });
 
           order.totalPrice += orderProduct.totalPrice;

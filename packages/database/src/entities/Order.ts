@@ -83,6 +83,16 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   userId?: number;
 
   /**
+   * 订单关联的模板ID
+   * @type {number}
+   * @optional
+   */
+  @Column({
+    nullable: true,
+  })
+  templateId?: number;
+
+  /**
    * 订单状态
    * @type {OrderStatus}
    * @description 订单的当前状态

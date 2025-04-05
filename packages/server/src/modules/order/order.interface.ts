@@ -14,6 +14,8 @@ import { BaseQuery } from "@/common/interfaces/query";
 
 export class OrderProduct {
   @IsNumber()
+  productCategoryId?: number;
+  @IsNumber()
   productId: number;
   @IsNumber()
   price: number;
@@ -21,14 +23,13 @@ export class OrderProduct {
   count: number;
   @IsNumber()
   discount: number;
+  @IsNumber()
+  times: number;
 }
 
 export class OrderCategory {
   @IsString()
   name: string;
-
-  @IsNumber()
-  productCategoryId: number;
 
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
@@ -44,6 +45,9 @@ export class OrderRequest {
 
   @IsNumber()
   customerId?: number;
+
+  @IsNumber()
+  templateId?: number;
 
   totalPrice?: number;
 

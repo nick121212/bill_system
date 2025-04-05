@@ -11,6 +11,7 @@ import {
 import { BaseEntity } from "./Base";
 import { OrderCategoryEntity } from "./OrderCategory";
 import { ProductEntity } from "./Product";
+import { ProductCategoryEntity } from "./ProductCategory";
 
 @Entity({
   name: "order_products",
@@ -54,6 +55,13 @@ export class OrderProductEntity extends BaseEntity<OrderProductEntity> {
   @ManyToOne(() => ProductEntity)
   @JoinColumn()
   product: ProductEntity;
+
+  /** 关联的产品分类 */
+  @ManyToOne(() => ProductCategoryEntity)
+  @JoinColumn()
+  productCategory: ProductCategoryEntity;
+
+  
 
   @ManyToOne(() => OrderCategoryEntity)
   @JoinColumn()

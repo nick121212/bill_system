@@ -1,18 +1,16 @@
+import * as _ from "lodash";
 import { Repository, Not, Equal, IsNull, EntityManager } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   CustomerEntity,
-  ProductCategoryEntity,
   ProductEntity,
   ProductPriceEntity,
-  ProductUnitEntity,
   UserEntity,
 } from "@bill/database/dist/entities";
 import { HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
@@ -92,21 +90,25 @@ export class CustomerService {
   async getPriceById(id?: number) {
     const customer = await this.getByIdWithError(id);
 
-    const [rows, count] = await this.repoForProduct
-      .createQueryBuilder("product")
+    const [rows, count] = await this.repoForPrice
+      .createQueryBuilder("product_price")
       .where({
-        deletedDate: IsNull(),
+        customer: customer,
       })
-      .innerJoinAndSelect("product.unit", "unit")
       .innerJoinAndSelect(
-        "product.customerPrices",
-        "prices",
-        "prices.customerId = :customerId",
-        { customerId: customer.id }
+        "product_price.product",
+        "product",
+        "product.id = product_price.productId"
       )
       .getManyAndCount();
 
-    return { rows, count };
+    return {
+      rows,
+      count,
+      map: _.keyBy(rows, (r) => {
+        return r.product?.id;
+      }),
+    };
   }
 
   async savePrices(id: number, body: CustomerPriceRequest) {

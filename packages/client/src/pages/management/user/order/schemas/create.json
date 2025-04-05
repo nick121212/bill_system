@@ -1,0 +1,67 @@
+{
+  "title": "Order",
+  "type": "object",
+  "properties": {
+    "no": { "type": "string", "title": "订单号" },
+    "desc": { "type": "string", "title": "描述", "default": "" },
+    "customerId": { "type": "number", "title": "客户" },
+    "templateId": { "type": "number", "title": "模板" },
+    "categories": {
+      "type": "array",
+      "title": "商品分类",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "分类名称" },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "productId": { "type": "number", "title": "商品" },
+                "productCategoryId": { "type": "number", "title": "商品分类" },
+                "price": {
+                  "type": "number",
+                  "title": "商品价格",
+                  "default": 0,
+                  "minimum": 0
+                },
+                "desc": {
+                  "type": "string"
+                },
+                "count": {
+                  "type": "number",
+                  "title": "商品数量",
+                  "default": 1,
+                  "minimum": 0
+                },
+                "times": {
+                  "type": "number",
+                  "title": "商品次数",
+                  "default": 1,
+                  "minimum": 0
+                },
+                "product": {
+                  "type": "object",
+                  "default": {}
+                }
+              },
+              "required": [
+                "productId",
+                "productCategoryId",
+                "price",
+                "count",
+                "times"
+              ]
+            }
+          }
+        },
+        "required": ["name", "products"]
+      }
+    },
+    "customerProducts": {
+      "type": "object"
+    }
+  },
+  "required": ["no", "desc", "customerId", "templateId", "categories"]
+}

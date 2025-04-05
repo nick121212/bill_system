@@ -11,9 +11,10 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
+import Create1 from './create1';
+import OrderStatus from './orderStatus';
 import Remove from './remove';
 import Search from './search';
-import OrderStatus from './orderStatus';
 
 const colorStatus = ['#f50', '#87d068', 'volcano'];
 
@@ -91,9 +92,9 @@ export default function OrderPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Create
+          <Create1
             title={t('cls.order.modal.eTitle')}
-            formValue={record}
+            orderId={record.id}
             onSuccess={pag.refresh}
           />
           {record.status === 0 && (
@@ -117,7 +118,7 @@ export default function OrderPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title={t('cls.order.modal.cTitle')} onSuccess={pag.refresh} />
+          <Create1 orderId={0} title={t('cls.order.modal.cTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"
