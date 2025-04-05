@@ -76,7 +76,7 @@ export default function ProductTemplateDetail({
       {showModal && ((data && categories && products) || !orderId) && (
         <DetailForm
           title={title}
-          order={{ ...data, customerProducts: products.map } as  any}
+          order={{ ...data, customerProducts: products?.map||{} } as  any}
           categories={categories as any}
           onSuccess={() => {
             setShowModal(false);

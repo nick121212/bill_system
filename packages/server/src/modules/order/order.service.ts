@@ -217,7 +217,7 @@ export class OrderService {
             productCategory: productCategory,
             orderId: order.id,
             times: p.times,
-            totalPrice: p.count * p.price,
+            totalPrice: p.count * p.price * p.times,
             // categoryId: p.productCategoryId,
           });
 
