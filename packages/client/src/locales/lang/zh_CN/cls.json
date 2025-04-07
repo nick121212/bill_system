@@ -79,6 +79,9 @@
         "eTitle": "编辑订单",
         "dTitle": "删除订单",
         "sTitle": "修改订单状态"
+      },
+      "detail": {
+        "title": "订单详情"
       }
     }
   }

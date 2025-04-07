@@ -14,6 +14,7 @@ import Create from './create';
 import OrderStatus from './orderStatus';
 import Remove from './remove';
 import Search from './search';
+import Detail from './detail';
 
 const colorStatus = ['#f50', '#87d068', 'volcano'];
 
@@ -101,6 +102,7 @@ export default function OrderPage() {
             btnType="text"
             onSuccess={pag.refresh}
           />
+          <Detail orderId={record.id} />
           <Remove
             title={t('cls.order.modal.dTitle')}
             record={record}
