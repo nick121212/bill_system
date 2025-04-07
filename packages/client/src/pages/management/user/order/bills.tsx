@@ -10,7 +10,6 @@ import type { OrderEntity } from '@bill/database/esm';
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
-import OrderStatus from './orderStatus';
 import Search from './search';
 
 const colorStatus = ['#f50', '#87d068', 'volcano'];

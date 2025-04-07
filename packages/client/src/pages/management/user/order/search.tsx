@@ -83,6 +83,16 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
             }
           />
 
+          <SelectField
+            loading={customerLoad}
+            name="status"
+            options={[
+              { label: t('cls.order.statusStr.0'), value: 0 },
+              { label: t('cls.order.statusStr.1'), value: 1 },
+              { label: t('cls.order.statusStr.2'), value: 2 },
+            ]}
+          />
+
           <RangeFields name="time" showTime={false} />
 
           <Space size={'small'} align="start">

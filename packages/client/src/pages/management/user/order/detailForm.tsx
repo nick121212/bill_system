@@ -39,6 +39,7 @@ import {
   ListViewField,
   LongTextField,
   TableField,
+  VisibleField,
 } from '@/uniforms/fields';
 import { convertEmptyToSearchAll } from '@/utils';
 
@@ -197,11 +198,11 @@ function TemplateSelect() {
           name: cate.name,
           products: cate.products.map((product) => {
             return {
-              productId: product.product.id,
-              productCategoryId: product.productCategory.id,
+              productId: product?.product?.id,
+              productCategoryId: product?.productCategory?.id,
               count: product.count,
               times: product.times,
-              desc: product.product.desc,
+              desc: product?.product?.desc,
               price: product.price,
             };
           }),
@@ -390,7 +391,7 @@ function TotalPrice() {
   let totalPrice = 0;
 
   field.value?.forEach((category) => {
-    category.products.forEach((product) => {
+    category?.products?.forEach((product) => {
       if (product?.count && product?.price && product?.times)
         totalPrice += product.count * product.price * product.times;
     });
@@ -500,30 +501,39 @@ export default function DetailForm({
 
             <TemplateSelect />
 
-            <EmptyField name="categories">
-              <ListViewField
-                label=""
-                name="categories"
-                rowKey={(item) => {
-                  return item;
-                }}
-                addButton={
-                  <ListAddField
-                    name="$"
-                    shape="default"
-                    ghost
-                    size="large"
-                    color="danger"
-                    variant="text"
-                    icon={<PlusOutlined />}
-                  >
-                    添加分类
-                  </ListAddField>
-                }
-              >
-                <CategoryItem name="$" />
-              </ListViewField>
-            </EmptyField>
+            <VisibleField
+              name="categories"
+              condition={(model) => {
+                console.log(model);
+                
+                return model.templateId && model.templateId > 0;
+              }}
+            >
+              <EmptyField name="categories">
+                <ListViewField
+                  label=""
+                  name="categories"
+                  rowKey={(item) => {
+                    return item;
+                  }}
+                  addButton={
+                    <ListAddField
+                      name="$"
+                      shape="default"
+                      ghost
+                      size="large"
+                      color="danger"
+                      variant="text"
+                      icon={<PlusOutlined />}
+                    >
+                      添加分类
+                    </ListAddField>
+                  }
+                >
+                  <CategoryItem name="$" />
+                </ListViewField>
+              </EmptyField>
+            </VisibleField>
 
             <LongTextField name="desc" />
           </AutoForm>

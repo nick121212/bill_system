@@ -4,13 +4,13 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined, SyncOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import type { OrderEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
-import Create1 from './create1';
+import Create from './create';
 import OrderStatus from './orderStatus';
 import Remove from './remove';
 import Search from './search';
@@ -95,7 +95,7 @@ export default function OrderPage() {
       width: 100,
       render: (_, record) => (
         <div className="flex w-full justify-center text-gray">
-          <Create1
+          <Create
             title={t('cls.order.modal.eTitle')}
             orderId={record.id}
             btnType="text"
@@ -115,7 +115,7 @@ export default function OrderPage() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create1
+          <Create
             orderId={0}
             title={t('cls.order.modal.cTitle')}
             onSuccess={pag.refresh}

@@ -9,6 +9,7 @@
         "id": { "type": "number", "title": "客户" }
       }
     },
+    "status": { "type": "number", "title": "状态" },
     "time": {
       "type": "array",
       "items": {
