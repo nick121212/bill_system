@@ -25,7 +25,11 @@ import {
   LongTextField,
   TableField,
 } from '@/uniforms/fields';
-import { convertEmptyToSearchAll } from '@/utils';
+import {
+  convertEmptyToSearchAll,
+  convertPriceToServer,
+  convertPriceFromServer,
+} from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -99,14 +103,17 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         name={`${name}.productId`}
         options={products?.map((c) => {
           return {
-            label: c.name + '- ￥' + c.price + '元',
+            label: c.name + '- ￥' + convertPriceFromServer(c.price) + '元',
             value: c.id,
             data: c,
           };
         })}
         onChangeData={(e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
-          fieldPrice.onChange(data.data.price, fieldPrice.name);
+          fieldPrice.onChange(
+            convertPriceFromServer(data.data.price),
+            fieldPrice.name,
+          );
         }}
         label={''}
         loading={productLoad}
@@ -295,8 +302,21 @@ export default function DetailForm({
               }),
             }}
             onSubmit={(formData) => {
+              const processedCategories = formData.categories.map(
+                (category) => ({
+                  ...category,
+                  products: category.products.map((product) => ({
+                    ...product,
+                    price: convertPriceToServer(product.price),
+                  })),
+                }),
+              );
+
               callAjax({
-                data: formData,
+                data: {
+                  ...formData,
+                  categories: processedCategories,
+                },
               });
             }}
           >

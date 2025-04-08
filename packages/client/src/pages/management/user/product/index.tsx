@@ -10,6 +10,7 @@ import type { ProductUnitEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
+import { convertPriceFromServer } from '@/utils';
 
 import Create from './create';
 import Edit from './edit';
@@ -59,11 +60,13 @@ export default function PermissionPage() {
       title: t('cls.product.price'),
       dataIndex: 'price',
       align: 'center',
+      render: (price: number) => convertPriceFromServer(price),
     },
     {
       title: t('cls.product.cost'),
       dataIndex: 'cost',
       align: 'center',
+      render: (cost: number) => convertPriceFromServer(cost),
     },
     {
       title: t('cls.product.unit'),

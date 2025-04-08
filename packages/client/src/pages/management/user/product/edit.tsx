@@ -16,6 +16,7 @@ import {
   TextAreaField,
   AutoField,
 } from '@/uniforms/fields';
+import { convertPriceToServer, convertPriceFromServer } from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -39,8 +40,8 @@ function ProductCreateForm({
   const { onSubmit, setFormData, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
-      url: '/products',
-      method: 'POST',
+      url: `/products/${formValue?.id}`,
+      method: 'PUT',
     },
     onSuccess,
   );
@@ -89,12 +90,19 @@ function ProductCreateForm({
               {
                 ...formValue,
                 unitId: formValue?.unit?.id,
+                price: convertPriceFromServer(formValue?.price as number),
+                cost: convertPriceFromServer(formValue?.cost as number),
               } as any
             }
             onSubmit={(formData) => {
               setFormData(formData);
+              const processedFormData = {
+                ...formData,
+                price: convertPriceToServer(formData.price as number),
+                cost: convertPriceToServer(formData.cost as number),
+              };
               callAjax({
-                data: formData,
+                data: processedFormData,
               });
             }}
           >

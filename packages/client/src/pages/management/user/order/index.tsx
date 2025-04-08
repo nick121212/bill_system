@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { OrderEntity } from '@bill/database/esm';
+import { convertPriceFromServer } from '@/utils';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
@@ -67,6 +68,7 @@ export default function OrderPage() {
       title: t('cls.order.totalPrice'),
       dataIndex: 'totalPrice',
       align: 'center',
+      render: (val) => convertPriceFromServer(val),
     },
     {
       title: t('cls.order.status'),

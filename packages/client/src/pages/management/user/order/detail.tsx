@@ -7,6 +7,7 @@ import { AlignRightOutlined } from '@ant-design/icons';
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
+import { convertPriceFromServer } from '@/utils';
 
 interface IProps {
   orderId: number;
@@ -40,12 +41,18 @@ export function OrderDetail(props: IProps) {
           rowSpan: productIndex === 0 ? item.products.length : 0,
         };
         data.push(row);
-        totalPrice += product.price * product.count * product.times;
+        if (product?.count && product?.price && product?.times) {
+          totalPrice += product.count * product.price * product.times;
+        }
       });
     });
     data.push({
       fitstCategoryName: <span style={{ fontWeight: 'bold' }}>总价</span>,
-      times: <span style={{ fontWeight: 'bold' }}>{totalPrice}</span>,
+      times: (
+        <span style={{ fontWeight: 'bold' }}>
+          {convertPriceFromServer(totalPrice)}
+        </span>
+      ),
     });
     return data;
   }, [categories]);
@@ -105,6 +112,7 @@ export function OrderDetail(props: IProps) {
     {
       title: '价格',
       dataIndex: 'price',
+      render: (val: number) => val && convertPriceFromServer(val),
     },
     {
       title: '数量',

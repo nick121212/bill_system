@@ -41,7 +41,11 @@ import {
   TableField,
   VisibleField,
 } from '@/uniforms/fields';
-import { convertEmptyToSearchAll } from '@/utils';
+import {
+  convertEmptyToSearchAll,
+  convertPriceToServer,
+  convertPriceFromServer,
+} from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -126,13 +130,13 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     if (id && fieldCustomerProducts.value && fieldPrice.changed) {
       if (fieldCustomerProducts.value[id]) {
         const price =
-          (fieldCustomerProducts.value[id].price *
+          (convertPriceFromServer(fieldCustomerProducts.value[id].price) *
             fieldCustomerProducts.value[id].discount) /
           100;
 
         fieldPrice.onChange(price, fieldPrice.name);
       } else {
-        const price = fieldProduct.value.price;
+        const price = convertPriceFromServer(fieldProduct.value.price);
 
         fieldPrice.onChange(price, fieldPrice.name);
       }
@@ -145,14 +149,17 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         name={`${name}.productId`}
         options={products?.map((c) => {
           return {
-            label: c.name + '- ￥' + c.price + '元',
+            label: c.name + '- ￥' + convertPriceFromServer(c.price) + '元',
             value: c.id,
             data: c,
           };
         })}
         onChangeData={(e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
-          fieldPrice.onChange(data.data.price, fieldPrice.name);
+          fieldPrice.onChange(
+            convertPriceFromServer(data.data.price),
+            fieldPrice.name,
+          );
           fieldProduct.onChange(data.data, fieldProduct.name);
         }}
         label={''}
@@ -203,7 +210,7 @@ function TemplateSelect() {
               count: product.count,
               times: product.times,
               desc: product?.product?.desc,
-              price: product.price,
+              price: convertPriceFromServer(product.price),
             };
           }),
         };
@@ -402,7 +409,7 @@ function TotalPrice() {
       style={{ color: 'red', fontSize: 18 }}
       className="text-red-600 mb-2 text-right"
     >
-      总价：{totalPrice}
+      总价：{totalPrice.toFixed(2)}
     </div>
   );
 }
@@ -473,19 +480,46 @@ export default function DetailForm({
                         count: product.count,
                         times: product.times,
                         desc: product.product.desc,
-                        price: product.price,
+                        price: convertPriceFromServer(product.price),
                       };
                     }),
                   };
                 }) || [],
             }}
-            onSubmit={(formData) => {
+            onSubmit={(formData: {
+              categories: {
+                name: string;
+                products: {
+                  productId: number;
+                  productCategoryId: number;
+                  count: number;
+                  times: number;
+                  desc: string;
+                  price: number;
+                }[];
+              }[];
+              no: string;
+              customerId: number;
+              templateId: number;
+              desc: string;
+            }) => {
+              // 转换价格为整数后提交
+              const processedCategories = formData.categories.map(
+                (category) => ({
+                  ...category,
+                  products: category.products.map((product) => ({
+                    ...product,
+                    price: convertPriceToServer(product.price),
+                  })),
+                }),
+              );
+
               callAjax({
                 data: {
                   no: formData.no,
                   customerId: formData.customerId,
                   templateId: formData.templateId,
-                  categories: formData.categories,
+                  categories: processedCategories,
                   desc: formData.desc,
                 },
               });
@@ -505,7 +539,7 @@ export default function DetailForm({
               name="categories"
               condition={(model) => {
                 console.log(model);
-                
+
                 return model.templateId && model.templateId > 0;
               }}
             >
