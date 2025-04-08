@@ -43,7 +43,11 @@ export function OrderDetail(props: IProps) {
         totalPrice += product.price * product.count * product.times;
       });
     });
-    return { data, totalPrice };
+    data.push({
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>总价</span>,
+      times: <span style={{ fontWeight: 'bold' }}>{totalPrice}</span>,
+    });
+    return data;
   }, [categories]);
 
   const items: DescriptionsProps['items'] = [
@@ -103,10 +107,6 @@ export function OrderDetail(props: IProps) {
       dataIndex: 'price',
     },
     {
-      title: '折扣',
-      dataIndex: 'discount',
-    },
-    {
       title: '数量',
       dataIndex: 'count',
     },
@@ -137,16 +137,8 @@ export function OrderDetail(props: IProps) {
               size="small"
               style={{ width: '100%' }}
               columns={columns}
-              dataSource={flattenData.data}
+              dataSource={flattenData}
               pagination={false}
-              footer={() => {
-                return (
-                  <div style={{ fontWeight: 'bold', display: 'flex' }}>
-                    <span style={{ width: 200 }}>总价：</span>
-                    <span>{flattenData.totalPrice}</span>
-                  </div>
-                );
-              }}
             />
           </Descriptions.Item>
         </Descriptions>
