@@ -4,6 +4,7 @@ import useAxios from 'axios-hooks';
 
 import Chart from '@/components/chart/chart';
 import useChart from '@/components/chart/useChart';
+import { convertPriceFromServer } from '@/utils';
 
 import { getDateRanges, DateType } from './util';
 
@@ -49,7 +50,7 @@ const AmountTop = () => {
   });
 
   const series = [
-    { name: '金额', data: rows?.map(({ totalAmount }: Row) => totalAmount) },
+    { name: '金额', data: rows?.map(({ totalAmount }: Row) => convertPriceFromServer(parseFloat(totalAmount))) },
   ];
 
   return (

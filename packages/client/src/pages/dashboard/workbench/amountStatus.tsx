@@ -1,11 +1,13 @@
 import { useEffect, useState, memo, useMemo } from 'react';
 import { Col, Row, Space, Select } from 'antd';
 import useAxios from 'axios-hooks';
-import Conversion from './conversion_applications';
 import type { OrderEntity } from '@bill/database/esm';
 
-import { getDateRanges, DateType } from './util';
 import { themeVars } from '@/theme/theme.css';
+import { convertPriceFromServer } from '@/utils';
+
+import Conversion from './conversion_applications';
+import { getDateRanges, DateType } from './util';
 
 interface Props {
   dateType: DateType;
@@ -66,7 +68,7 @@ const AmountStatus = ({ dateType }: Props) => {
     >
       <Conversion
         percent={+amountSummary.received.percent}
-        title={`${amountSummary.received.amount}`}
+        title={`${convertPriceFromServer(amountSummary.received.amount)}`}
         subtitle="回款金额"
         iconify="tabler:user-filled"
         bg={themeVars.colors.palette.primary.default}
@@ -74,7 +76,7 @@ const AmountStatus = ({ dateType }: Props) => {
       />
       <Conversion
         percent={+amountSummary.pending.percent}
-        title={`${amountSummary.pending.amount}`}
+        title={`${convertPriceFromServer(amountSummary.pending.amount)}`}
         subtitle="未回款金额"
         iconify="ic:round-email"
         bg={themeVars.colors.palette.info.default}

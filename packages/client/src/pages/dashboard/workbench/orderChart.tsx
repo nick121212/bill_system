@@ -1,11 +1,12 @@
-import { Typography } from 'antd';
 import { useEffect } from 'react';
+import { Typography } from 'antd';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 
 import Card from '@/components/card';
 import Chart from '@/components/chart/chart';
 import useChart from '@/components/chart/useChart';
+import { convertPriceFromServer } from '@/utils';
 
 import { getDateRanges, DateType } from './util';
 
@@ -47,7 +48,9 @@ export default function OrderChart() {
     { name: '订单', data: rows?.map(({ totalCount }: DataItem) => totalCount) },
     {
       name: '金额',
-      data: rows?.map(({ totalAmount }: DataItem) => totalAmount),
+      data: rows?.map(({ totalAmount }: DataItem) =>
+        convertPriceFromServer(parseFloat(totalAmount)),
+      ),
     },
   ];
   return (

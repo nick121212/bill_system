@@ -13,7 +13,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import { useField } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
-import { CustomerEntity, type ProductEntity } from '@bill/database/esm';
+import { CustomerEntity, ProductPriceEntity, type ProductEntity } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
@@ -93,7 +93,7 @@ export default function CategoryDrawer({
       onCloseProps();
     },
   );
-  const { rows, loading } = useData<ProductEntity[]>(
+  const { rows, loading } = useData<(ProductPriceEntity & { customerPrices: ProductPriceEntity[] })[]>(
     `customers/${customerId}/products`,
   );
   const { data: info } = useDetailData<CustomerEntity>(
@@ -132,16 +132,17 @@ export default function CategoryDrawer({
             showInlineError
             schema={bridge}
             model={{
-              prices: (rows || []).map((r: ProductEntity) => {
+              prices: (rows || []).map((r: ProductPriceEntity & { customerPrices: ProductPriceEntity[] }) => {
                 let price = convertPriceFromServer(r.price);
                 if (r.customerPrices && r.customerPrices.length > 0) {
                   price = convertPriceFromServer(r.customerPrices[0].price);
                 }
-                return { ...r, productId: r.id, price };
+                
+                return { ...r, productId: r.product?.id, price };
               }),
             }}
             onSubmit={(formData) => {
-              const processedPrices = formData.prices.map((price) => ({
+              const processedPrices = (formData as { prices: ProductEntity[] }).prices.map((price) => ({
                 ...price,
                 price: convertPriceToServer(price.price),
               }));

@@ -1,3 +1,4 @@
+import { BigNumber } from "bignumber.js";
 import xlsx from "node-xlsx";
 import { Like, Repository, Not, In } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
@@ -10,7 +11,6 @@ import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
-import { ProductCategoryService } from "@/modules/productCategory/category.service";
 import { ProductUnitService } from "@/modules/productUnit/unit.service";
 
 import { ProductBodyRequest, ProductQuery } from "./product.interface";
@@ -144,10 +144,10 @@ export class ProductService {
       products.push(
         new ProductEntity().extend({
           name: row[0],
-          price: row[5],
-          cost: row[4],
-          desc: row[1] || '',
-          label: row[0] || '',
+          price: BigNumber(row[5] * 100, 10).toNumber(),
+          cost: BigNumber(row[4] * 100, 10).toNumber(),
+          desc: row[1] || "",
+          label: row[0] || "",
           companyId: this.request.userEntity.company?.id,
           userId: this.request.userEntity.id,
           unit,

@@ -1,24 +1,30 @@
 import { useEffect, useState } from 'react';
-import { Col, Row, Space, Select } from 'antd';
-import BannerCard from './banner-card';
-import AmountStatus from './amountStatus';
-import TotalCard, { IconType } from './total-card';
-import AmountTop from './amountTop';
-import OrderChart from './orderChart';
+import { Col, Row, Space, Select, Segmented, Flex } from 'antd';
 
 import { getTotalAmount } from '@/api/services/statistics';
-
-import { getDateRanges, DateType } from './util';
 import { themeVars } from '@/theme/theme.css';
+import { convertPriceFromServer } from '@/utils';
+
+import AmountStatus from './amountStatus';
+import AmountTop from './amountTop';
+import BannerCard from './banner-card';
+import OrderChart from './orderChart';
+import TotalCard, { IconType } from './total-card';
+import { getDateRanges, DateType } from './util';
 
 type DataItem = {
   iconType: IconType;
-  count:  string;
+  count: string;
   percent: string;
   chartData: number[];
 };
 
-const processData = (cur: any, pre: any, key: string): DataItem => {
+const processData = (
+  cur: any,
+  pre: any,
+  key: string,
+  convert = false,
+): DataItem => {
   const currentValue = +cur[key];
   const previousValue = +pre[key];
   const iconType =
@@ -27,15 +33,18 @@ const processData = (cur: any, pre: any, key: string): DataItem => {
       : currentValue === previousValue
         ? 'steady'
         : 'decline';
-  const percent = previousValue === 0 ? '0.00' : (
-    ((currentValue - previousValue) / previousValue) *
-    100
-  ).toFixed(2);
+  const percent =
+    previousValue === 0
+      ? '0.00'
+      : (((currentValue - previousValue) / previousValue) * 100).toFixed(2);
   return {
     iconType,
     count: cur[key],
     percent: `${percent}%`,
-    chartData: [previousValue, currentValue],
+    chartData: [
+      convert ? convertPriceFromServer(previousValue) : previousValue,
+      convert ? convertPriceFromServer(currentValue) : currentValue,
+    ],
   };
 };
 
@@ -62,16 +71,28 @@ function Workbench() {
       const pre = previous.data[0];
       setCustomerData(processData(cur, pre, 'customerCount'));
       setOrderCount(processData(cur, pre, 'totalCount'));
-      setAmountData(processData(cur, pre, 'totalAmount'));
+      setAmountData(processData(cur, pre, 'totalAmount', true));
     });
   }, [dateType]);
 
   return (
     <div className="p-2">
+      <Flex align="end" justify="end">
+        <Segmented<string>
+          className="mb-2 mb-lg-4"
+          options={[
+            { value: DateType.Day, label: '天' },
+            { value: DateType.Week, label: '周' },
+            { value: DateType.Month, label: '月' },
+          ]}
+          onChange={(value) => setDaeType(value as DateType)}
+          value={dateType}
+        />
+      </Flex>
       <Row gutter={[16, 16]} justify="center">
         <Col span={24} lg={16}>
           <BannerCard>
-            <div className="absolute right-10 top-6 c">
+            {/* <div className="absolute right-10 top-6 c">
               <span style={{ color: themeVars.colors.palette.primary.dark }}>
                 数据维度：
               </span>
@@ -85,7 +106,7 @@ function Workbench() {
                 ]}
                 onChange={setDaeType}
               />
-            </div>
+            </div> */}
           </BannerCard>
         </Col>
         <Col span={24} lg={8}>
@@ -118,7 +139,9 @@ function Workbench() {
           <TotalCard
             title="订单总金额"
             iconType={amountData?.iconType}
-            count={amountData?.count || '0'}
+            count={convertPriceFromServer(
+              parseFloat(amountData?.count || '0'),
+            ).toString()}
             percent={amountData?.percent || '0%'}
             chartData={amountData?.chartData || []}
           />
