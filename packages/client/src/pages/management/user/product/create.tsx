@@ -2,7 +2,6 @@ import { useCallback, useRef, useState } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
 import type { ButtonType } from 'antd/es/button';
-import debounce from 'lodash/debounce';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
@@ -18,6 +17,7 @@ import {
   TextAreaField,
   AutoField,
 } from '@/uniforms/fields';
+import { convertPriceToServer } from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -32,19 +32,10 @@ export type ProductModalProps = {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-function ProductCreateForm({
-  title,
-  onSuccess,
-  onClose,
-}: ProductModalProps) {
+function ProductCreateForm({ title, onSuccess, onClose }: ProductModalProps) {
   const { t } = useTranslation();
   const formRef = useRef<any>();
-  const {
-    onSubmit,
-    setFormData,
-    callAjax,
-    loadingAjax,
-  } = useFormAction(
+  const { onSubmit, setFormData, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
       url: '/products',
@@ -95,8 +86,12 @@ function ProductCreateForm({
             schema={bridge}
             onSubmit={(formData) => {
               setFormData(formData);
+              const processedFormData = {
+                ...formData,
+                price: convertPriceToServer(formData.price as number),
+              };
               callAjax({
-                data: formData,
+                data: processedFormData,
               });
             }}
           >
@@ -155,7 +150,13 @@ export default function ProductCreateModal({
         {btnTxt || t('crud.create.buttonText')}
       </Button>
 
-      {showModal && <ProductCreateForm title={title} onClose={() => setShowModal(false)} onSuccess={onSuccessCall} />}
+      {showModal && (
+        <ProductCreateForm
+          title={title}
+          onClose={() => setShowModal(false)}
+          onSuccess={onSuccessCall}
+        />
+      )}
     </>
   );
 }

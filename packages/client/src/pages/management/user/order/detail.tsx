@@ -7,6 +7,7 @@ import { AlignRightOutlined } from '@ant-design/icons';
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
+import { convertPriceFromServer } from '@/utils';
 
 interface IProps {
   orderId: number;
@@ -40,10 +41,20 @@ export function OrderDetail(props: IProps) {
           rowSpan: productIndex === 0 ? item.products.length : 0,
         };
         data.push(row);
-        totalPrice += product.price * product.count * product.times;
+        if (product?.count && product?.price && product?.times) {
+          totalPrice += product.count * product.price * product.times;
+        }
       });
     });
-    return { data, totalPrice };
+    data.push({
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>总价</span>,
+      times: (
+        <span style={{ fontWeight: 'bold' }}>
+          {convertPriceFromServer(totalPrice)}
+        </span>
+      ),
+    });
+    return data;
   }, [categories]);
 
   const items: DescriptionsProps['items'] = [
@@ -101,10 +112,7 @@ export function OrderDetail(props: IProps) {
     {
       title: '价格',
       dataIndex: 'price',
-    },
-    {
-      title: '折扣',
-      dataIndex: 'discount',
+      render: (val: number) => val && convertPriceFromServer(val),
     },
     {
       title: '数量',
@@ -137,16 +145,8 @@ export function OrderDetail(props: IProps) {
               size="small"
               style={{ width: '100%' }}
               columns={columns}
-              dataSource={flattenData.data}
+              dataSource={flattenData}
               pagination={false}
-              footer={() => {
-                return (
-                  <div style={{ fontWeight: 'bold', display: 'flex' }}>
-                    <span style={{ width: 200 }}>总价：</span>
-                    <span>{flattenData.totalPrice}</span>
-                  </div>
-                );
-              }}
             />
           </Descriptions.Item>
         </Descriptions>

@@ -27,6 +27,7 @@ import {
   ListDelField,
   TableField,
 } from '@/uniforms/fields';
+import { convertPriceToServer, convertPriceFromServer } from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -132,18 +133,24 @@ export default function CategoryDrawer({
             schema={bridge}
             model={{
               prices: (rows || []).map((r: ProductEntity) => {
-                let price = r.price;
-
+                let price = convertPriceFromServer(r.price);
                 if (r.customerPrices && r.customerPrices.length > 0) {
-                  price = r.customerPrices[0].price;
+                  price = convertPriceFromServer(r.customerPrices[0].price);
                 }
-
                 return { ...r, productId: r.id, price };
               }),
             }}
             onSubmit={(formData) => {
+              const processedPrices = formData.prices.map((price) => ({
+                ...price,
+                price: convertPriceToServer(price.price),
+              }));
+
               callAjax({
-                data: formData,
+                data: {
+                  ...formData,
+                  prices: processedPrices,
+                },
               });
             }}
           >
