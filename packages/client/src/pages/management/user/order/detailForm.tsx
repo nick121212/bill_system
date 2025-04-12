@@ -132,9 +132,9 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
 
         fieldPrice.onChange(price, fieldPrice.name);
       } else {
-        const price = fieldProduct.value.price;
+        const price = fieldProduct.value?.price;
 
-        fieldPrice.onChange(price, fieldPrice.name);
+        price && fieldPrice.onChange(price, fieldPrice.name);
       }
     }
   }, [fieldCustomerProducts.value, id]);
@@ -505,7 +505,7 @@ export default function DetailForm({
               name="categories"
               condition={(model) => {
                 console.log(model);
-                
+
                 return model.templateId && model.templateId > 0;
               }}
             >

@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined } from '@ant-design/icons';
+import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
 import type { OrderEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
@@ -80,7 +80,7 @@ export default function OrderPage() {
       align: 'center',
       width: 200,
       render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
-    }
+    },
   ];
 
   return (
@@ -95,6 +95,15 @@ export default function OrderPage() {
             }}
           >
             {t('common.redo')}
+          </Button>
+          <Button
+            icon={<ExportOutlined />}
+            type="link"
+            onClick={() => {
+              pag.refresh();
+            }}
+          >
+            导出账单
           </Button>
         </Space>
       }
