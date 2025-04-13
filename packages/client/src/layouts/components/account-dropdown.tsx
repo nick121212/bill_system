@@ -70,22 +70,22 @@ export default function AccountDropdown() {
       ),
       key: "0",
     },
-    {
-      label: <NavLink to={HOMEPAGE}>{t("sys.menu.dashboard")}</NavLink>,
-      key: "1",
-    },
+    // {
+    //   label: <NavLink to={HOMEPAGE}>{t("sys.menu.dashboard")}</NavLink>,
+    //   key: "1",
+    // },
     // {
     // 	label: <NavLink to="/management/user/profile">{t("sys.menu.user.profile")}</NavLink>,
     // 	key: "2",
     // },
-    {
-      label: (
-        <NavLink to="/management/user/account">
-          {t("sys.menu.user.account")}
-        </NavLink>
-      ),
-      key: "3",
-    },
+    // {
+    //   label: (
+    //     <NavLink to="/management/user/account">
+    //       {t("sys.menu.user.account")}
+    //     </NavLink>
+    //   ),
+    //   key: "3",
+    // },
     {
       label: <SettingButton />,
       key: "2",
