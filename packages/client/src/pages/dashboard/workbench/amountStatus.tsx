@@ -29,8 +29,10 @@ const AmountStatus = ({ dateType }: Props) => {
     const { currentRange } = getDateRanges(dateType);
     refresh({
       params: {
-        createTimeStart: currentRange[0],
-        createTimeEnd: currentRange[1],
+        where: {
+          createTimeStart: currentRange[0],
+          createTimeEnd: currentRange[1],
+        },
       },
     });
   }, [dateType]);

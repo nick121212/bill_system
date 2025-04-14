@@ -1,8 +1,8 @@
-import apiClient from '../apiClient';
-import type { Result } from '#/api';
+import apiClient from "../apiClient";
+import type { Result } from "#/api";
 
 export enum StatisticsApi {
-  TOTAL_AMOUNT = '/statistics/totalAmount',
+  TOTAL_AMOUNT = "/statistics/totalAmount",
 }
 
 /**
@@ -12,4 +12,4 @@ export const getTotalAmount = (params: {
   createTimeStart: string;
   createTimeEnd: string;
 }): Promise<Result<any>> =>
-  apiClient.get({ url: StatisticsApi.TOTAL_AMOUNT, params });
+  apiClient.get({ url: StatisticsApi.TOTAL_AMOUNT, params: { where: params } });

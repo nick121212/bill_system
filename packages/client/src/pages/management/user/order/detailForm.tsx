@@ -118,7 +118,6 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     id
       ? { productId: id, categoryId: field.value }
       : { categoryId: field.value },
-    field.value,
   );
   const mounted = useMountedState();
 
@@ -486,7 +485,7 @@ export default function DetailForm({
                     }),
                   };
                 }) || [],
-            }}
+            } as any}
             onSubmit={(formData: {
               categories: {
                 name: string;
@@ -529,8 +528,6 @@ export default function DetailForm({
             <ErrorsField />
 
             <TotalPrice />
-
-            <AutoField name="no" />
 
             <CustomerSelect />
 

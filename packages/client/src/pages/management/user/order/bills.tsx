@@ -9,7 +9,7 @@ import type { OrderEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
-import { convertPriceFromServer } from '@/utils';
+import { convertNo, convertPriceFromServer } from '@/utils';
 
 import Search from './search';
 
@@ -48,6 +48,7 @@ export default function OrderPage() {
       dataIndex: 'no',
       align: 'center',
       width: 200,
+      render: (val) => convertNo(val),
     },
     {
       title: t('cls.order.customer'),

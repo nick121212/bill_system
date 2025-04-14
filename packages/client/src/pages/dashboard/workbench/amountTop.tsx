@@ -24,8 +24,10 @@ const AmountTop = () => {
     const { currentRange } = getDateRanges(DateType.Month);
     refresh({
       params: {
-        createTimeStart: currentRange[0],
-        createTimeEnd: currentRange[1],
+        where: {
+          createTimeStart: currentRange[0],
+          createTimeEnd: currentRange[1],
+        },
       },
     });
   }, []);
@@ -50,7 +52,12 @@ const AmountTop = () => {
   });
 
   const series = [
-    { name: '金额', data: rows?.map(({ totalAmount }: Row) => convertPriceFromServer(parseFloat(totalAmount))) },
+    {
+      name: '金额',
+      data: rows?.map(({ totalAmount }: Row) =>
+        convertPriceFromServer(parseFloat(totalAmount)),
+      ),
+    },
   ];
 
   return (

@@ -6,16 +6,16 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { OrderEntity } from '@bill/database/esm';
-import { convertPriceFromServer } from '@/utils';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
+import { convertNo, convertPriceFromServer } from '@/utils';
 
 import Create from './create';
+import Detail from './detail';
 import OrderStatus from './orderStatus';
 import Remove from './remove';
 import Search from './search';
-import Detail from './detail';
 
 const colorStatus = ['#f50', '#87d068', 'volcano'];
 
@@ -52,6 +52,7 @@ export default function OrderPage() {
       dataIndex: 'no',
       align: 'center',
       width: 200,
+      render: (val) => convertNo(val),
     },
     {
       title: t('cls.order.customer'),

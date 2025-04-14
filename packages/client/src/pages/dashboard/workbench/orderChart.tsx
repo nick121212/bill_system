@@ -29,8 +29,10 @@ export default function OrderChart() {
     const { currentRange } = getDateRanges(DateType.Month);
     refresh({
       params: {
-        createTimeStart: currentRange[0],
-        createTimeEnd: currentRange[1],
+        where: {
+          createTimeStart: currentRange[0],
+          createTimeEnd: currentRange[1],
+        },
       },
     });
   }, []);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'antd';
 import { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
@@ -7,13 +7,9 @@ import {
   OrderCategoryEntity,
   OrderEntity,
   ProductPriceEntity,
-  TemplateCategoryEntity,
-  TemplateEntity,
 } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
-import { useUUID } from '@/hooks/data/useUUID';
-import { uuid, uuidCompact } from '@/utils/uuid';
 
 import DetailForm from './detailForm';
 
@@ -49,7 +45,7 @@ export default function ProductTemplateDetail({
     'products',
     showModal && !!data?.customer?.id,
   );
-  const { uuid, loading: uuidLoading } = useUUID(showModal);
+  // const { uuid, loading: uuidLoading } = useUUID(showModal);
 
   return (
     <>
@@ -57,9 +53,7 @@ export default function ProductTemplateDetail({
         <Button
           type={btnType}
           shape="circle"
-          loading={
-            loading && categoriesLoading && productsLoading && uuidLoading
-          }
+          loading={loading && categoriesLoading && productsLoading}
           icon={<EditOutlined />}
           onClick={() => {
             setShowModal(true);
@@ -67,9 +61,7 @@ export default function ProductTemplateDetail({
         />
       ) : (
         <Button
-          loading={
-            loading && categoriesLoading && productsLoading && uuidLoading
-          }
+          loading={loading && categoriesLoading && productsLoading}
           type={btnType}
           icon={<PlusOutlined />}
           onClick={() => {
@@ -80,11 +72,11 @@ export default function ProductTemplateDetail({
         </Button>
       )}
 
-      {showModal && uuid && ((data && categories && products) || !orderId) && (
+      {showModal && ((data && categories && products) || !orderId) && (
         <DetailForm
           title={title}
           order={
-            { no: uuid, ...data, customerProducts: products?.map || {} } as any
+            { no: '', ...data, customerProducts: products?.map || {} } as any
           }
           categories={categories as any}
           onSuccess={() => {

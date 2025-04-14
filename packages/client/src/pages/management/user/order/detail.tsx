@@ -1,9 +1,8 @@
 import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, Descriptions, Drawer, Space, Table } from 'antd';
 import type { DescriptionsProps, TableProps } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { AlignRightOutlined } from '@ant-design/icons';
-
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
@@ -156,7 +155,6 @@ export function OrderDetail(props: IProps) {
 }
 
 export default function OrderDetailButton({ orderId }: { orderId: number }) {
-  const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
   return (
     <>

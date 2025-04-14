@@ -1,12 +1,6 @@
+import * as dayjs from "dayjs";
 import * as _ from "lodash";
-import {
-  Between,
-  EntityManager,
-  In,
-  LessThan,
-  MoreThan,
-  Repository,
-} from "typeorm";
+import { Between, EntityManager, In, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   OrderCategoryEntity,
@@ -52,7 +46,7 @@ export class OrderService {
     query: OrderQuery,
     user: ActiveUserData
   ): Promise<{ rows: OrderEntity[]; count: number }> {
-    const { startDate, endDate, ...rest } = query.where ?? {};
+    const { startDate, endDate, no, ...rest } = query.where ?? {};
     const whereClause = {
       ...rest,
 
@@ -62,6 +56,9 @@ export class OrderService {
           }
         : {}),
 
+      ...(no && {
+        no: `${this.request.userEntity.company?.id}-${no}`,
+      }),
       ...dataFilter(this.request.userEntity),
     };
     const [rows, count] = await this.repo.findAndCount({
@@ -248,25 +245,26 @@ export class OrderService {
       companyId: user.companyId,
       userId: user.id,
     });
-    const orderNo = await this.getByNo(no);
+    const key = `${user.companyId}-${dayjs().format("YYYYMMDD")}`;
+    const orderNo = await this.generateIndex(key);
+    const orderFromNo = await this.getByNo(orderNo);
 
-    if (orderNo) {
+    if (orderFromNo) {
       throw new ApiException(
         "order no already exists",
         ApiStatusCode.KEY_ALREADY_EXISTS,
         HttpStatus.OK,
         {
-          no: no,
+          no: orderNo,
           type: "OrderEntity",
         }
       );
     }
 
-    return this.saveData(order, body).then(async(order) => {
-      const orderKey = order.no.split("-");
-      orderKey.pop();
+    body.no = orderNo;
 
-      const no = await this.redisService.incr(orderKey.join("-"));
+    return this.saveData(order, body).then(async (order) => {
+      await this.redisService.incr(key);
 
       return order;
     });
@@ -313,6 +311,6 @@ export class OrderService {
   async generateIndex(key: string) {
     const index = await this.redisService.get(key);
 
-    return `${key}-${index || 1}`;
+    return `${key}_${index || 1}`;
   }
 }
