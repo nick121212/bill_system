@@ -15,6 +15,7 @@ import { BaseQuery } from "@/common/interfaces/query";
 import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
 
+import { ProductService } from "../product/product.service";
 import {
   ProductCategoryProductQuery,
   ProductCategoryQuery,
@@ -26,6 +27,7 @@ export class ProductCategoryService {
   constructor(
     @InjectRepository(ProductCategoryEntity)
     private repo: Repository<ProductCategoryEntity>,
+    @InjectRepository(ProductEntity) private repoProduct: Repository<ProductEntity>,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
     @InjectEntityManager() private em: EntityManager
   ) {}
@@ -67,23 +69,41 @@ export class ProductCategoryService {
     return data || null;
   }
 
+  async findOrCreate(
+    name: string,
+    body: ProductCategoryRequest
+  ): Promise<ProductCategoryEntity> {
+    const data = await this.repo.findOneBy({
+      name,
+    });
+
+    if (data) {
+      return data;
+    }
+
+    return this.create(body);
+  }
+
   async getProducts(
     id: number,
     query: ProductCategoryProductQuery
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const category = await this.getByIdWithError(id);
-    const { name,productId, ...rest } = query.where || {};
+    const { name, productId, ...rest } = query.where || {};
 
-    const [rows, count] = await this.em.findAndCount(ProductEntity, {
+     const [rows, count] = await this.repoProduct.findAndCount({
+      skip: query.skip,
+      take: query.take,
       where: {
-        id: In(category.products),
+        id: In(category.products || []),
         ...(name ? { name: ILike(`%${name}%`) } : {}),
         ...(productId ? { id: In([productId]) } : {}),
         ...dataFilter(this.request.userEntity),
       },
-      skip: query.skip,
-      take: query.take,
-      relations: ["unit"],
+      relations: {
+        unit: true,
+      },
+      withDeleted: false,
     });
 
     return {

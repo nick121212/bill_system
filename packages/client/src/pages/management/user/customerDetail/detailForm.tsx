@@ -25,6 +25,8 @@ import {
   ErrorsField,
   ListAddField,
   ListDelField,
+  NumField,
+  PriceField,
   TableField,
 } from '@/uniforms/fields';
 import { convertPriceToServer, convertPriceFromServer } from '@/utils';
@@ -219,7 +221,7 @@ export default function CategoryDrawer({
                   align: 'center',
                   width: 200,
                   render: (val, record, index) => {
-                    return <AutoField name={`${index}.price`} />;
+                    return <PriceField name={`${index}.price`} />;
                   },
                 },
                 {

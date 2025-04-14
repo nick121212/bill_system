@@ -29,4 +29,6 @@ export class ProductBodyRequest {
 export class ProductQuery extends BaseQuery<{
   name?: string;
   excludeIds?: number[];
+
+  productId?: number;
 }> {}

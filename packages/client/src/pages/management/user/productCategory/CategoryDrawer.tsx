@@ -43,9 +43,16 @@ function ProductSelect({ name }: { name: string }) {
     rows: products,
     loading: productLoad,
     onSearch: debouncedOnProductSearch,
-  } = useData<ProductEntity[]>('products', {
-    excludeIds,
-  });
+  } = useData<ProductEntity[]>(
+    'products',
+    props.value
+      ? {
+          id: props.value,
+        }
+      : {
+          excludeIds,
+        },
+  );
 
   return (
     <div className="w-full">
@@ -147,7 +154,12 @@ export default function CategoryDrawer({
               name="products"
               label=" "
               addButton={
-                <ListAddField type="primary" size="middle" shape="default" name="$">
+                <ListAddField
+                  type="primary"
+                  size="middle"
+                  shape="default"
+                  name="$"
+                >
                   添加商品
                 </ListAddField>
               }

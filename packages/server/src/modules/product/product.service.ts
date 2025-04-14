@@ -1,8 +1,12 @@
 import { BigNumber } from "bignumber.js";
 import xlsx from "node-xlsx";
-import { Like, Repository, Not, In } from "typeorm";
+import { Like, Repository, Not, In, ILike } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
-import { ProductEntity, UserEntity } from "@bill/database/dist/entities";
+import {
+  ProductCategoryEntity,
+  ProductEntity,
+  UserEntity,
+} from "@bill/database/dist/entities";
 import { HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
@@ -11,6 +15,7 @@ import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
 import { Log4jsService } from "@/modules/log4js";
+import { ProductCategoryService } from "@/modules/productCategory/category.service";
 import { ProductUnitService } from "@/modules/productUnit/unit.service";
 
 import { ProductBodyRequest, ProductQuery } from "./product.interface";
@@ -21,6 +26,7 @@ export class ProductService {
     private logger: Log4jsService,
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
     private productUnitService: ProductUnitService,
+    private productCategoryService: ProductCategoryService,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
   ) {}
 
@@ -51,6 +57,25 @@ export class ProductService {
       rows,
       count,
     };
+  }
+
+  async getProductsThroughCategory(category: ProductCategoryEntity, query: ProductQuery) {
+    const { name, productId, ...rest } = query.where || {};
+
+    return this.repo.findAndCount({
+      skip: query.skip,
+      take: query.take,
+      where: {
+        id: In(category.products || []),
+        ...(name ? { name: ILike(`%${name}%`) } : {}),
+        ...(productId ? { id: In([productId]) } : {}),
+        ...dataFilter(this.request.userEntity),
+      },
+      relations: {
+        unit: true,
+      },
+      withDeleted: false,
+    });
   }
 
   async getById(id?: number): Promise<ProductEntity | null> {
@@ -137,24 +162,43 @@ export class ProductService {
     const workSheet = workSheetsFromBuffer[0];
     const rows = workSheet.data.splice(1);
     const products: ProductEntity[] = [];
+    const categoryMap: Record<string, ProductCategoryEntity> = {};
 
     for (const row of rows) {
-      const unit = await this.productUnitService.findOrCreate(row[3]);
+      const cateName = row[0];
+      const unit = await this.productUnitService.findOrCreate(row[4]);
 
-      products.push(
-        new ProductEntity().extend({
-          name: row[0],
-          price: BigNumber(row[5] * 100, 10).toNumber(),
-          cost: BigNumber(row[4] * 100, 10).toNumber(),
-          desc: row[1] || "",
-          label: row[0] || "",
-          companyId: this.request.userEntity.company?.id,
-          userId: this.request.userEntity.id,
-          unit,
-        })
-      );
+      if (!categoryMap[cateName]) {
+        categoryMap[cateName] = await this.productCategoryService.findOrCreate(
+          cateName,
+          { products: [], name: cateName, label: cateName, desc: cateName }
+        );
+      }
+
+      const product = new ProductEntity().extend({
+        name: row[1],
+        price: BigNumber(row[6] * 100, 10).toNumber(),
+        cost: BigNumber(row[5] * 100, 10).toNumber(),
+        desc: row[3] || row[4] || "",
+        label: row[1] || "",
+        companyId: this.request.userEntity.company?.id,
+        userId: this.request.userEntity.id,
+        unit,
+      });
+
+      products.push(product);
+      categoryMap[cateName].products.push(product);
     }
 
-    return await this.repo.save(products);
+    const result = await this.repo.save(products);
+
+    for (const category of Object.values(categoryMap)) {
+      await this.productCategoryService.update(category.id, {
+        ...category,
+        products: products.map((p) => p.id),
+      });
+    }
+
+    return result;
   }
 }

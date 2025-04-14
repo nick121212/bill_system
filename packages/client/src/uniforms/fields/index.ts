@@ -32,3 +32,4 @@ export { default as TableField } from './TableField';
 export { default as ListViewField } from './ListViewField';
 export { default as EmptyField } from './EmptyField';
 export { default as VisibleField } from './VisibleField';
+export { default as PriceField } from './PriceField';
