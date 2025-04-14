@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { Button, Space, Tag } from 'antd';
+import { useCallback, useState, useEffect } from 'react';
+import { Button, Space, Tag, Checkbox } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
@@ -34,6 +34,43 @@ export default function OrderPage() {
     [refresh],
   );
   const pag = usePagination(onSuccess);
+
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [allChecked, setAllChecked] = useState(false);
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (selectedKeys: React.Key[]) => {
+      // selectedKeys为空，删除selectedRowKeys中rows?.rows里的数据
+      if (selectedKeys.length === 0) {
+        setSelectedRowKeys(
+          selectedRowKeys.filter(
+            (key) =>
+              !rows?.rows.finedIndex((row: OrderEntity) => row.id === key),
+          ),
+        );
+      }
+      if (selectedKeys.length > 0) {
+        selectedKeys.forEach((key) => {
+          // selectedRowKeys中不包含key，则添加到selectedRowKeys中
+          if (!selectedRowKeys.includes(key)) {
+            setSelectedRowKeys([...selectedRowKeys, key]);
+          }
+          // 删除rows?.rows中key不在selectedKeys中的数据
+          const deleteKeys = rows?.rows.filter(
+            (row: OrderEntity) => !selectedKeys.includes(row.id),
+          );
+          setSelectedRowKeys(
+            selectedRowKeys.filter((k) => !deleteKeys.includes(k)),
+          );
+        });
+      }
+    },
+  };
+
+  useEffect(() => {
+    console.log('selectedRowKeys:', selectedRowKeys);
+  }, [selectedRowKeys]);
 
   const columns: ColumnsType<OrderEntity> = [
     {
@@ -126,6 +163,7 @@ export default function OrderPage() {
         loading,
         dataSource: rows?.rows || [],
         columns,
+        rowSelection,
       }}
     >
       <Search
@@ -135,6 +173,12 @@ export default function OrderPage() {
           pag.setSearchData(searchData);
         }}
       />
+      <Checkbox
+        checked={allChecked}
+        onChange={(e) => setAllChecked(e.target.checked)}
+      >
+        全选
+      </Checkbox>
     </TablePage>
   );
 }

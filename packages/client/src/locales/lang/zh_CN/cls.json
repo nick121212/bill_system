@@ -13,6 +13,7 @@
       "phone": "客户手机",
       "address": "客户地址",
       "desc": "客户简介",
+      "paytime": "账期",
       "modal": {
         "cTitle": "新建客户",
         "eTitle": "编辑客户",

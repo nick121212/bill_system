@@ -70,6 +70,12 @@ export default function ProductUnit() {
       align: 'center',
     },
     {
+      title: t('cls.customer.paytime'),
+      dataIndex: 'paytime',
+      align: 'center',
+      render: (val) => (val ? `${val}天` : '-'),
+    },
+    {
       title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
@@ -103,7 +109,10 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title={t('cls.customer.modal.cTitle')} onSuccess={pag.refresh} />
+          <Create
+            title={t('cls.customer.modal.cTitle')}
+            onSuccess={pag.refresh}
+          />
           <Button
             icon={<ReloadOutlined />}
             type="text"

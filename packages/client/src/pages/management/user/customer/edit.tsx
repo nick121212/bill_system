@@ -114,12 +114,9 @@ export default function CategoryEditModal({
               <ErrorsField />
 
               <AutoFields fields={['fullname', 'phone', 'email']} />
-              <NumField
-                step={1}
-                min={10}
-                max={100}
-                name="discount"
-              />
+              <NumField step={1} min={10} max={100} name="discount" />
+
+              <NumField step={1} min={0} name="paytime" />
 
               <TextAreaField name="desc" />
             </AutoForm>

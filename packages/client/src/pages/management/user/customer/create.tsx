@@ -1,6 +1,13 @@
 import { useCallback, useRef } from 'react';
 import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, type SliderSingleProps, Space, Spin } from 'antd';
+import {
+  Button,
+  Drawer,
+  Form,
+  type SliderSingleProps,
+  Space,
+  Spin,
+} from 'antd';
 import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
@@ -117,12 +124,8 @@ export default function UnitCreateModal({
 
               <AutoFields fields={['fullname', 'phone', 'email', 'address']} />
 
-              <NumField
-                step={1}
-                min={10}
-                max={100}
-                name="discount"
-              />
+              <NumField step={1} min={10} max={100} name="discount" />
+              <NumField step={1} min={0} name="paytime" />
 
               <TextAreaField name="desc" />
             </AutoForm>

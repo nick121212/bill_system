@@ -4,9 +4,9 @@ import type { DescriptionsProps, TableProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { AlignRightOutlined } from '@ant-design/icons';
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
-
+import dayjs from 'dayjs';
 import useDetailData from '@/hooks/data/useDetailData';
-import { convertPriceFromServer } from '@/utils';
+import { convertNo, convertPriceFromServer } from '@/utils';
 
 interface IProps {
   orderId: number;
@@ -60,7 +60,7 @@ export function OrderDetail(props: IProps) {
     {
       label: '订单编号',
       span: 'filled',
-      children: data?.no,
+      children: convertNo(data?.no || ''),
     },
     {
       label: '客户',
@@ -81,6 +81,16 @@ export function OrderDetail(props: IProps) {
       label: '邮箱',
       span: 2,
       children: data?.customer?.email,
+    },
+    {
+      label: '结款信息',
+      span: 2,
+      children: t(`cls.order.statusStr.${data?.status || 0}`),
+    },
+    {
+      label: '订单日期',
+      span: 2,
+      children: dayjs(data?.createTime).format('YYYY-MM-DD HH:mm:ss'),
     },
     {
       label: '描述',

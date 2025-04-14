@@ -6,8 +6,10 @@ import {
   Descriptions,
   Drawer,
   Form,
-  Space,
+  Flex,
   Spin,
+  Row,
+  Col,
 } from 'antd';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
@@ -41,6 +43,7 @@ import {
   PriceField,
   TableField,
   VisibleField,
+  SelectField,
 } from '@/uniforms/fields';
 import {
   convertEmptyToSearchAll,
@@ -429,11 +432,16 @@ function TotalPrice() {
   totalPrice = (totalPrice * (filedDiscount.value || 100)) / 100;
 
   return (
-    <div
-      style={{ color: 'red', fontSize: 18 }}
-      className="text-red-600 mb-2 text-right"
-    >
-      总价：{totalPrice.toFixed(2)}
+    <div style={{ color: 'red', fontSize: 18 }} className="text-red-600 mb-2">
+      <Row gutter={24}>
+        <Col
+          span={5}
+          style={{ textAlign: 'right', padding: 0, marginLeft: 10 }}
+        >
+          总价：
+        </Col>
+        <Col span={18}>{totalPrice.toFixed(2)}</Col>
+      </Row>
     </div>
   );
 }
@@ -466,15 +474,20 @@ export default function DetailForm({
       onClose={onCloseProps}
       open={true}
       title={title}
-      extra={
-        <Space>
+      footer={
+        <Flex justify="end" gap={10}>
           <Button loading={loadingAjax} onClick={onCloseProps}>
             {t('crud.cancel')}
           </Button>
-          <Button loading={loadingAjax} onClick={onSubmit} type="primary">
+          <Button
+            loading={loadingAjax}
+            onClick={onSubmit}
+            type="primary"
+            className="mr-20"
+          >
             {t('crud.confirm')}
           </Button>
-        </Space>
+        </Flex>
       }
     >
       <Form
@@ -553,8 +566,6 @@ export default function DetailForm({
           >
             <ErrorsField />
 
-            <TotalPrice />
-
             <CustomerSelect />
 
             <TemplateSelect />
@@ -592,6 +603,16 @@ export default function DetailForm({
             </VisibleField>
 
             <LongTextField name="desc" />
+
+            <SelectField
+              name="status"
+              options={[
+                { label: '未结款', value: 0 },
+                { label: '已结款', value: 1 },
+                { label: '已取消', value: 2 },
+              ]}
+            />
+            <TotalPrice />
           </AutoForm>
         </Spin>
       </Form>
