@@ -6,6 +6,7 @@
     "desc": { "type": "string", "title": "描述", "default": "" },
     "customerId": { "type": "number", "title": "客户" },
     "templateId": { "type": "number", "title": "模板" },
+    "discount": { "type": "number", "title": "折扣", "default": 100 },
     "categories": {
       "type": "array",
       "title": "商品分类",

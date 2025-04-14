@@ -14,6 +14,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
+import { toPrice } from "@/common/utils/price";
 import { ProductService } from "@/modules/product/product.service";
 
 import {
@@ -133,7 +134,7 @@ export class CustomerService {
             new ProductPriceEntity().extend({
               customer,
               discount: element.discount,
-              price: element.price,
+              price: toPrice(element.price),
               product: await this.productService.getById(element.productId),
             })
           );

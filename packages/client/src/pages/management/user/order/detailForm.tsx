@@ -12,7 +12,7 @@ import {
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { useMount, useMountedState } from 'react-use';
-import { useField } from 'uniforms';
+import { useField, useForm } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
@@ -38,6 +38,7 @@ import {
   ListDelField,
   ListViewField,
   LongTextField,
+  PriceField,
   TableField,
   VisibleField,
 } from '@/uniforms/fields';
@@ -98,6 +99,7 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
 }
 
 function ProductSelect({ name, id }: { name: string; id?: number }) {
+  const form = useForm();
   const [field] = useField(`${name}.productCategoryId`, {});
   const [fieldPrice] = useField(`${name}.price`, {});
   const [fieldDesc] = useField(`${name}.desc`, {});
@@ -119,29 +121,39 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
       ? { productId: id, categoryId: field.value }
       : { categoryId: field.value },
   );
-  const mounted = useMountedState();
+  // const mounted = useMountedState();
 
   useEffect(() => {
-    if (!mounted()) {
-      return;
+    // if (!mounted()) {
+    //   return;
+    // }
+
+    if (id && fieldCustomerProducts.value[id]) {
+      const price =
+        (fieldCustomerProducts.value[id].price *
+          fieldCustomerProducts.value[id].discount) /
+        100;
+
+      return fieldPrice.onChange(
+        convertPriceFromServer(price),
+        fieldPrice.name,
+      );
     }
 
-    if (id && fieldCustomerProducts.value && fieldPrice.changed) {
-      if (fieldCustomerProducts.value[id]) {
-        const price =
-          (convertPriceFromServer(fieldCustomerProducts.value[id].price) *
-            fieldCustomerProducts.value[id].discount) /
-          100;
-
-        fieldPrice.onChange(price, fieldPrice.name);
-      } else {
-
-        const price = convertPriceFromServer(fieldProduct.value.price);
-
-        price && fieldPrice.onChange(price, fieldPrice.name);
-      }
+    if (fieldProduct.value?.price) {
+      return fieldPrice.onChange(
+        convertPriceFromServer(fieldProduct.value?.price),
+        fieldPrice.name,
+      );
     }
-  }, [fieldCustomerProducts.value, id]);
+
+    if (products?.length > 0) {
+      return fieldPrice.onChange(
+        convertPriceFromServer(products[0].price),
+        fieldPrice.name,
+      );
+    }
+  }, [fieldCustomerProducts.value, id, products, form.model.templateId]);
 
   return (
     <div className="w-full">
@@ -210,7 +222,7 @@ function TemplateSelect() {
               count: product.count,
               times: product.times,
               desc: product?.product?.desc,
-              price: convertPriceFromServer(product.price),
+              price: product.price,
             };
           }),
         };
@@ -295,7 +307,7 @@ function CategoryItem(props: any) {
                     title: '价格',
                     dataIndex: 'price',
                     render: (val, record, index) => {
-                      return <AutoField label="" name={`${index}.price`} />;
+                      return <PriceField label="" name={`${index}.price`} />;
                     },
                   },
                   {
@@ -359,6 +371,7 @@ function CustomerSelect() {
     manual: true,
   });
   const [field] = useField(`customerProducts`, {}, { absoluteName: true });
+  const [discountField] = useField(`discount`, {}, { absoluteName: true });
 
   return (
     <AutoField
@@ -376,6 +389,8 @@ function CustomerSelect() {
         }).then(({ data }) => {
           field.onChange(data.map, field.name);
         });
+
+        discountField.onChange(data.data.discount, discountField.name);
       }}
       loading={cusLoading}
       showSearch
@@ -394,6 +409,13 @@ function TotalPrice() {
     {},
     (OrderCategoryEntity & { products: OrderProductEntity[] })[]
   >(`categories`, {});
+  const [filedDiscount] = useField<any, number>(
+    `discount`,
+    {},
+    {
+      absoluteName: true,
+    },
+  );
 
   let totalPrice = 0;
 
@@ -403,6 +425,8 @@ function TotalPrice() {
         totalPrice += product.count * product.price * product.times;
     });
   });
+
+  totalPrice = (totalPrice * (filedDiscount.value || 100)) / 100;
 
   return (
     <div
@@ -465,27 +489,29 @@ export default function DetailForm({
             ref={formRef as any}
             showInlineError
             schema={bridge}
-            model={{
-              ...order,
-              customerId: order?.customer?.id,
-              categories:
-                categories?.map((cate) => {
-                  return {
-                    name: cate.name,
-                    products: cate.products.map((product) => {
-                      return {
-                        product: product.product,
-                        productId: product.product.id,
-                        productCategoryId: product.productCategory.id,
-                        count: product.count,
-                        times: product.times,
-                        desc: product.product.desc,
-                        price: convertPriceFromServer(product.price),
-                      };
-                    }),
-                  };
-                }) || [],
-            } as any}
+            model={
+              {
+                ...order,
+                customerId: order?.customer?.id,
+                categories:
+                  categories?.map((cate) => {
+                    return {
+                      name: cate.name,
+                      products: cate.products.map((product) => {
+                        return {
+                          product: product.product,
+                          productId: product.product.id,
+                          productCategoryId: product.productCategory.id,
+                          count: product.count,
+                          times: product.times,
+                          desc: product.product.desc,
+                          price: product.price,
+                        };
+                      }),
+                    };
+                  }) || [],
+              } as any
+            }
             onSubmit={(formData: {
               categories: {
                 name: string;
@@ -536,8 +562,6 @@ export default function DetailForm({
             <VisibleField
               name="categories"
               condition={(model) => {
-                console.log(model);
-
                 return model.templateId && model.templateId > 0;
               }}
             >

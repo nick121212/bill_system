@@ -23,6 +23,7 @@ import {
   ListDelField,
   ListViewField,
   LongTextField,
+  PriceField,
   TableField,
 } from '@/uniforms/fields';
 import {
@@ -110,10 +111,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         })}
         onChangeData={(e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
-          fieldPrice.onChange(
-            convertPriceFromServer(data.data.price),
-            fieldPrice.name,
-          );
+          fieldPrice.onChange(data.data.price, fieldPrice.name);
         }}
         label={''}
         loading={productLoad}
@@ -182,7 +180,7 @@ function CategoryItem(props: any) {
                     title: '价格',
                     dataIndex: 'price',
                     render: (val, record, index) => {
-                      return <AutoField label="" name={`${index}.price`} />;
+                      return <PriceField label="" name={`${index}.price`} />;
                     },
                   },
                   {

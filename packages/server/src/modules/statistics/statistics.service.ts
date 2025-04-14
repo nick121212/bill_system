@@ -21,7 +21,7 @@ export class StatisticsService {
     const where: any = {};
 
     if (userEntity.company?.id) {
-      where.companyId = userEntity.company.id;
+    where.companyId = userEntity.company.id;
     }
 
     if (query.where?.customerId) {

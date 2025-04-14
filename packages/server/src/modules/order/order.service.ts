@@ -18,6 +18,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
+import { toPrice } from "@/common/utils/price";
 
 import { CustomerService } from "../customer/customer.service";
 import { RedisService } from "../redis/redis.service";
@@ -208,14 +209,14 @@ export class OrderService {
           const orderProduct = new OrderProductEntity().extend({
             productId: p.productId,
             name: product.name,
-            price: p.price,
+            price: toPrice(p.price),
             discount: p.discount || 100,
             count: p.count,
             orderCategory: orderCategory,
             productCategory: productCategory,
             orderId: order.id,
             times: p.times,
-            totalPrice: p.count * p.price * p.times,
+            totalPrice: p.count * toPrice(p.price) * p.times,
             // categoryId: p.productCategoryId,
           });
 

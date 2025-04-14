@@ -16,6 +16,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
+import { toPrice } from "@/common/utils/price";
 
 import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
 
@@ -175,7 +176,7 @@ export class TemplateService {
             new TemplateCategoryProductEntity().extend({
               productCategory: productCategory,
               product: product,
-              price: p.price,
+              price: toPrice(p.price),
               count: p.count || 1,
               times: p.times || 1,
               templateCategory: templateCategory,

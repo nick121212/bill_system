@@ -11,6 +11,7 @@ import {
   AutoFields,
   AutoForm,
   ErrorsField,
+  NumField,
   SliderField,
   TextAreaField,
 } from '@/uniforms/fields';
@@ -116,12 +117,10 @@ export default function UnitCreateModal({
 
               <AutoFields fields={['fullname', 'phone', 'email', 'address']} />
 
-              <SliderField
-                tooltip={{ formatter, open: true, placement:"right" }}
+              <NumField
                 step={1}
                 min={10}
                 max={100}
-                marks={{ 10: 10, 50: 50, 100: 100 }}
                 name="discount"
               />
 

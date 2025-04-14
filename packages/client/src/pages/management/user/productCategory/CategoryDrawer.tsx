@@ -60,7 +60,7 @@ function ProductSelect({ name }: { name: string }) {
         name={name}
         options={products?.map((c) => {
           return {
-            label: c.name,
+            label: c.name ,
             value: c.id,
           };
         })}

@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import tinyPinyin from "tiny-pinyin";
@@ -53,9 +54,9 @@ export function getPinYinFirstChar(str: string, lowerCase = true) {
     .join("");
 }
 
-export const convertPriceToServer = (price: number) => Math.round(price * 100);
+export const convertPriceToServer = (price: number) => price;
 
-export const convertPriceFromServer = (price: number) => price / 100;
+export const convertPriceFromServer = (price: number) => BigNumber(price, 10).toNumber().toFixed(2);
 
 export const convertNo = (no: string) => {
   return no.split("-").pop() || no;

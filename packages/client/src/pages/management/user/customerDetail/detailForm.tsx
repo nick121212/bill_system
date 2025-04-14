@@ -11,9 +11,13 @@ import {
   Spin,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useField } from 'uniforms';
+import { useField, useForm } from 'uniforms';
 import { PlusOutlined } from '@ant-design/icons';
-import { CustomerEntity, ProductPriceEntity, type ProductEntity } from '@bill/database/esm';
+import {
+  CustomerEntity,
+  ProductPriceEntity,
+  type ProductEntity,
+} from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
@@ -42,12 +46,17 @@ export type CategoryDrawerProps = {
 const bridge = getBridge(schema as SomeJSONSchema);
 
 function ProductSelect({ name, id }: { name: string; id?: number }) {
+  const [props] = useField(name, {});
+  const [field] = useField(`${name}.price`, {});
+  const form = useForm();
+  const excludeIds = (form?.model?.prices as ProductPriceEntity[])?.filter(
+    (p) => p?.product?.id !== props.value,
+  ).map(p => p?.product?.id);
   const {
     rows: products,
     loading: productLoad,
     onSearch: debouncedOnProductSearch,
-  } = useData<ProductEntity[]>('products', id ? { id } : {});
-  const [field] = useField(`${name}.price`, {});
+  } = useData<ProductEntity[]>('products', id ? { id } : { excludeIds });
 
   return (
     <div className="w-full">
@@ -55,7 +64,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         name={`${name}.productId`}
         options={products?.map((c) => {
           return {
-            label: c.name,
+            label: c.name + '-' + c.id,
             value: c.id,
             data: c,
           };
@@ -69,6 +78,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
         filterOption={false}
         onSearch={(val: string) =>
           debouncedOnProductSearch({
+            excludeIds,
             name: val === '' ? undefined : val,
           })
         }
@@ -95,9 +105,9 @@ export default function CategoryDrawer({
       onCloseProps();
     },
   );
-  const { rows, loading } = useData<(ProductPriceEntity & { customerPrices: ProductPriceEntity[] })[]>(
-    `customers/${customerId}/products`,
-  );
+  const { rows, loading } = useData<
+    (ProductPriceEntity & { customerPrices: ProductPriceEntity[] })[]
+  >(`customers/${customerId}/products`);
   const { data: info } = useDetailData<CustomerEntity>(
     'customers',
     customerId,
@@ -134,17 +144,25 @@ export default function CategoryDrawer({
             showInlineError
             schema={bridge}
             model={{
-              prices: (rows || []).map((r: ProductPriceEntity & { customerPrices: ProductPriceEntity[] }) => {
-                let price = convertPriceFromServer(r.price);
-                if (r.customerPrices && r.customerPrices.length > 0) {
-                  price = convertPriceFromServer(r.customerPrices[0].price);
-                }
-                
-                return { ...r, productId: r.product?.id, price };
-              }),
+              prices: (rows || []).map(
+                (
+                  r: ProductPriceEntity & {
+                    customerPrices: ProductPriceEntity[];
+                  },
+                ) => {
+                  let price = r.price;
+                  if (r.customerPrices && r.customerPrices.length > 0) {
+                    price = r.customerPrices[0].price;
+                  }
+
+                  return { ...r, productId: r.product?.id, price };
+                },
+              ),
             }}
             onSubmit={(formData) => {
-              const processedPrices = (formData as { prices: ProductEntity[] }).prices.map((price) => ({
+              const processedPrices = (
+                formData as { prices: ProductEntity[] }
+              ).prices.map((price) => ({
                 ...price,
                 price: convertPriceToServer(price.price),
               }));
@@ -221,7 +239,7 @@ export default function CategoryDrawer({
                   align: 'center',
                   width: 200,
                   render: (val, record, index) => {
-                    return <PriceField name={`${index}.price`} />;
+                    return <AutoField name={`${index}.price`} />;
                   },
                 },
                 {

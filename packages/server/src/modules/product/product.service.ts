@@ -14,6 +14,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ApiException } from "@/common/exception/api.exception";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
+import { toPrice } from "@/common/utils/price";
 import { Log4jsService } from "@/modules/log4js";
 import { ProductCategoryService } from "@/modules/productCategory/category.service";
 import { ProductUnitService } from "@/modules/productUnit/unit.service";
@@ -59,7 +60,10 @@ export class ProductService {
     };
   }
 
-  async getProductsThroughCategory(category: ProductCategoryEntity, query: ProductQuery) {
+  async getProductsThroughCategory(
+    category: ProductCategoryEntity,
+    query: ProductQuery
+  ) {
     const { name, productId, ...rest } = query.where || {};
 
     return this.repo.findAndCount({
@@ -116,6 +120,8 @@ export class ProductService {
     const unit = await this.productUnitService.getByIdWithError(unitId);
     const child = new ProductEntity().extend({
       ...rest,
+      price: toPrice(body.price),
+      cost: toPrice(body.cost),
       companyId: user?.companyId,
       userId: user?.id,
     });
@@ -131,9 +137,9 @@ export class ProductService {
 
     product.label = body.label;
     product.name = body.name;
-    product.cost = body.cost;
+    product.cost = toPrice(body.cost);
     product.desc = body.desc;
-    product.price = body.price;
+    product.price = toPrice(body.price);
     product.unit = unit;
 
     return this.repo.save(product);
@@ -177,8 +183,8 @@ export class ProductService {
 
       const product = new ProductEntity().extend({
         name: row[1],
-        price: BigNumber(row[6] * 100, 10).toNumber(),
-        cost: BigNumber(row[5] * 100, 10).toNumber(),
+        price: toPrice(row[6]),
+        cost: toPrice(row[5]),
         desc: row[3] || row[4] || "",
         label: row[1] || "",
         companyId: this.request.userEntity.company?.id,

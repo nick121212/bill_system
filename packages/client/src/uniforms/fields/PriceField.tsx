@@ -2,8 +2,6 @@ import type { Ref } from 'react';
 import { InputNumber, type InputNumberProps } from 'antd';
 import { type FieldProps, connectField, filterDOMProps } from 'uniforms';
 
-import { convertPriceFromServer } from '@/utils';
-
 import wrapField from './wrapField';
 
 export type NumFieldProps = FieldProps<
@@ -14,8 +12,6 @@ export type NumFieldProps = FieldProps<
 >;
 
 function Price(props: NumFieldProps) {
-  console.log(props);
-
   return wrapField(
     props,
     <InputNumber
@@ -26,11 +22,7 @@ function Price(props: NumFieldProps) {
       onChange={(event) => {
         const parse = props.decimal ? Number.parseFloat : Number.parseInt;
         const value = parse(`${event}`);
-        props.onChange(Number.isNaN(value) ? undefined : value );
-
-
-        console.log(value);
-        
+        props.onChange(Number.isNaN(value) ? 0 : value);
       }}
       placeholder={props.placeholder}
       readOnly={props.readOnly}
@@ -38,7 +30,7 @@ function Price(props: NumFieldProps) {
       step={props.step || (props.decimal ? 0.1 : 1)}
       style={{ width: '100%' }}
       type="number"
-      value={(props.value || 0)}
+      value={props.value || 0}
       {...filterDOMProps(props)}
     />,
   );
