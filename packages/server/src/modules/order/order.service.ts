@@ -225,6 +225,9 @@ export class OrderService {
           products.push(entityManager.save(orderProduct));
         }
       }
+
+      order.totalPrice = (order.totalPrice * customer.discount) / 100;
+
       await entityManager.save(OrderEntity, order);
       await Promise.all([
         ...categories,
