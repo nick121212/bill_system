@@ -44,6 +44,7 @@ export class ProductUnitService {
   async findOrCreate(name: string) {
     const data = await this.repo.findOneBy({
       name,
+      companyId: this.request.userEntity.company?.id,
     });
 
     if (data) {
@@ -54,6 +55,7 @@ export class ProductUnitService {
       name,
       label: name,
       desc: name,
+      
     });
   }
 
@@ -95,8 +97,8 @@ export class ProductUnitService {
 
     const child = new ProductUnitEntity().extend({
       ...rest,
-      companyId: user?.companyId,
-      userId: user?.id,
+      companyId: this.request.userEntity.company?.id,
+      userId: this.request.userEntity.id,
     });
 
     return await this.repo.save(child);

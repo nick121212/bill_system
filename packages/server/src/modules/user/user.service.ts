@@ -94,10 +94,10 @@ export class UserService {
     return user;
   }
 
-  async findOne(fullname: string, pass: string): Promise<UserEntity | null> {
+  async findOne(email: string, pass: string): Promise<UserEntity | null> {
     return this.repo.findOne({
       where: {
-        fullname: fullname,
+        email,
         password: hashPwd(pass, this.configService.get("app").secret),
       },
       relations: {

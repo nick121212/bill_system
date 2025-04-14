@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Col, Row, Space, Select, Segmented, Flex } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 import { getTotalAmount } from '@/api/services/statistics';
-import { themeVars } from '@/theme/theme.css';
+import CreateCustomer from '@/pages/management/user/customer/create';
+import CreateOrder from '@/pages/management/user/order/create';
+import CreateProduct from '@/pages/management/user/product/create';
+import CreateProductCategory from '@/pages/management/user/productCategory/create';
+import CreateProductTemplate from '@/pages/management/user/productTemplate/create';
+import CreateProductUnit from '@/pages/management/user/productUnit/create';
 import { convertPriceFromServer } from '@/utils';
 
 import AmountStatus from './amountStatus';
@@ -54,6 +60,7 @@ function Workbench() {
   const [customerData, setCustomerData] = useState<DataItem>();
   const [orderCount, setOrderCount] = useState<DataItem>();
   const [amountData, setAmountData] = useState<DataItem>();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const { currentRange, previousRange } = getDateRanges(dateType);
@@ -77,7 +84,46 @@ function Workbench() {
 
   return (
     <div className="p-2">
-      <Flex align="end" justify="end">
+      <Flex align="end" justify="space-between" style={{marginBottom: 20 }}>
+        <Space size={20}>
+          <CreateCustomer
+            btnType="primary"
+            btnTxt={t('cls.customer.modal.cTitle')}
+            title={t('cls.customer.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+          <CreateOrder
+            btnType="primary"
+            orderId={0}
+            btnTxt={t('cls.order.modal.cTitle')}
+            title={t('cls.order.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+          <CreateProduct
+            btnType="primary"
+            btnTxt={t('cls.product.modal.cTitle')}
+            title={t('cls.product.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+          <CreateProductCategory
+            btnType="primary"
+            btnTxt={t('cls.proCategory.modal.cTitle')}
+            title={t('cls.proCategory.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+          <CreateProductUnit
+            btnType="primary"
+            btnTxt={t('cls.proUnit.modal.cTitle')}
+            title={t('cls.proUnit.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+          <CreateProductTemplate
+            btnType="primary"
+            btnTxt={t('cls.proTemp.modal.cTitle')}
+            title={t('cls.proTemp.modal.cTitle')}
+            onSuccess={() => {}}
+          />
+        </Space>
         <Segmented<string>
           className="mb-2 mb-lg-4"
           options={[

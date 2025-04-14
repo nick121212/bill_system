@@ -3,14 +3,13 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import { useTranslation } from 'react-i18next';
 
+import Character3 from '@/assets/images/characters/character_3.png';
 import CreateCustomer from '@/pages/management/user/customer/create';
 import CreateOrder from '@/pages/management/user/order/create';
 import CreateProduct from '@/pages/management/user/product/create';
 import CreateProductCategory from '@/pages/management/user/productCategory/create';
-import CreateProductUnit from '@/pages/management/user/productUnit/create';
 import CreateProductTemplate from '@/pages/management/user/productTemplate/create';
-
-import Character3 from '@/assets/images/characters/character_3.png';
+import CreateProductUnit from '@/pages/management/user/productUnit/create';
 import { useUserInfo } from '@/store/userStore';
 import { themeVars } from '@/theme/theme.css';
 
@@ -51,44 +50,7 @@ export default function BannerCard({children}: {children?: React.ReactNode}) {
           🚀 当前服务状态正常，祝您高效办公！
         </div>
         <div style={{position: 'relative'}}>
-          <Space size={20} style={{position: 'absolute', zIndex: 9}}>
-            <CreateCustomer
-              btnType="primary"
-              btnTxt={t('cls.customer.modal.cTitle')}
-              title={t('cls.customer.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-            <CreateOrder
-              btnType="primary"
-              btnTxt={t('cls.order.modal.cTitle')}
-              title={t('cls.order.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-            <CreateProduct
-              btnType="primary"
-              btnTxt={t('cls.product.modal.cTitle')}
-              title={t('cls.product.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-            <CreateProductCategory
-              btnType="primary"
-              btnTxt={t('cls.proCategory.modal.cTitle')}
-              title={t('cls.proCategory.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-            <CreateProductUnit
-              btnType="primary"
-              btnTxt={t('cls.proUnit.modal.cTitle')}
-              title={t('cls.proUnit.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-            <CreateProductTemplate
-              btnType="primary"
-              btnTxt={t('cls.proTemp.modal.cTitle')}
-              title={t('cls.proTemp.modal.cTitle')}
-              onSuccess={() => {}}
-            />
-          </Space>
+          
         </div>
       </Col>
 

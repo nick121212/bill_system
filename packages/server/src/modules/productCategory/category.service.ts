@@ -75,6 +75,7 @@ export class ProductCategoryService {
   ): Promise<ProductCategoryEntity> {
     const data = await this.repo.findOneBy({
       name,
+      companyId: this.request.userEntity.company?.id,
     });
 
     if (data) {
@@ -137,8 +138,8 @@ export class ProductCategoryService {
     const { products, ...rest } = body;
     const category = new ProductCategoryEntity().extend({
       ...rest,
-      companyId: user?.companyId,
-      userId: user?.id,
+      companyId: this.request.userEntity.company?.id,
+      userId: this.request.userEntity.id,
     });
 
     return await this.em.transaction(async (entityManager: EntityManager) => {

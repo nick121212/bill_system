@@ -104,4 +104,7 @@ export default async function migrationExecutor(
   // await addPermission(em, PERMISSION_LIST as any);
   // await addRoleData(em);
   // await addUserData(em, secret);
+
+  console.log(hashPwd("demo1234", secret));
+  
 }
