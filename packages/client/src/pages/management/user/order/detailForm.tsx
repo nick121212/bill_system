@@ -124,12 +124,12 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
       ? { productId: id, categoryId: field.value }
       : { categoryId: field.value },
   );
-  // const mounted = useMountedState();
+  const mounted = useMountedState();
 
   useEffect(() => {
-    // if (!mounted()) {
-    //   return;
-    // }
+    if (!mounted() || !fieldPrice.changed) {
+      return;
+    }
 
     if (id && fieldCustomerProducts.value[id]) {
       const price =
@@ -137,24 +137,15 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
           fieldCustomerProducts.value[id].discount) /
         100;
 
-      return fieldPrice.onChange(
-        convertPriceFromServer(price),
-        fieldPrice.name,
-      );
+      return fieldPrice.onChange(price, fieldPrice.name);
     }
 
     if (fieldProduct.value?.price) {
-      return fieldPrice.onChange(
-        convertPriceFromServer(fieldProduct.value?.price),
-        fieldPrice.name,
-      );
+      return fieldPrice.onChange(fieldProduct.value?.price, fieldPrice.name);
     }
 
-    if (products?.length > 0) {
-      return fieldPrice.onChange(
-        convertPriceFromServer(products[0].price),
-        fieldPrice.name,
-      );
+    if (products?.length === 1) {
+      return fieldPrice.onChange(products[0].price, fieldPrice.name);
     }
   }, [fieldCustomerProducts.value, id, products, form.model.templateId]);
 
