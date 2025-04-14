@@ -16,6 +16,9 @@ export class CustomerRequest {
   @IsString()
   email: string;
 
+  @IsNumber()
+  paytime: number;
+
   @IsString()
   address: string;
 

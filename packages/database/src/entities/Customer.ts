@@ -60,6 +60,12 @@ export class CustomerEntity extends BaseEntity<CustomerEntity> {
   })
   userId?: number;
 
+  @Column({
+    nullable: true,
+    default: 0,
+  })
+  paytime?: number;
+
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
 
