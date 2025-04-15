@@ -10,6 +10,14 @@
       "pattern": "^1[3-9]\\d{9}$",
       "title": "手机号"
     },
+    "paytime": {
+      "type": "number",
+      "title": "账期",
+      "precision": 0,
+      "style": {
+        "width": 80
+      }
+    },
     "deliver": {
       "type": "number",
       "enum": [0, 1],

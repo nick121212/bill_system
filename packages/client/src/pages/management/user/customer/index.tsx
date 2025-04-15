@@ -73,7 +73,7 @@ export default function ProductUnit() {
       title: t('cls.customer.paytime'),
       dataIndex: 'paytime',
       align: 'center',
-      render: (val) => (val ? `${val}天` : '-'),
+      render: (val) => (val ? `${val}天` : '无账期'),
     },
     {
       title: t('cls.com.createTime'),

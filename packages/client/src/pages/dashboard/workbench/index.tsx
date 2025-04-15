@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Col, Row, Space, Select, Segmented, Flex } from 'antd';
+import { useEffect, useState, useMemo } from 'react';
+import { Col, Row, Space, Tag, Segmented, Flex } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { getTotalAmount } from '@/api/services/statistics';
@@ -17,6 +17,7 @@ import BannerCard from './banner-card';
 import OrderChart from './orderChart';
 import TotalCard, { IconType } from './total-card';
 import { getDateRanges, DateType } from './util';
+import { themeVars } from '@/theme/theme.css';
 
 type DataItem = {
   iconType: IconType;
@@ -24,6 +25,12 @@ type DataItem = {
   percent: string;
   chartData: number[];
 };
+
+const dateTypeLabelMap = {
+  [DateType.Day]: '当天',
+  [DateType.Week]: '本周',
+  [DateType.Month]: '本月',
+} as Record<DateType, string>;
 
 const processData = (
   cur: any,
@@ -82,9 +89,17 @@ function Workbench() {
     });
   }, [dateType]);
 
+  const dateTip = useMemo(() => {
+    return (
+      <Tag color={themeVars.colors.palette.primary.default}>
+        {dateTypeLabelMap[dateType]}
+      </Tag>
+    );
+  }, [dateType]);
+
   return (
     <div className="p-2">
-      <Flex align="end" justify="space-between" style={{marginBottom: 20 }}>
+      <Flex align="end" justify="space-between" style={{ marginBottom: 20 }}>
         <Space size={20}>
           <CreateCustomer
             btnType="primary"
@@ -163,7 +178,7 @@ function Workbench() {
       <Row gutter={[16, 16]} className="mt-4" justify="center">
         <Col span={24} md={8}>
           <TotalCard
-            title="客户数量"
+            title={<div>客户数量 {dateTip}</div>}
             iconType={customerData?.iconType}
             count={customerData?.count || '0'}
             percent={customerData?.percent || '0%'}
@@ -173,7 +188,7 @@ function Workbench() {
 
         <Col span={24} md={8}>
           <TotalCard
-            title="订单数量"
+            title={<div>订单数量 {dateTip}</div>}
             iconType={orderCount?.iconType}
             count={orderCount?.count || '0'}
             percent={orderCount?.percent || '0%'}
@@ -183,7 +198,7 @@ function Workbench() {
 
         <Col span={24} md={8}>
           <TotalCard
-            title="订单总金额"
+            title={<div>订单总金额 {dateTip}</div>}
             iconType={amountData?.iconType}
             count={convertPriceFromServer(
               parseFloat(amountData?.count || '0'),

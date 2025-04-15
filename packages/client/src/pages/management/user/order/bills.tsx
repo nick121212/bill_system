@@ -36,40 +36,40 @@ export default function OrderPage() {
   const pag = usePagination(onSuccess);
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectedIds, setSelectedIds] = useState<React.Key[]>([]);
   const [allChecked, setAllChecked] = useState(false);
 
   const rowSelection = {
-    selectedRowKeys,
+    selectedRowKeys: selectedIds,
     onChange: (selectedKeys: React.Key[]) => {
-      // selectedKeys为空，删除selectedRowKeys中rows?.rows里的数据
-      if (selectedKeys.length === 0) {
-        setSelectedRowKeys(
-          selectedRowKeys.filter(
-            (key) =>
-              !rows?.rows.finedIndex((row: OrderEntity) => row.id === key),
-          ),
-        );
-      }
-      if (selectedKeys.length > 0) {
-        selectedKeys.forEach((key) => {
-          // selectedRowKeys中不包含key，则添加到selectedRowKeys中
-          if (!selectedRowKeys.includes(key)) {
-            setSelectedRowKeys([...selectedRowKeys, key]);
-          }
-          // 删除rows?.rows中key不在selectedKeys中的数据
-          const deleteKeys = rows?.rows.filter(
-            (row: OrderEntity) => !selectedKeys.includes(row.id),
-          );
-          setSelectedRowKeys(
-            selectedRowKeys.filter((k) => !deleteKeys.includes(k)),
-          );
-        });
-      }
+      setSelectedRowKeys(selectedKeys);
     },
   };
 
   useEffect(() => {
     console.log('selectedRowKeys:', selectedRowKeys);
+    if (selectedRowKeys.length === 0) {
+      setSelectedIds((ids) => {
+        return ids.filter(
+          (key) => !rows?.rows?.map(({ id }: OrderEntity) => id)?.includes(key),
+        );
+      });
+    }
+    if (selectedRowKeys.length > 0) {
+      let ids = [...selectedIds];
+      selectedRowKeys.forEach((key) => {
+        // selectedIds中没有key，则添加到selectedIds中
+        if (!ids.includes(key)) {
+          ids.push(key);
+        }
+      });
+      // 删除rows?.rows中key不在selectedRowKeys中的数据
+      const deleteKeys = rows?.rows
+        ?.filter((row: OrderEntity) => !selectedRowKeys.includes(row.id))
+        .map(({ id }: OrderEntity) => id);
+      ids = ids.filter((k) => !deleteKeys.includes(k));
+      setSelectedIds(ids);
+    }
   }, [selectedRowKeys]);
 
   const columns: ColumnsType<OrderEntity> = [

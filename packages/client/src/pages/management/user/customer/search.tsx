@@ -38,7 +38,7 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
         }}
       >
         <Form preserve={false} layout="inline">
-          <AutoFields fields={['fullname', 'phone']} />
+          <AutoFields fields={['fullname', 'phone', 'paytime']} />
 
           <Space size={'small'} align="start">
             <Button type="link" loading={loading} onClick={onSuccessCall}>
