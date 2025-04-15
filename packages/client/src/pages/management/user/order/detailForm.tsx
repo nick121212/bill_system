@@ -10,12 +10,13 @@ import {
   Spin,
   Row,
   Col,
+  Modal,
 } from 'antd';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
 import { useMount, useMountedState } from 'react-use';
 import { useField, useForm } from 'uniforms';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
   OrderCategoryEntity,
@@ -445,6 +446,7 @@ export default function DetailForm({
   title,
 }: DetailFormProps) {
   const { t } = useTranslation();
+  const [modal, contextHolder] = Modal.useModal();
   const formRef = useRef<any>();
   const { onSubmit, callAjax, loadingAjax } = useFormAction(
     formRef,
@@ -457,6 +459,17 @@ export default function DetailForm({
       onSuccess?.();
     },
   );
+
+  const confirm = () => {
+    modal.confirm({
+      title: '确认提交',
+      icon: <ExclamationCircleOutlined />,
+      // content: 'Bla bla ...',
+      okText: '确认',
+      cancelText: '取消',
+      onOk: onSubmit,
+    });
+  };
 
   return (
     <Drawer
@@ -609,18 +622,23 @@ export default function DetailForm({
       </Form>
 
       <Flex justify="center" gap={10}>
-          <Button loading={loadingAjax} onClick={onCloseProps}>
-            {t('crud.cancel')}
-          </Button>
-          <Button
+        <Button loading={loadingAjax} onClick={onCloseProps}>
+          {t('crud.cancel')}
+        </Button>
+        {/* <Button
             loading={loadingAjax}
             onClick={onSubmit}
             type="primary"
             className="mr-20"
           >
             {t('crud.confirm')}
-          </Button>
-        </Flex>
+          </Button> */}
+        <Button type="primary" onClick={confirm}>
+          {t('crud.confirm')}
+        </Button>
+      </Flex>
+
+      {contextHolder}
     </Drawer>
   );
 }

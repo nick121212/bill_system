@@ -12,11 +12,7 @@
     },
     "paytime": {
       "type": "number",
-      "title": "账期",
-      "precision": 0,
-      "style": {
-        "width": 80
-      }
+      "title": "账期"
     },
     "deliver": {
       "type": "number",
