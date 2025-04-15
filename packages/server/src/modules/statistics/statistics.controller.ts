@@ -14,7 +14,7 @@ import { StatisticsService } from "./statistics.service";
 @Controller({
   path: ["statistics"],
 })
-@Roles(Role.Admin)
+@Roles(Role.User)
 export class StatisticsController {
   constructor(
     private roleService: StatisticsService,

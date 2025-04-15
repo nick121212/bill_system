@@ -315,6 +315,10 @@ export class OrderService {
   async generateIndex(key: string) {
     const index = await this.redisService.get(key);
 
-    return `${key}_${index || 1}`;
+    if (!index) {
+      return `${key}_1`;
+    }
+
+    return `${key}_${parseInt(index) + 1}`;
   }
 }

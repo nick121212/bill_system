@@ -465,21 +465,21 @@ export default function DetailForm({
       onClose={onCloseProps}
       open={true}
       title={title}
-      footer={
-        <Flex justify="end" gap={10}>
-          <Button loading={loadingAjax} onClick={onCloseProps}>
-            {t('crud.cancel')}
-          </Button>
-          <Button
-            loading={loadingAjax}
-            onClick={onSubmit}
-            type="primary"
-            className="mr-20"
-          >
-            {t('crud.confirm')}
-          </Button>
-        </Flex>
-      }
+      // footer={
+      //   <Flex justify="center" gap={10}>
+      //     <Button loading={loadingAjax} onClick={onCloseProps}>
+      //       {t('crud.cancel')}
+      //     </Button>
+      //     <Button
+      //       loading={loadingAjax}
+      //       onClick={onSubmit}
+      //       type="primary"
+      //       className="mr-20"
+      //     >
+      //       {t('crud.confirm')}
+      //     </Button>
+      //   </Flex>
+      // }
     >
       <Form
         labelCol={{ span: 5 }}
@@ -607,6 +607,20 @@ export default function DetailForm({
           </AutoForm>
         </Spin>
       </Form>
+
+      <Flex justify="center" gap={10}>
+          <Button loading={loadingAjax} onClick={onCloseProps}>
+            {t('crud.cancel')}
+          </Button>
+          <Button
+            loading={loadingAjax}
+            onClick={onSubmit}
+            type="primary"
+            className="mr-20"
+          >
+            {t('crud.confirm')}
+          </Button>
+        </Flex>
     </Drawer>
   );
 }
