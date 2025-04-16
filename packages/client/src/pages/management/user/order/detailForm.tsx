@@ -51,6 +51,7 @@ import {
   convertPriceToServer,
   convertPriceFromServer,
 } from '@/utils';
+import ComfirmDetail from './confirmDetail';
 
 import schema from './schemas/create.json';
 
@@ -461,13 +462,21 @@ export default function DetailForm({
   );
 
   const confirm = () => {
+    const data = formRef.current.getModel();
+    console.log(111222, data)
     modal.confirm({
       title: '确认提交',
       icon: <ExclamationCircleOutlined />,
-      // content: 'Bla bla ...',
+      content: (
+        <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
+          <ComfirmDetail formData={data} />,
+        </div>
+      ),
       okText: '确认',
       cancelText: '取消',
       onOk: onSubmit,
+      width: window.innerWidth * 0.75,
+      style: { maxWidth: '75vw' },
     });
   };
 
