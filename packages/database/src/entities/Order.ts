@@ -11,8 +11,10 @@ import {
 
 import { OrderStatus } from "../enums/OrderStatus";
 import { BaseEntity } from "./Base";
+import { CompanyEntity } from "./Company";
 import { CustomerEntity } from "./Customer";
 import { OrderCategoryEntity } from "./OrderCategory";
+import { UserEntity } from "./User";
 
 /**
  * 订单实体类
@@ -72,6 +74,14 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
     nullable: true,
   })
   companyId?: number;
+
+  @ManyToOne(() => CompanyEntity)
+  @JoinColumn()
+  company?: CompanyEntity | null;
+
+  @ManyToOne(() => UserEntity)
+  @JoinColumn()
+  user?: UserEntity | null;
 
   /**
    * 关联的用户ID

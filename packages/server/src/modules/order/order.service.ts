@@ -71,6 +71,7 @@ export class OrderService {
       where: whereClause,
       relations: {
         customer: true,
+        user: true,
       },
     });
 
@@ -325,6 +326,32 @@ export class OrderService {
     return `${key}_${parseInt(index) + 1}`;
   }
 
+  async generateOrderSheet(){
+    
+  }
+
+  async generateSummarySheet(orderMap: Record<string, OrderEntity>) {
+    const dataSheet1: Array<Array<string | number | undefined>> = [
+      ["订单编号", "订单日期", "客户", "总金额", "操作员"],
+    ];
+
+    for (const key in orderMap) {
+      if (Object.prototype.hasOwnProperty.call(orderMap, key)) {
+        const order = orderMap[key];
+
+        dataSheet1.push([
+          order.no,
+          dayjs(order.createTime).format("YYYYMMDD HH:mm:ss"),
+          order.customer.fullname,
+          order.totalPrice,
+          order.user?.fullname,
+        ]);
+      }
+    }
+
+    return { name: "summary", data: dataSheet1 };
+  }
+
   async generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
     const orderMap = _.keyBy(orders, "id");
 
@@ -353,13 +380,17 @@ export class OrderService {
       cate.products.push(p);
     });
 
-    return orderMap;
+    return this.generateSummarySheet(orderMap);
   }
 
   async export(body: OrderExportRequest) {
     const orders = await this.repo.find({
       where: {
         id: In(body.orderIds),
+      },
+      relations: {
+        customer: true,
+        user: true,
       },
     });
     const categoryProducts = await this.repoPro.find({

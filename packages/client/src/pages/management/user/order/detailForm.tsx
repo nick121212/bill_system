@@ -51,8 +51,8 @@ import {
   convertPriceToServer,
   convertPriceFromServer,
 } from '@/utils';
-import ComfirmDetail from './confirmDetail';
 
+import ComfirmDetail from './confirmDetail';
 import schema from './schemas/create.json';
 
 export type DetailFormProps = {
@@ -215,6 +215,7 @@ function TemplateSelect() {
             return {
               productId: product?.product?.id,
               productCategoryId: product?.productCategory?.id,
+              product: product.product,
               count: product.count,
               times: product.times,
               desc: product?.product?.desc,
@@ -368,6 +369,8 @@ function CustomerSelect() {
   });
   const [field] = useField(`customerProducts`, {}, { absoluteName: true });
   const [discountField] = useField(`discount`, {}, { absoluteName: true });
+  const [customerField] = useField(`customer`, {}, { absoluteName: true });
+
 
   return (
     <AutoField
@@ -386,6 +389,7 @@ function CustomerSelect() {
           field.onChange(data.map, field.name);
         });
 
+        customerField.onChange(data.data, customerField.name);
         discountField.onChange(data.data.discount, discountField.name);
       }}
       loading={cusLoading}
@@ -469,7 +473,7 @@ export default function DetailForm({
       icon: <ExclamationCircleOutlined />,
       content: (
         <div style={{ maxHeight: '80vh', overflowY: 'auto' }}>
-          <ComfirmDetail formData={data} />,
+          <ComfirmDetail formData={data} />
         </div>
       ),
       okText: '确认',
@@ -526,6 +530,7 @@ export default function DetailForm({
                       products: cate.products.map((product) => {
                         return {
                           product: product.product,
+                          product1: product.product,
                           productId: product.product.id,
                           productCategoryId: product.productCategory.id,
                           count: product.count,
