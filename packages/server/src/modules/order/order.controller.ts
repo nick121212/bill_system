@@ -20,6 +20,7 @@ import { Roles } from "@/common/decorators/roles.decorator";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 
 import {
+  OrderExportRequest,
   OrderQuery,
   OrderRequest,
   OrderStatusRequest,
@@ -74,6 +75,11 @@ export class OrderController {
   @Delete("/:id")
   async remote(@Param("id") id: number) {
     return this.orderService.remove(id);
+  }
+
+  @Patch("/export")
+  async export(@Body() body: OrderExportRequest) {
+    return this.orderService.export(body);
   }
 
   @Patch("/uuid/:key")

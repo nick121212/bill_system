@@ -12,6 +12,7 @@ import {
 import { OrderStatus } from "../enums/OrderStatus";
 import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
+import { OrderCategoryEntity } from "./OrderCategory";
 
 /**
  * 订单实体类
@@ -112,6 +113,8 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
 
   @UpdateDateColumn({ type: "datetime", name: "update_time" })
   updateTime: Date;
+
+  categories?: OrderCategoryEntity[];
 
   /**
    * 软删除时间

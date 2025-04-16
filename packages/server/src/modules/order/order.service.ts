@@ -1,5 +1,6 @@
 import * as dayjs from "dayjs";
 import * as _ from "lodash";
+import xlsx from "node-xlsx";
 import { Between, EntityManager, In, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
@@ -8,6 +9,7 @@ import {
   OrderProductEntity,
   ProductCategoryEntity,
   ProductEntity,
+  ProductUnitEntity,
   UserEntity,
 } from "@bill/database/dist/entities";
 import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
@@ -23,6 +25,7 @@ import { toPrice } from "@/common/utils/price";
 import { CustomerService } from "../customer/customer.service";
 import { RedisService } from "../redis/redis.service";
 import {
+  OrderExportRequest,
   OrderProduct,
   OrderQuery,
   OrderRequest,
@@ -320,5 +323,58 @@ export class OrderService {
     }
 
     return `${key}_${parseInt(index) + 1}`;
+  }
+
+  async generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
+    const orderMap = _.keyBy(orders, "id");
+
+    products.forEach((p) => {
+      if (!orderMap[p.orderId].categories) {
+        orderMap[p.orderId].categories = [];
+      }
+
+      let cate = p.orderCategory;
+      let cateIndex = _.findIndex(orderMap[p.orderId].categories, function (o) {
+        return o.id === cate.id;
+      });
+
+      if (cateIndex < 0) {
+        orderMap[p.orderId].categories?.push(cate);
+      } else {
+        cate = orderMap[p.orderId].categories![cateIndex]!;
+      }
+
+      (p.orderCategory as any) = null;
+
+      if (!cate.products) {
+        cate.products = [];
+      }
+
+      cate.products.push(p);
+    });
+
+    return orderMap;
+  }
+
+  async export(body: OrderExportRequest) {
+    const orders = await this.repo.find({
+      where: {
+        id: In(body.orderIds),
+      },
+    });
+    const categoryProducts = await this.repoPro.find({
+      where: {
+        orderId: In(body.orderIds),
+      },
+      relations: {
+        orderCategory: true,
+        product: {
+          unit: true,
+        },
+        productCategory: true,
+      },
+    });
+
+    return this.generateExcel(orders, categoryProducts);
   }
 }

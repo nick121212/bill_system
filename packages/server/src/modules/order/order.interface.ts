@@ -84,3 +84,8 @@ export class OrderQuery extends BaseQuery<OrderWhere> {
   @Type(() => OrderWhere)
   declare where?: OrderWhere;
 }
+
+export class OrderExportRequest {
+  orderIds: number[];
+  selectAll?: boolean;
+}

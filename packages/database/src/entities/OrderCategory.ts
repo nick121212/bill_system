@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { OrderProductEntity } from "./OrderProduct";
 import { ProductCategoryEntity } from "./ProductCategory";
 
 @Entity({
@@ -31,6 +32,8 @@ export class OrderCategoryEntity extends BaseEntity<OrderCategoryEntity> {
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   category: ProductCategoryEntity;
+
+  products?: OrderProductEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;
