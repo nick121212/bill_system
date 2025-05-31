@@ -37,7 +37,17 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
           onSuccess?.(formData);
         }}
       >
-        <Form preserve={false} layout="inline">
+        <Form
+          preserve={false}
+          layout="inline"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.stopPropagation();
+              e.preventDefault();
+              onSuccessCall();
+            }
+          }}
+        >
           <AutoFields fields={['fullname', 'phone', 'paytime']} />
 
           <Space size={'small'} align="start">

@@ -1,3 +1,4 @@
+import { Type } from "class-transformer";
 import { IsArray, IsNumber, IsString } from "class-validator";
 import { DeliverType } from "@bill/database";
 
@@ -57,4 +58,15 @@ export class CustomerPriceRequest {
   prices: CustomerPrice[];
 }
 
-export class CustomerQuery extends BaseQuery {}
+export class CustomerWhere {
+    @IsString()
+    fullname?: string;
+
+    @IsString()
+    phone?: string;
+}
+
+export class CustomerQuery extends BaseQuery<CustomerWhere> {
+  @Type(() => CustomerWhere)
+  declare where?: CustomerWhere;
+}

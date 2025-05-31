@@ -60,7 +60,11 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
           onSuccess?.(modifiedData);
         }}
       >
-        <Form preserve={false} layout="inline">
+        <Form preserve={false} layout="inline" onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onSuccessCall();
+          }
+        }}>
           <AutoFields fields={['no']} />
 
           <SelectField

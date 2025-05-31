@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import { Repository, Not, Equal, IsNull, EntityManager } from "typeorm";
+import { Repository, Not, Equal, IsNull, EntityManager, Like } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   CustomerEntity,
@@ -39,11 +39,14 @@ export class CustomerService {
     query: CustomerQuery,
     user: ActiveUserData
   ): Promise<{ rows: CustomerEntity[]; count: number }> {
+    const { fullname, phone, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
+        ...rest,
+        ...(fullname ? { fullname: Like(`%${fullname}%`) } : {}),
+        ...(phone ? { phone: Like(`%${phone}%`) } : {}),
         ...dataFilter(this.request.userEntity),
       },
       loadRelationIds: true,
