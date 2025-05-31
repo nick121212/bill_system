@@ -6,20 +6,22 @@ import Router from "@/router/index";
 
 import { MotionLazy } from "./components/animate/motion-lazy";
 import Toast from "./components/toast";
+import userStore from "./store/userStore";
 import { AntdAdapter } from "./theme/adapter/antd.adapter";
 import { ThemeProvider } from "./theme/theme-provider";
 
 function App() {
+  const userInfo = userStore.getState();
+
   return (
     <ConfigProvider csp={{ nonce: "YourNonceCode" }}>
       <ThemeProvider adapters={[AntdAdapter]}>
         <MotionLazy>
           <Helmet>
-            <title>Slash Admin</title>
+            <title>{userInfo.userInfo?.company?.name}</title>
             <link rel="icon" href={Logo} />
           </Helmet>
           <Toast />
-
           <Router />
         </MotionLazy>
       </ThemeProvider>
