@@ -82,6 +82,18 @@ export class ProductService {
     });
   }
 
+  async getByName(name?: string): Promise<ProductEntity | null> {
+    if (!name) {
+      return null;
+    }
+
+    const data = await this.repo.findOneBy({
+      name,
+    });
+
+    return data || null;
+  }
+
   async getById(id?: number): Promise<ProductEntity | null> {
     if (!id) {
       return null;
@@ -181,18 +193,25 @@ export class ProductService {
         );
       }
 
-      const product = new ProductEntity().extend({
-        name: row[1],
-        price: toPrice(row[6]),
-        cost: toPrice(row[5]),
-        desc: row[3] || row[4] || "",
-        label: row[1] || "",
-        companyId: this.request.userEntity.company?.id,
-        userId: this.request.userEntity.id,
-        unit,
-      });
+      // let product = ;
+
+      const product =
+        (await this.getByName(row[1])) ||
+        new ProductEntity().extend({
+          name: row[1],
+          price: toPrice(row[6]),
+          cost: toPrice(row[5]),
+          desc: row[3] || row[4] || "",
+          label: row[1] || "",
+          companyId: this.request.userEntity.company?.id,
+          userId: this.request.userEntity.id,
+          unit,
+        });
 
       products.push(product);
+      if (!categoryMap[cateName].products) {
+        categoryMap[cateName].products = [];
+      }
       categoryMap[cateName].products.push(product);
     }
 
@@ -201,7 +220,7 @@ export class ProductService {
     for (const category of Object.values(categoryMap)) {
       await this.productCategoryService.update(category.id, {
         ...category,
-        products: products.map((p) => p.id),
+        products: category.products.map((p) => p.id),
       });
     }
 
