@@ -1,10 +1,11 @@
 import { useState, useMemo } from 'react';
 import { Button, Descriptions, Drawer, Space, Table } from 'antd';
 import type { DescriptionsProps, TableProps } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { AlignRightOutlined } from '@ant-design/icons';
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
-import dayjs from 'dayjs';
+
 import useDetailData from '@/hooks/data/useDetailData';
 import { convertNo, convertPriceFromServer } from '@/utils';
 
@@ -143,6 +144,9 @@ export function OrderDetail(props: IProps) {
       extra={
         <Space>
           <Button onClick={onClose}>{t('crud.cancel')}</Button>
+          <Button type="primary" onClick={()=>{
+            window.print();
+          }}>{t('crud.print')}</Button>
         </Space>
       }
     >

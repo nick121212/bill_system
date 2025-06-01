@@ -67,6 +67,8 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
         }}>
           <AutoFields fields={['no']} />
 
+          <AutoFields fields={['phone']} />
+
           <SelectField
             loading={customerLoad}
             name="customer.id"

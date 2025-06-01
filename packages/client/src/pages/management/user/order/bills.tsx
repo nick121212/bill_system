@@ -177,7 +177,7 @@ export default function OrderPage() {
         checked={allChecked}
         onChange={(e) => setAllChecked(e.target.checked)}
       >
-        全选
+        选择全部订单
       </Checkbox>
     </TablePage>
   );

@@ -109,6 +109,13 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
   const [fieldPrice] = useField(`${name}.price`, {});
   const [fieldDesc] = useField(`${name}.desc`, {});
   const [fieldProduct] = useField<any, ProductEntity>(`${name}.product`, {});
+  const [filedDiscount] = useField<any, number>(
+    `discount`,
+    {},
+    {
+      absoluteName: true,
+    },
+  );
   const [fieldCustomerProducts] = useField<any, Record<number, ProductEntity>>(
     `customerProducts`,
     {},
@@ -143,11 +150,11 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     }
 
     if (fieldProduct.value?.price) {
-      return fieldPrice.onChange(fieldProduct.value?.price, fieldPrice.name);
+      return fieldPrice.onChange(fieldProduct.value?.price * filedDiscount.value / 100, fieldPrice.name);
     }
 
     if (products?.length === 1) {
-      return fieldPrice.onChange(products[0].price, fieldPrice.name);
+      return fieldPrice.onChange(products[0].price * filedDiscount.value / 100, fieldPrice.name);
     }
   }, [fieldCustomerProducts.value, id, products, form.model.templateId]);
 
@@ -426,7 +433,7 @@ function TotalPrice() {
     });
   });
 
-  totalPrice = (totalPrice * (filedDiscount.value || 100)) / 100;
+  // totalPrice = (totalPrice * (filedDiscount.value || 100)) / 100;
 
   return (
     <div style={{ color: 'red', fontSize: 18 }} className="text-red-600 mb-2">

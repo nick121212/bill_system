@@ -78,6 +78,9 @@ export class OrderWhere {
 
   @IsString()
   no?: string;
+
+  @IsString()
+  phone?: string;
 }
 
 export class OrderQuery extends BaseQuery<OrderWhere> {

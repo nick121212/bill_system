@@ -4,6 +4,7 @@ export enum DateType {
   Day = 'day',
   Week = 'week',
   Month = 'month',
+  Year = 'year'
 }
 
 export const getDateRanges = (

@@ -9,6 +9,7 @@ import CreateProduct from '@/pages/management/user/product/create';
 import CreateProductCategory from '@/pages/management/user/productCategory/create';
 import CreateProductTemplate from '@/pages/management/user/productTemplate/create';
 import CreateProductUnit from '@/pages/management/user/productUnit/create';
+import { themeVars } from '@/theme/theme.css';
 import { convertPriceFromServer } from '@/utils';
 
 import AmountStatus from './amountStatus';
@@ -17,7 +18,6 @@ import BannerCard from './banner-card';
 import OrderChart from './orderChart';
 import TotalCard, { IconType } from './total-card';
 import { getDateRanges, DateType } from './util';
-import { themeVars } from '@/theme/theme.css';
 
 type DataItem = {
   iconType: IconType;
@@ -30,6 +30,7 @@ const dateTypeLabelMap = {
   [DateType.Day]: '当天',
   [DateType.Week]: '本周',
   [DateType.Month]: '本月',
+  [DateType.Year]: '本年',
 } as Record<DateType, string>;
 
 const processData = (
@@ -145,6 +146,7 @@ function Workbench() {
             { value: DateType.Day, label: '天' },
             { value: DateType.Week, label: '周' },
             { value: DateType.Month, label: '月' },
+            { value: DateType.Year, label: '年' },
           ]}
           onChange={(value) => setDaeType(value as DateType)}
           value={dateType}

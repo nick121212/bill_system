@@ -69,9 +69,9 @@ const AmountStatus = ({ dateType }: Props) => {
       className="h-full w-full justify-center"
     >
       <Conversion
-        percent={+amountSummary.received.percent}
-        title={`${convertPriceFromServer(amountSummary.received.amount)}`}
-        subtitle="回款金额"
+        percent={100}
+        title={`${convertPriceFromServer(amountSummary.received.amount + amountSummary.pending.amount)}`}
+        subtitle="总金额"
         iconify="tabler:user-filled"
         bg={themeVars.colors.palette.primary.default}
         strokeColor={themeVars.colors.palette.primary.light}

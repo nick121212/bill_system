@@ -1,7 +1,7 @@
 import * as dayjs from "dayjs";
 import * as _ from "lodash";
 import xlsx from "node-xlsx";
-import { Between, EntityManager, In, Repository } from "typeorm";
+import { Between, EntityManager, In, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
   OrderCategoryEntity,
@@ -50,7 +50,7 @@ export class OrderService {
     query: OrderQuery,
     user: ActiveUserData
   ): Promise<{ rows: OrderEntity[]; count: number }> {
-    const { startDate, endDate, no, ...rest } = query.where ?? {};
+    const { startDate, endDate, no, phone,  ...rest } = query.where ?? {};
     const whereClause = {
       ...rest,
 
@@ -63,6 +63,13 @@ export class OrderService {
       ...(no && {
         no: `${this.request.userEntity.company?.id}-${no}`,
       }),
+
+      ...(phone && {
+        customer: {
+          phone: Like(`%${phone}%`),
+        },
+      }),
+
       ...dataFilter(this.request.userEntity),
     };
     const [rows, count] = await this.repo.findAndCount({
