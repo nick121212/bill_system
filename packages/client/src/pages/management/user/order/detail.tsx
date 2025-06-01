@@ -143,7 +143,7 @@ export function OrderDetail(props: IProps) {
       open={true}
       extra={
         <Space>
-          <Button onClick={onClose}>{t('crud.cancel')}</Button>
+          {/* <Button onClick={onClose}>{t('crud.cancel')}</Button> */}
           <Button type="primary" onClick={()=>{
             window.print();
           }}>{t('crud.print')}</Button>

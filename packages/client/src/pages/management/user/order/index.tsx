@@ -32,7 +32,12 @@ export default function OrderPage() {
   const onSuccess = useCallback(
     (formData?: unknown) => {
       refresh({
-        params: formData,
+        params: {
+          ...(formData || {}),
+          order: {
+            createTime: 'DESC',
+          },
+        },
       });
     },
     [refresh],

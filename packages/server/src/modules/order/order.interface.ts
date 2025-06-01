@@ -86,6 +86,8 @@ export class OrderWhere {
 export class OrderQuery extends BaseQuery<OrderWhere> {
   @Type(() => OrderWhere)
   declare where?: OrderWhere;
+
+  order?: Record<string, string>;
 }
 
 export class OrderExportRequest {

@@ -1,3 +1,5 @@
+import * as fs from "fs";
+import { PassThrough } from "stream";
 import { Role } from "@bill/database";
 import {
   Controller,
@@ -12,6 +14,8 @@ import {
   Req,
   Res,
   Patch,
+  StreamableFile,
+  UseInterceptors,
 } from "@nestjs/common";
 
 import { ActiveUser } from "@/common/decorators/active-user.decorator";
@@ -78,8 +82,16 @@ export class OrderController {
   }
 
   @Patch("/export")
-  async export(@Body() body: OrderExportRequest) {
-    return this.orderService.export(body);
+  async export(@Body() body: OrderExportRequest, @Res() res: any) {
+    const data = await this.orderService.export(body);
+
+    // 创建一个bufferstream
+    const bufferStream = new PassThrough();
+    //将Buffer写入
+    bufferStream.end(data);
+
+    // return bufferStream.pipe(res);
+    return bufferStream.pipe(res);
   }
 
   @Patch("/uuid/:key")

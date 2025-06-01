@@ -1,6 +1,7 @@
 import * as dayjs from "dayjs";
 import * as _ from "lodash";
-import xlsx from "node-xlsx";
+import xlsx, { WorkSheet } from "node-xlsx";
+import * as fs from "node:fs";
 import { Between, EntityManager, In, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
@@ -32,6 +33,12 @@ import {
   OrderStatusRequest,
 } from "./order.interface";
 
+const statusMap = {
+  "0": "未支付",
+  "1": "已支付",
+  "2": "已取消",
+};
+
 @Injectable()
 export class OrderService {
   constructor(
@@ -50,7 +57,7 @@ export class OrderService {
     query: OrderQuery,
     user: ActiveUserData
   ): Promise<{ rows: OrderEntity[]; count: number }> {
-    const { startDate, endDate, no, phone,  ...rest } = query.where ?? {};
+    const { startDate, endDate, no, phone, ...rest } = query.where ?? {};
     const whereClause = {
       ...rest,
 
@@ -80,6 +87,7 @@ export class OrderService {
         customer: true,
         user: true,
       },
+      order: query.order,
     });
 
     return {
@@ -237,7 +245,7 @@ export class OrderService {
         }
       }
 
-      order.totalPrice = (order.totalPrice * customer.discount) / 100;
+      // order.totalPrice = (order.totalPrice * customer.discount) / 100;
 
       await entityManager.save(OrderEntity, order);
       await Promise.all([
@@ -333,11 +341,112 @@ export class OrderService {
     return `${key}_${parseInt(index) + 1}`;
   }
 
-  async generateOrderSheet(){
-    
+  generateOrderSheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
+    const dataSheet1: Array<Array<any>> = [];
+    const ranges: any[] = []; //{s: {c: 0, r: 0}, e: {c: 0, r: 3}}; // A1:A4
+    let rowIndex = 0;
+
+    for (const key in orderMap) {
+      if (Object.prototype.hasOwnProperty.call(orderMap, key)) {
+        const order = orderMap[key];
+
+        dataSheet1.push(["订单编号", order.no?.toString(), "", "", "", "", ""]);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push([
+          "客户",
+          order.customer.fullname,
+          "",
+          "",
+          "电话",
+          order.customer.phone,
+          "",
+        ]);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
+        ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push([
+          "地址",
+          order.customer.address,
+          "",
+          "",
+          "邮箱",
+          order.customer.email,
+          "",
+        ]);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
+        ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push([
+          "结款信息",
+          statusMap[order.status],
+          "",
+          "",
+          "订单日期",
+          dayjs(order.createTime).format("YYYYMMDD HH:mm:ss"),
+          "",
+        ]);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
+        ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push(["", "", "", "", "", "", ""]);
+        ranges.push({ s: { c: 0, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push([
+          "分类名称",
+          "产品名称",
+          "单位",
+          "价格",
+          "单份数量",
+          "份数",
+          "总计",
+        ]);
+        rowIndex++;
+
+        for (const c of order?.categories || []) {
+          ranges.push({
+            s: { c: 0, r: rowIndex },
+            e: { c: 0, r: rowIndex - 1 + (c.products?.length || 0) },
+          });
+          for (const p of c.products || []) {
+            dataSheet1.push([
+              c.name,
+              p.name,
+              p.product.unit.name,
+              p.price,
+              p.count,
+              p.times,
+              p.totalPrice,
+            ]);
+            rowIndex++;
+          }
+        }
+
+        dataSheet1.push(["总价", order.totalPrice, "", "", "", "", ""]);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push(["", "", "", "", "", "", ""]);
+        ranges.push({ s: { c: 0, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+      }
+    }
+
+    return {
+      name: "orders",
+      data: dataSheet1,
+      options: {
+        "!merges": ranges,
+      },
+    };
   }
 
-  async generateSummarySheet(orderMap: Record<string, OrderEntity>) {
+  generateSummarySheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
     const dataSheet1: Array<Array<string | number | undefined>> = [
       ["订单编号", "订单日期", "客户", "总金额", "操作员"],
     ];
@@ -356,7 +465,7 @@ export class OrderService {
       }
     }
 
-    return { name: "summary", data: dataSheet1 };
+    return { name: "summary", data: dataSheet1, options: {} };
   }
 
   async generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
@@ -387,7 +496,10 @@ export class OrderService {
       cate.products.push(p);
     });
 
-    return this.generateSummarySheet(orderMap);
+    return [
+      this.generateSummarySheet(orderMap),
+      this.generateOrderSheet(orderMap),
+    ];
   }
 
   async export(body: OrderExportRequest) {
@@ -413,6 +525,10 @@ export class OrderService {
       },
     });
 
-    return this.generateExcel(orders, categoryProducts);
+    const data = await this.generateExcel(orders, categoryProducts);
+
+    const buffer = await xlsx.build(data);
+
+    return buffer;
   }
 }

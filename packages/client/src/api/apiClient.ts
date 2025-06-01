@@ -16,6 +16,12 @@ export const axiosInstance = axios.create({
   headers: { "Content-Type": "application/json;charset=utf-8" },
 });
 
+export const axiosInstanceFile = axios.create({
+  baseURL: import.meta.env.VITE_APP_BASE_API,
+  timeout: 50000,
+  // headers: { "Content-Type": "application/json;charset=utf-8" },
+});
+
 export const getAuthHeader = function(){
   const userInfo = userStore.getState();
 
@@ -23,6 +29,18 @@ export const getAuthHeader = function(){
     Authorization: `Bearer ${userInfo.userToken?.accessToken}` || "",
   }
 }
+
+axiosInstanceFile.interceptors.request.use(
+  (config) => {
+    // 在请求被发送之前做些什么
+    config.headers.Authorization =getAuthHeader().Authorization;
+    return config;
+  },
+  (error) => {
+    // 请求错误时做些什么
+    return Promise.reject(error);
+  }
+);
 
 // 请求拦截
 axiosInstance.interceptors.request.use(

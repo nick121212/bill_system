@@ -136,9 +136,9 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
   const mounted = useMountedState();
 
   useEffect(() => {
-    if (!mounted() || !fieldPrice.changed) {
-      return;
-    }
+    // if (!mounted() || !fieldPrice.changed) {
+    //   return;
+    // }
 
     if (id && fieldCustomerProducts.value[id]) {
       const price =

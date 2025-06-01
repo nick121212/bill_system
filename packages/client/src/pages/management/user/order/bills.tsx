@@ -11,6 +11,7 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 import { convertNo, convertPriceFromServer } from '@/utils';
 
+import Export from './export';
 import Search from './search';
 
 const colorStatus = ['#f50', '#87d068', 'volcano'];
@@ -136,15 +137,7 @@ export default function OrderPage() {
           >
             {t('common.redo')}
           </Button>
-          <Button
-            icon={<ExportOutlined />}
-            type="link"
-            onClick={() => {
-              pag.refresh();
-            }}
-          >
-            导出账单
-          </Button>
+          <Export />
         </Space>
       }
       tableProps={{
