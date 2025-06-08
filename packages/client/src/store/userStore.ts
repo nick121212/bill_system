@@ -1,3 +1,4 @@
+import { Modal } from "antd";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -112,6 +113,36 @@ export const useProfile = () => {
     try {
       const res = await profileMutation.mutateAsync();
       res?.data && setUserInfo(res.data);
+
+      if ((res.data.expireDay ?? 0) < 30) {
+        Modal.warning({
+          content: "账号有效期已不足30天, 请联系管理员续费。",
+          title:"通知"
+        });
+      }
+
+      if ((res.data.expireDay ?? 0) < 14) {
+        Modal.warning({
+          content: "账号有效期还剩半个月, 请联系管理员续费。",
+          title:"通知"
+        });
+      }
+
+      if ((res.data.expireDay ?? 0) < 7) {
+        Modal.warning({
+          content:"账号有效期还剩一周, 请联系管理员续费。",
+          title:"通知"
+        });
+      }
+
+      if ((res.data.expireDay ?? 0) < 0) {
+        Modal.error({
+          content:"账号已过期, 请联系管理员续费。",
+          title:"通知"
+        });
+      }
+
+      return res.data;
     } catch (err) {
       toast.error(err.message, {
         position: "top-center",

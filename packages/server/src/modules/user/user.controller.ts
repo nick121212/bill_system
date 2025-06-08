@@ -1,7 +1,6 @@
-import { Role } from "@bill/database";
+import { Role } from '@bill/database';
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -9,56 +8,56 @@ import {
   Put,
   Delete,
   Query,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
-import { Roles } from "@/common/decorators/roles.decorator";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { Log4jsService } from "@/modules/log4js";
+import { ActiveUser } from '@/common/decorators/active-user.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import { Log4jsService } from '@/modules/log4js';
 
-import { UserPasswordRequest, UserQuery, UserRequest } from "./user.interface";
-import { UserService } from "./user.service";
+import { UserPasswordRequest, UserQuery, UserRequest } from './user.interface';
+import { UserService } from './user.service';
 
 @Controller({
-  path: ["users"],
+  path: ['users'],
 })
 @Roles(Role.Admin)
 export class UserController {
   constructor(
     private userService: UserService,
-    private readonly log4jService: Log4jsService
+    private readonly log4jService: Log4jsService,
   ) {}
 
-  @Get("/")
+  @Get('/')
   async all(@Query() query: UserQuery) {
     return this.userService.all(query);
   }
 
-  @Get("/:id")
-  async one(@Param("id") id: number) {
+  @Get('/:id')
+  async one(@Param('id') id: number) {
     return this.userService.getById(id);
   }
 
-  @Post("/")
+  @Post('/')
   async create(@Body() body: UserRequest) {
     return this.userService.create(body);
   }
 
-  @Put("/:id")
-  async update(@Param("id") id: number, @Body() body: UserRequest) {
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: UserRequest) {
     return this.userService.update(id, body);
   }
 
-  @Put("/:id/password")
+  @Put('/:id/password')
   async changePassword(
     @Body() body: UserPasswordRequest,
-    @ActiveUser() user: ActiveUserData
+    @ActiveUser() user: ActiveUserData,
   ) {
     return this.userService.changePassword(body, user);
   }
 
-  @Delete("/:id")
-  async remote(@Param("id") id: number) {
+  @Delete('/:id')
+  async remote(@Param('id') id: number) {
     return this.userService.remove(id);
   }
 }

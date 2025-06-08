@@ -13,7 +13,7 @@
       "pattern": "^1[3-9]\\d{9}$",
       "title": "手机号"
     },
-    "validateDate": { "type": "integer", "default": 30, "title": "有效期时长" },
+    "validateDate": { "type": "number", "title": "有效期" },
     "isActive": {
       "type": "boolean",
       "default": true,

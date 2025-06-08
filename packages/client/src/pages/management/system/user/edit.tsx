@@ -11,6 +11,7 @@ import { getBridge } from "@/uniforms/ajv";
 import {
   AutoField,
   AutoForm,
+  DateField,
   ErrorsField,
   SelectField,
 } from "@/uniforms/fields";
@@ -128,7 +129,7 @@ export default function PermissionModal({
               />
               {/* <AutoField name="password" /> */}
               <AutoField name="phone" />
-              <AutoField name="validateDate" />
+              <DateField name="validateDate" showTime={false}/>
               <AutoField name="isActive" />
 
               <SelectField

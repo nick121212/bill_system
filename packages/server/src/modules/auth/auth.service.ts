@@ -1,10 +1,10 @@
 import { randomUUID } from "crypto";
+import * as dayjs from "dayjs";
 import { UserEntity } from "@bill/database/dist/entities";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 
-import { PERMISSION_LIST } from "@/assets";
 import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import { RedisService } from "@/modules/redis/redis.service";
 import { RoleService } from "@/modules/role/role.service";
@@ -68,6 +68,9 @@ export class AuthService {
 
     userEntity.permissions = role.menus;
     userEntity.password = "";
+    userEntity.expireDay = dayjs((userEntity.validateDate ?? 0) * 1)
+      .startOf("day")
+      .diff(dayjs().startOf("day"), "day");
 
     return userEntity;
   }

@@ -1,15 +1,7 @@
-import { Type } from "class-transformer";
-import {
-  IsBoolean,
-  isBoolean,
-  IsEmail,
-  IsNumber,
-  IsString,
-  Max,
-  Min,
-} from "class-validator";
+import { Type } from 'class-transformer';
+import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class UserRequest {
   @IsString()

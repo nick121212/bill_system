@@ -14,14 +14,14 @@ export default function Page403() {
 	return (
 		<>
 			<Helmet>
-				<title> 403 No Permission!</title>
+				<title>账号已过期</title>
 			</Helmet>
 
 			<div className="m-auto max-w-[400px]">
 				<MotionContainer className="flex flex-col items-center justify-center px-2">
 					<m.div variants={varBounce().in}>
 						<Typography.Title level={3} className="text-center">
-							No permission
+						账号已过期
 						</Typography.Title>
 					</m.div>
 
@@ -93,10 +93,6 @@ export default function Page403() {
 							</defs>
 						</svg>
 					</m.div>
-
-					<NavLink to={HOMEPAGE} className="rounded-md p-4 !text-text-primary !bg-primary">
-						Go to Home
-					</NavLink>
 				</MotionContainer>
 			</div>
 		</>

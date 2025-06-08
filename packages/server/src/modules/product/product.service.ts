@@ -183,13 +183,13 @@ export class ProductService {
     const categoryMap: Record<string, ProductCategoryEntity> = {};
 
     for (const row of rows) {
-      const cateName = row[0];
+      const cateName = row[0] as string;
       const unit = await this.productUnitService.findOrCreate(row[4]);
 
       if (!categoryMap[cateName]) {
         categoryMap[cateName] = await this.productCategoryService.findOrCreate(
           cateName,
-          { products: [], name: cateName, label: cateName, desc: cateName }
+          { products: [], name: cateName, label: cateName, desc: cateName },
         );
       }
 

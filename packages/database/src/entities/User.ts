@@ -64,8 +64,10 @@ export class UserEntity extends BaseEntity<UserEntity> {
 
   permissions?: MenuEntity[];
 
-  @Column({ default: 30 })
+  @Column({ default: 30, type: "bigint" })
   validateDate?: number;
+
+  expireDay?: number;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

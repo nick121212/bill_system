@@ -1,8 +1,5 @@
-import type {
-  FindOptionsRelationByString,
-  FindOptionsRelations,
-  Repository,
-} from "typeorm";
+import * as dayjs from "dayjs";
+import type { FindOptionsRelations, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import { UserEntity } from "@bill/database/dist/entities";
 import { Global, HttpStatus, Injectable } from "@nestjs/common";
@@ -51,6 +48,11 @@ export class UserService {
     return {
       rows: rows.map((u) => {
         u.password = "";
+        u.validateDate = (u.validateDate || 0) * 1;
+        u.expireDay = dayjs(u.validateDate).startOf("day").diff(
+          dayjs().startOf("day"),
+          "day"
+        );
         return u;
       }),
       count,
@@ -124,7 +126,7 @@ export class UserService {
 
   async update(id: number, body: UserRequest): Promise<UserEntity> {
     const user = await this.getByIdWithError(id);
-    const { password, company, role, ...rest } = body;
+    const { company, role, ...rest } = body;
 
     user.extend({
       ...rest,

@@ -8,7 +8,7 @@ import type { CompanyEntity, MenuEntity, RoleEntity } from "@bill/database/esm";
 import useData from "@/hooks/data/useData";
 import useFormAction from "@/hooks/form/useFormAction";
 import { getBridge } from "@/uniforms/ajv";
-import { AutoField, AutoForm, SelectField } from "@/uniforms/fields";
+import { AutoField, AutoForm, DateField, SelectField } from "@/uniforms/fields";
 
 import schema from "./schemas/create.json";
 
@@ -117,10 +117,8 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
                 })}
               />              <AutoField name="password" />
               <AutoField name="phone" />
-              <AutoField name="validateDate" />
+              <DateField name="validateDate" showTime={false}/>
               <AutoField name="isActive" />
-
-
 
               <SelectField
                 name="role"

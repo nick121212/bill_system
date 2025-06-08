@@ -15,9 +15,13 @@ import { themeVars } from '@/theme/theme.css';
 
 dayjs.locale('zh-cn');
 
-export default function BannerCard({children}: {children?: React.ReactNode}) {
+export default function BannerCard({
+  children,
+}: {
+  children?: React.ReactNode;
+}) {
   const { t } = useTranslation();
-  const { fullname } = useUserInfo();
+  const { fullname, expireDay } = useUserInfo();
 
   const bg = `linear-gradient(135deg, rgba(${themeVars.colors.palette.primary.lightChannel}, .2), rgba(${themeVars.colors.palette.primary.defaultChannel}, .2)) ${themeVars.colors.common.white}`;
 
@@ -49,8 +53,8 @@ export default function BannerCard({children}: {children?: React.ReactNode}) {
           <br />
           🚀 当前服务状态正常，祝您高效办公！
         </div>
-        <div style={{position: 'relative'}}>
-          
+        <div style={{ position: 'relative' }}>
+          您的账号有效期还剩下：{expireDay}天
         </div>
       </Col>
 

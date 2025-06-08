@@ -23,7 +23,9 @@ export default function ProtectedRoute({ children }: Props) {
 
   useEffect(() => {
     if (accessToken) {
-      profile();
+      profile().then(() => {
+        // check();
+      });
     }
   }, []);
 

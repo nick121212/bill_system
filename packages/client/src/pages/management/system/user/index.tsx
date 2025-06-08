@@ -37,7 +37,7 @@ export default function PermissionPage() {
 
   const columns: ColumnsType<UserEntity> = [
     {
-      title: "Name",
+      title: "姓名",
       dataIndex: "name",
       width: 300,
       render: (_, record) => {
@@ -54,20 +54,26 @@ export default function PermissionPage() {
       },
     },
     {
-      title: "Address",
+      title: "地址",
       dataIndex: "address",
       align: "center",
       width: 120,
     },
     {
-      title: "Role",
+      title: "权限",
       dataIndex: "role",
       align: "center",
       width: 120,
       render: (role: RoleEntity) => <Tag color="cyan">{role?.name}</Tag>,
     },
     {
-      title: "Status",
+      title: "有效期",
+      dataIndex: "expireDay",
+      align: "center",
+      width: 120,
+    },
+    {
+      title: "状态",
       dataIndex: "status",
       align: "center",
       width: 120,
