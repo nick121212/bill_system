@@ -41,6 +41,14 @@ export const getDateRanges = (
       currentRange = [thisMonthStart, thisMonthEnd];
       previousRange = [lastMonthStart, lastMonthEnd];
       break;
+    case 'year':
+      const thisYearStart = dayjs().startOf('year');
+      const thisYearEnd = dayjs().endOf('year');
+      const lastYearStart = dayjs().subtract(1, 'year').startOf('year');
+      const lastYearEnd = dayjs().subtract(1, 'year').endOf('year');
+      currentRange = [thisYearStart, thisYearEnd];
+      previousRange = [lastYearStart, lastYearEnd];
+      break;
     default:
       break;
   }

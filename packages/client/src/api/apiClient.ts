@@ -86,6 +86,10 @@ axiosInstance.interceptors.response.use(
     if (status === 401) {
       userStore.getState().actions.clearUserInfoAndToken();
     }
+
+    if (status === 403) {
+      location.href = "#/403";
+    }
     return Promise.reject(error);
   }
 );

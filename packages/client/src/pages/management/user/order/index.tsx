@@ -91,6 +91,13 @@ export default function OrderPage() {
       },
     },
     {
+      title: t('cls.com.operator'),
+      dataIndex: 'user',
+      align: 'center',
+      width: 200,
+      render: (data) => data?.fullname,
+    },
+    {
       title: t('cls.com.createTime'),
       dataIndex: 'createTime',
       align: 'center',
