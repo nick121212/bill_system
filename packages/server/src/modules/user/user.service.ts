@@ -49,10 +49,9 @@ export class UserService {
       rows: rows.map((u) => {
         u.password = "";
         u.validateDate = (u.validateDate || 0) * 1;
-        u.expireDay = dayjs(u.validateDate).startOf("day").diff(
-          dayjs().startOf("day"),
-          "day"
-        );
+        u.expireDay = dayjs(u.validateDate)
+          .startOf("day")
+          .diff(dayjs().startOf("day"), "day");
         return u;
       }),
       count,
@@ -71,6 +70,12 @@ export class UserService {
       where: { id },
       relations,
     });
+
+    if (data) {
+      data.expireDay = dayjs(data.validateDate)
+        .startOf("day")
+        .diff(dayjs().startOf("day"), "day");
+    }
 
     return data || null;
   }

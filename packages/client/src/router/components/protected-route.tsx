@@ -23,8 +23,11 @@ export default function ProtectedRoute({ children }: Props) {
 
   useEffect(() => {
     if (accessToken) {
-      profile().then(() => {
+      profile().then((data) => {
         // check();
+        if(data.expireDay <= 0) {
+          router.replace('/login');
+        }
       });
     }
   }, []);
