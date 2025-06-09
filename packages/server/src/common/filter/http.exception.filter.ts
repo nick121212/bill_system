@@ -45,6 +45,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
       return next(exception);
     }
 
+    if(exception instanceof HttpException && exception.getStatus()===403){
+      return next(exception);
+    }
+
     // sql error can not expose to users
     if (exception instanceof QueryFailedError) {
       return response.status(HttpStatus.OK).json({
@@ -64,7 +68,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         timestamp: Date.now(),
         path: req.url,
       },
-      message: exception?.message || "UNKNOWN_ERROR",
+      message: exception?.message || 'UNKNOWN_ERROR',
     });
   }
 }

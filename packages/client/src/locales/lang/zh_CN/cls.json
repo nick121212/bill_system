@@ -5,6 +5,7 @@
       "desc": "描述",
       "createTime": "创建时间",
       "updateTime": "更新时间",
+      "operator":"操作员",
       "operation": "操作"
     },
     "customer": {

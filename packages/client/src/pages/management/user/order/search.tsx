@@ -63,6 +63,9 @@ export default function SearchForm({ onSuccess, loading }: SearchFormProps) {
         <Form preserve={false} layout="inline" onKeyDown={(e) => {
           if (e.key === 'Enter') {
             onSuccessCall();
+
+            e.stopPropagation();
+            e.preventDefault();
           }
         }}>
           <AutoFields fields={['no']} />

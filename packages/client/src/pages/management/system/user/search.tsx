@@ -42,7 +42,14 @@ export default function PermissionModal({
           onSuccess?.(formData);
         }}
       >
-        <Form preserve={false} layout="inline">
+        <Form preserve={false} layout="inline" onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onSuccessCall();
+
+            e.stopPropagation();
+            e.preventDefault();
+          }
+        }}>
           <AutoField name="fullname" />
 
           <SelectField
