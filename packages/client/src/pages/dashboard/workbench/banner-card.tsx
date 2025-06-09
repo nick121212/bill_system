@@ -4,12 +4,6 @@ import 'dayjs/locale/zh-cn';
 import { useTranslation } from 'react-i18next';
 
 import Character3 from '@/assets/images/characters/character_3.png';
-import CreateCustomer from '@/pages/management/user/customer/create';
-import CreateOrder from '@/pages/management/user/order/create';
-import CreateProduct from '@/pages/management/user/product/create';
-import CreateProductCategory from '@/pages/management/user/productCategory/create';
-import CreateProductTemplate from '@/pages/management/user/productTemplate/create';
-import CreateProductUnit from '@/pages/management/user/productUnit/create';
 import { useUserInfo } from '@/store/userStore';
 import { themeVars } from '@/theme/theme.css';
 

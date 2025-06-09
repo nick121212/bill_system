@@ -11,6 +11,7 @@ import { useLogout, useUserActions, useUserInfo } from "@/store/userStore";
 import { useTheme } from "@/theme/hooks";
 
 import SettingButton from "./setting-button";
+import ChangePassword from "./change-password";
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -62,6 +63,10 @@ export default function AccountDropdown() {
   );
 
   const items: MenuProps["items"] = [
+    {
+      label: <ChangePassword />,
+      key: "5",
+    },
     {
       label: (
         <NavLink to="https://docs-admin.slashspaces.com/" target="_blank">
