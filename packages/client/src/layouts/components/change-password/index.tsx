@@ -68,7 +68,7 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onCancel, onS
             callAjax({ data: formData });
           }}
         >
-          <AutoFields fields={['oldPassword', 'newPassword', 'confirmPassword']} />
+          <AutoFields fields={['password', 'passwordNew', 'passwordNewAgain']} />
 
         </AutoForm>
       </Form>

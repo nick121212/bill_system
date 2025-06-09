@@ -2,22 +2,22 @@
   "title": "changePassword",  
   "type": "object",  
   "properties": {  
-    "oldPassword": {  
+    "password": {  
       "type": "string",  
       "title": "旧密码",  
       "minLength": 6,  
       "maxLength": 30
     },  
-    "newPassword": {  
+    "passwordNew": {  
       "type": "string",  
       "title": "新密码",  
       "minLength": 6,  
       "maxLength": 30
     },  
-    "confirmPassword": {  
+    "passwordNewAgain": {  
       "type": "string",  
       "title": "确认新密码"
     }  
   },  
-  "required": ["oldPassword", "newPassword", "confirmPassword"]  
+  "required": ["password", "passwordNew", "passwordNewAgain"]  
 }
