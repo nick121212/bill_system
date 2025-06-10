@@ -68,9 +68,9 @@ export class AuthService {
 
     userEntity.permissions = role.menus;
     userEntity.password = "";
-    userEntity.expireDay = dayjs((userEntity.validateDate ?? 0) * 1)
-      .startOf("day")
-      .diff(dayjs().startOf("day"), "day");
+    // userEntity.expireDay = dayjs((userEntity.validateDate ?? 0) * 1)
+    //   .startOf("day")
+    //   .diff(dayjs().startOf("day"), "day");
 
     return userEntity;
   }

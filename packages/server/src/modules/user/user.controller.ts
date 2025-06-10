@@ -8,6 +8,7 @@ import {
   Put,
   Delete,
   Query,
+  Patch,
 } from '@nestjs/common';
 
 import { ActiveUser } from '@/common/decorators/active-user.decorator';
@@ -43,17 +44,17 @@ export class UserController {
     return this.userService.create(body);
   }
 
-  @Put('/:id')
-  async update(@Param('id') id: number, @Body() body: UserRequest) {
-    return this.userService.update(id, body);
-  }
-
-  @Put('/:id/password')
+  @Patch('/:id/password')
   async changePassword(
     @Body() body: UserPasswordRequest,
     @ActiveUser() user: ActiveUserData,
   ) {
     return this.userService.changePassword(body, user);
+  }
+
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: UserRequest) {
+    return this.userService.update(id, body);
   }
 
   @Delete('/:id')

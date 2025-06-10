@@ -1,15 +1,12 @@
 import React, { useState, useRef } from 'react';
+import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Modal, Button, Form } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import {
-  AutoFields,
-  AutoForm,
-} from '@/uniforms/fields';
-import { getBridge } from '@/uniforms/ajv';
-import useFormAction from '@/hooks/form/useFormAction';
-import { useUserInfo } from '@/store/userStore';
 
+import useFormAction from '@/hooks/form/useFormAction';
+import { useLogout, useUserInfo } from '@/store/userStore';
+import { getBridge } from '@/uniforms/ajv';
+import { AutoForm, TextField } from '@/uniforms/fields';
 
 import schema from './form.json';
 
@@ -20,17 +17,24 @@ interface ChangePasswordModalProps {
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onCancel, onSuccess }) => {
+const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({
+  onCancel,
+  onSuccess,
+}) => {
   const { t } = useTranslation();
   const formRef = useRef<any>();
   const { id } = useUserInfo();
+  const logoutAction = useLogout();
   const { onSubmit, setFormData, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
-      url: `/user/${id}/password`,
-      method: 'PUT',
+      url: `/users/${id}/password`,
+      method: 'PATCH',
     },
-    onSuccess,
+    () => {
+      onSuccess();
+      logoutAction();
+    },
   );
 
   return (
@@ -68,8 +72,13 @@ const ChangePasswordModal: React.FC<ChangePasswordModalProps> = ({ onCancel, onS
             callAjax({ data: formData });
           }}
         >
-          <AutoFields fields={['password', 'passwordNew', 'passwordNewAgain']} />
+          {/* <AutoFields
+            fields={['password', 'passwordNew', 'passwordNewAgain']}
+          /> */}
 
+          <TextField type="password" name="password" />
+          <TextField type="password" name="passwordNew" />
+          <TextField type="password" name="passwordNewAgain" />
         </AutoForm>
       </Form>
     </Modal>
@@ -90,14 +99,10 @@ const ChangePassword: React.FC = () => {
 
   return (
     <div>
-      <div onClick={showModal}>
-        {t('changePassword.buttonText')}
-      </div>
-      { isModalVisible && <ChangePasswordModal
-        onCancel={handleCancel}
-        onSuccess={handleCancel}
-      />}
-      
+      <div onClick={showModal}>{t('changePassword.buttonText')}</div>
+      {isModalVisible && (
+        <ChangePasswordModal onCancel={handleCancel} onSuccess={handleCancel} />
+      )}
     </div>
   );
 };

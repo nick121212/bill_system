@@ -77,6 +77,10 @@ export class UserService {
         .diff(dayjs().startOf("day"), "day");
     }
 
+    if (data?.role?.label === "admin") {
+      data.expireDay = 9999;
+    }
+
     return data || null;
   }
 
