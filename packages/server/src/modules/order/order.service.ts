@@ -573,10 +573,8 @@ export class OrderService {
       },
     });
 
-    const data = await this.generateExcel(orders, categoryProducts);
+    const data = this.generateExcel(orders, categoryProducts);
 
-    const buffer = await xlsx.build(data);
-
-    return buffer;
+    return xlsx.build(data);
   }
 }
