@@ -8,11 +8,11 @@ export class ReportRequest {
   @IsString()
   name: string;
 
-  @IsString()
-  label: string;
-
   @IsNumber()
   type: ReportType;
+
+  @IsString()
+  desc: string;
 }
 
 class ReportSearchModel {

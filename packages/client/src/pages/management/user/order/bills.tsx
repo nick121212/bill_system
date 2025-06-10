@@ -18,6 +18,7 @@ const colorStatus = ['#f50', '#87d068', 'volcano'];
 
 export default function OrderPage() {
   const { t } = useTranslation();
+  const [query, setQuery] = useState<unknown>({});
   const [{ data: rows, loading }, refresh] = useAxios(
     {
       url: '/orders',
@@ -28,6 +29,7 @@ export default function OrderPage() {
   );
   const onSuccess = useCallback(
     (formData?: unknown) => {
+      setQuery(formData);
       refresh({
         params: formData,
       });
@@ -137,7 +139,7 @@ export default function OrderPage() {
           >
             {t('common.redo')}
           </Button>
-          <Export />
+          <Export query={query} orderIds={selectedIds.map((id) => Number(id))} selectAll={allChecked} />
         </Space>
       }
       tableProps={{
