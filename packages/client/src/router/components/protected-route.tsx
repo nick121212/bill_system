@@ -29,7 +29,7 @@ export default function ProtectedRoute({ children }: Props) {
     if (accessToken) {
       profile().then((data) => {
         // check();
-        if(data.expireDay <= 0) {
+        if ((data as any).expireDay <= 0) {
           router.replace('/login');
         }
       });
