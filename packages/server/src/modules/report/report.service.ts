@@ -6,7 +6,6 @@ import { REQUEST } from "@nestjs/core";
 import { InjectRepository } from "@nestjs/typeorm";
 
 import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
 import dataFilter from "@/common/utils/dataFilter";
 
 import type { ReportQuery, ReportRequest } from "./report.interface";
@@ -84,7 +83,7 @@ export class ReportService {
     const { ...rest } = body;
     const report = new ReportEntity().extend({
       ...rest,
-        ...dataFilter(this.request.userEntity),
+      ...dataFilter(this.request.userEntity),
     });
 
     return await this.repo.save(report);
