@@ -1,7 +1,6 @@
 import * as dayjs from "dayjs";
 import * as _ from "lodash";
 import xlsx, { WorkSheet } from "node-xlsx";
-import * as fs from "node:fs";
 import { Between, EntityManager, In, Like, Repository } from "typeorm";
 import { ApiStatusCode } from "@bill/database";
 import {
@@ -10,7 +9,6 @@ import {
   OrderProductEntity,
   ProductCategoryEntity,
   ProductEntity,
-  ProductUnitEntity,
   UserEntity,
 } from "@bill/database/dist/entities";
 import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
@@ -401,10 +399,10 @@ export class OrderService {
           "分类名称",
           "产品名称",
           "单位",
-          "价格",
+          "价格(元)",
           "单份数量",
           "份数",
-          "总计",
+          "总计(元)",
         ]);
         rowIndex++;
 
@@ -427,7 +425,7 @@ export class OrderService {
           }
         }
 
-        dataSheet1.push(["总价", order.totalPrice, "", "", "", "", ""]);
+        dataSheet1.push(["总价(元)", order.totalPrice, "", "", "", "", ""]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
@@ -448,7 +446,7 @@ export class OrderService {
 
   generateSummarySheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
     const dataSheet1: Array<Array<string | number | undefined>> = [
-      ["订单编号", "订单日期", "客户", "总金额", "操作员"],
+      ["订单编号", "订单日期", "客户", "总金额(元)", "操作员"],
     ];
 
     for (const key in orderMap) {
@@ -465,10 +463,14 @@ export class OrderService {
       }
     }
 
-    return { name: "summary", data: dataSheet1, options: {} };
+    return {
+      name: "summary",
+      data: dataSheet1,
+      options: { "!outline": true } as any,
+    };
   }
 
-  async generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
+  generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
     const orderMap = _.keyBy(orders, "id");
 
     products.forEach((p) => {
@@ -477,9 +479,12 @@ export class OrderService {
       }
 
       let cate = p.orderCategory;
-      let cateIndex = _.findIndex(orderMap[p.orderId].categories, function (o) {
-        return o.id === cate.id;
-      });
+      const cateIndex = _.findIndex(
+        orderMap[p.orderId].categories,
+        function (o) {
+          return o.id === cate.id;
+        },
+      );
 
       if (cateIndex < 0) {
         orderMap[p.orderId].categories?.push(cate);
@@ -502,11 +507,54 @@ export class OrderService {
     ];
   }
 
+  getQuery(body: OrderExportRequest, key: "id" | "orderId" = "id") {
+    if (body.orderIds.length) {
+      return {
+        where: {
+          [key]: In(body.orderIds),
+          ...dataFilter(this.request.userEntity),
+        },
+      };
+    }
+
+    if (Object.keys(body.query?.where || {}).length) {
+      const { startDate, endDate, no, phone, status, customer } =
+        body.query?.where ?? {};
+      const whereClause: Record<string, unknown> = {
+        ...(startDate && endDate
+          ? {
+              createTime: Between(startDate, endDate),
+            }
+          : {}),
+
+        ...(no && {
+          no: `${this.request.userEntity.company?.id}-${no}`,
+        }),
+
+        ...(phone && {
+          customer: {
+            phone: Like(`%${phone}%`),
+          },
+        }),
+        status,
+        ...dataFilter(this.request.userEntity),
+      };
+
+      if (customer) {
+        whereClause.customer = customer;
+      }
+
+      return {
+        where: whereClause,
+      };
+    }
+
+    return {};
+  }
+
   async export(body: OrderExportRequest) {
     const orders = await this.repo.find({
-      where: {
-        id: In(body.orderIds),
-      },
+      ...this.getQuery(body),
       relations: {
         customer: true,
         user: true,
@@ -514,7 +562,7 @@ export class OrderService {
     });
     const categoryProducts = await this.repoPro.find({
       where: {
-        orderId: In(body.orderIds),
+        orderId: In(orders.map((o) => o.id)),
       },
       relations: {
         orderCategory: true,

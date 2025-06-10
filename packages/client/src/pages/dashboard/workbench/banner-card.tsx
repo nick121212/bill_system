@@ -46,9 +46,9 @@ export default function BannerCard({
           ⏰ 今日[ {dayjs().format('MM月DD日')} {dayjs().format('dddd')}]
           <br />
           🚀 当前服务状态正常，祝您高效办公！
-        </div>
-        <div style={{ position: 'relative' }}>
-          您的账号有效期还剩下：{expireDay}天
+          <br />
+          <br />
+          您的账号有效期还剩下：<span className="font-bold">{expireDay}</span>天
         </div>
       </Col>
 

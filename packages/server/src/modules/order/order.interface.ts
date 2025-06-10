@@ -81,6 +81,10 @@ export class OrderWhere {
 
   @IsString()
   phone?: string;
+
+  customer?: {
+    id?: number;
+  };
 }
 
 export class OrderQuery extends BaseQuery<OrderWhere> {
@@ -93,4 +97,5 @@ export class OrderQuery extends BaseQuery<OrderWhere> {
 export class OrderExportRequest {
   orderIds: number[];
   selectAll?: boolean;
+  query?: OrderQuery;
 }
