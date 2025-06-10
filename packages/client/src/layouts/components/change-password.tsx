@@ -8,7 +8,7 @@ import { useLogout, useUserInfo } from '@/store/userStore';
 import { getBridge } from '@/uniforms/ajv';
 import { AutoForm, TextField } from '@/uniforms/fields';
 
-import schema from './form.json';
+import schema from './schemas/changePassword.json';
 
 interface ChangePasswordModalProps {
   onCancel: () => void;

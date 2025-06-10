@@ -12,6 +12,7 @@ import { useTheme } from "@/theme/hooks";
 
 import SettingButton from "./setting-button";
 import ChangePassword from "./change-password";
+import Report from "./report";
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -66,6 +67,10 @@ export default function AccountDropdown() {
     {
       label: <ChangePassword />,
       key: "5",
+    },
+    {
+      label: <Report />,
+      key: "6",
     },
     {
       label: (

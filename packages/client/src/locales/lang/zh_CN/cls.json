@@ -85,6 +85,12 @@
       "detail": {
         "title": "订单详情"
       }
+    },
+    "report": {
+      "name": "标题",
+      "type": "类型",
+      "createTime": "创建时间",
+      "desc": "描述"
     }
   }
 }

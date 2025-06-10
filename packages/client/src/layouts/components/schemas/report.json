@@ -1,0 +1,19 @@
+{  
+  "title": "Report",  
+  "type": "object",  
+  "properties": {  
+    "name": {  
+      "type": "string",  
+      "title": "名称",  
+      "maxLength": 20
+    },
+    "type": {
+      "type": "number",
+      "enum": [1],
+      "default": 1,
+      "title": "类型"
+    },
+    "desc": { "type": "string", "title": "描述", "maxLength": 100 }
+  },  
+  "required": ["name", "desc"]  
+}

@@ -29,5 +29,10 @@
     "passwords": {
       "notMatch": "新密码和确认密码不一致！"
     }
+  },
+  "report": {
+    "title": "上报",
+    "buttonText": "上报",
+    "successMessage": "上报成功！"
   }
 }
