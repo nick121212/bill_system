@@ -22,6 +22,7 @@ import { ProductModule } from "@/modules/product/product.module";
 import { ProductCategoryModule } from "@/modules/productCategory/category.module";
 import { ProductUnitModule } from "@/modules/productUnit/unit.module";
 import { RedisModule } from "@/modules/redis/redis.module";
+import { ReportModule } from "@/modules/report/report.module";
 import { RoleModule } from "@/modules/role/role.module";
 import { StatisticsModule } from "@/modules/statistics/statistics.module";
 import { TemplateModule } from "@/modules/template/template.module";
@@ -72,6 +73,7 @@ import { UserModule } from "@/modules/user/user.module";
     CustomerModule,
     OrderModule,
     StatisticsModule,
+    ReportModule,
   ],
   providers: [
     {

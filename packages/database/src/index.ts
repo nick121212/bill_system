@@ -14,6 +14,7 @@ import {
   OrderEntity,
   OrderProductEntity,
   OrderCategoryEntity,
+  ReportEntity,
 } from "./entities";
 import { TotalAmountView } from "./views";
 
@@ -38,4 +39,5 @@ export default [
   OrderProductEntity,
   OrderCategoryEntity,
   TotalAmountView,
+  ReportEntity,
 ];
