@@ -11,6 +11,7 @@ import {
   Row,
   Col,
   Modal,
+  message,
 } from 'antd';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
@@ -150,11 +151,17 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     }
 
     if (fieldProduct.value?.price) {
-      return fieldPrice.onChange(fieldProduct.value?.price * filedDiscount.value / 100, fieldPrice.name);
+      return fieldPrice.onChange(
+        (fieldProduct.value?.price * filedDiscount.value) / 100,
+        fieldPrice.name,
+      );
     }
 
     if (products?.length === 1) {
-      return fieldPrice.onChange(products[0].price * filedDiscount.value / 100, fieldPrice.name);
+      return fieldPrice.onChange(
+        (products[0].price * filedDiscount.value) / 100,
+        fieldPrice.name,
+      );
     }
   }, [fieldCustomerProducts.value, id, products, form.model.templateId]);
 
@@ -218,17 +225,19 @@ function TemplateSelect() {
       categories?.map((cate) => {
         return {
           name: cate.name,
-          products: cate.products.map((product) => {
-            return {
-              productId: product?.product?.id,
-              productCategoryId: product?.productCategory?.id,
-              product: product.product,
-              count: product.count,
-              times: product.times,
-              desc: product?.product?.desc,
-              price: product.price,
-            };
-          }),
+          products: cate.products
+            ? cate.products.map((product) => {
+                return {
+                  productId: product?.product?.id,
+                  productCategoryId: product?.productCategory?.id,
+                  product: product.product,
+                  count: product.count,
+                  times: product.times,
+                  desc: product?.product?.desc,
+                  price: product.price,
+                };
+              })
+            : [],
         };
       }),
       field.name,
@@ -378,7 +387,6 @@ function CustomerSelect() {
   const [discountField] = useField(`discount`, {}, { absoluteName: true });
   const [customerField] = useField(`customer`, {}, { absoluteName: true });
 
-
   return (
     <AutoField
       name="customerId"
@@ -474,7 +482,7 @@ export default function DetailForm({
 
   const confirm = () => {
     const data = formRef.current.getModel();
-    console.log(111222, data)
+    console.log(111222, data);
     modal.confirm({
       title: '确认提交',
       icon: <ExclamationCircleOutlined />,
@@ -485,7 +493,19 @@ export default function DetailForm({
       ),
       okText: '确认',
       cancelText: '取消',
-      onOk: onSubmit,
+      onOk: () => {
+        if(data.categories?.length === 0){
+          message.error('请至少添加一个分类');
+          return;
+        }
+
+        if(data.categories?.some((cate: any) => cate.products?.length === 0)){
+          message.error('请至少添加一个商品');
+          return;
+        }
+
+        onSubmit();
+      },
       width: window.innerWidth * 0.75,
       style: { maxWidth: '75vw' },
     });
@@ -498,21 +518,6 @@ export default function DetailForm({
       onClose={onCloseProps}
       open={true}
       title={title}
-      // footer={
-      //   <Flex justify="center" gap={10}>
-      //     <Button loading={loadingAjax} onClick={onCloseProps}>
-      //       {t('crud.cancel')}
-      //     </Button>
-      //     <Button
-      //       loading={loadingAjax}
-      //       onClick={onSubmit}
-      //       type="primary"
-      //       className="mr-20"
-      //     >
-      //       {t('crud.confirm')}
-      //     </Button>
-      //   </Flex>
-      // }
     >
       <Form
         labelCol={{ span: 5 }}
