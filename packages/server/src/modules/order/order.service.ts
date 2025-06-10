@@ -339,6 +339,11 @@ export class OrderService {
     return `${key}_${parseInt(index) + 1}`;
   }
 
+  /**
+   * 获取订单详情sheet
+   * @param orderMap 
+   * @returns 
+   */
   generateOrderSheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
     const dataSheet1: Array<Array<any>> = [];
     const ranges: any[] = []; //{s: {c: 0, r: 0}, e: {c: 0, r: 3}}; // A1:A4
@@ -444,6 +449,11 @@ export class OrderService {
     };
   }
 
+  /**
+   * 获取订单汇总sheet
+   * @param orderMap 
+   * @returns 
+   */
   generateSummarySheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
     const dataSheet1: Array<Array<string | number | undefined>> = [
       ["订单编号", "订单日期", "客户", "总金额(元)", "操作员"],
@@ -470,6 +480,12 @@ export class OrderService {
     };
   }
 
+  /**
+   * 生成excel
+   * @param orders 
+   * @param products 
+   * @returns 
+   */
   generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
     const orderMap = _.keyBy(orders, "id");
 
