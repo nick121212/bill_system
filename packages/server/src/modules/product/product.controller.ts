@@ -1,7 +1,8 @@
+import { createReadStream } from "fs";
+import { join } from "path";
 import { Role } from "@bill/database";
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -14,6 +15,8 @@ import {
   MaxFileSizeValidator,
   FileTypeValidator,
   ParseFilePipe,
+  Res,
+  StreamableFile,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 
@@ -70,7 +73,10 @@ export class ProductController {
       new ParseFilePipe({
         validators: [
           new MaxFileSizeValidator({ maxSize: 1000000 }),
-          new FileTypeValidator({ fileType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+          new FileTypeValidator({
+            fileType:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          }),
         ],
       })
     )

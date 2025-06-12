@@ -11,6 +11,7 @@ import databaseConfig from "@/config/database.config";
 import { validate } from "@/config/env.validation";
 import jwtConfig from "@/config/jwt.config";
 import redisConfig from "@/config/redis.config";
+import { AppController } from "@/modules/app/app.controller";
 import { AuthModule } from "@/modules/auth/auth.module";
 import { JwtAuthGuard } from "@/modules/auth/guards/jwt-auth.guard";
 import { CompanyModule } from "@/modules/company/company.module";
@@ -85,5 +86,6 @@ import { UserModule } from "@/modules/user/user.module";
       useClass: RolesGuard,
     },
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

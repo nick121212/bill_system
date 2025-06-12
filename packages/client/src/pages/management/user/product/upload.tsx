@@ -4,9 +4,17 @@ import type { ButtonType } from 'antd/es/button';
 import { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
-import { ApiStatusCode, ProductUnitEntity, type ProductEntity } from '@bill/database/esm';
+import {
+  ApiStatusCode,
+  ProductUnitEntity,
+  type ProductEntity,
+} from '@bill/database/esm';
 
-import { axiosInstance, getAuthHeader } from '@/api/apiClient';
+import {
+  axiosInstanceFile,
+  axiosInstance,
+  getAuthHeader,
+} from '@/api/apiClient';
 import { Upload } from '@/components/upload';
 
 export type ProductModalProps = {
@@ -93,8 +101,23 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       align: 'center',
       width: '15%',
       ellipsis: true,
-    }
+    },
   ];
+  const download = () => {
+    axiosInstanceFile
+      .get('product.xlsx', {
+        responseType: 'blob',
+      })
+      .then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'template.xlsx');
+        document.body.appendChild(link);
+        link.click();
+      });
+    // window.open("/template.xlsx");
+  };
 
   return (
     <Drawer
@@ -103,6 +126,11 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       width={720}
       onClose={onClose}
       open={true}
+      extra={
+        <Button type="primary" onClick={download}>
+          下载模板
+        </Button>
+      }
       styles={{
         body: {
           paddingBottom: 80,
