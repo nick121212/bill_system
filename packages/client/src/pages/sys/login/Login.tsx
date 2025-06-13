@@ -5,17 +5,17 @@ import { Navigate } from "react-router";
 import DashboardImg from "@/assets/images/background/dashboard.png";
 import Overlay from "@/assets/images/background/overlay.jpg";
 import LocalePicker from "@/components/locale-picker";
-import { useUserToken } from "@/store/userStore";
-
 import SettingButton from "@/layouts/components/setting-button";
+import { useUserToken } from "@/store/userStore";
 import { themeVars } from "@/theme/theme.css";
 import { rgbAlpha } from "@/utils/theme";
+
 import LoginForm from "./LoginForm";
 import MobileForm from "./MobileForm";
+import { LoginStateProvider } from "./providers/LoginStateProvider";
 import QrCodeFrom from "./QrCodeForm";
 import RegisterForm from "./RegisterForm";
 import ResetForm from "./ResetForm";
-import { LoginStateProvider } from "./providers/LoginStateProvider";
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -40,10 +40,10 @@ function Login() {
 					background: bg,
 				}}
 			>
-				<div className="text-3xl font-bold leading-normal lg:text-4xl xl:text-5xl">Slash Admin</div>
+				<div className="text-3xl font-bold leading-normal lg:text-4xl xl:text-5xl">新实界图文管理系统</div>
 				<img className="max-w-[480px] xl:max-w-[560px]" src={DashboardImg} alt="" />
 				<Typography.Text className="flex flex-row gap-[16px] text-2xl">
-					{t("sys.login.signInSecondTitle")}
+				上海信新实界企业发展有限公司
 				</Typography.Text>
 			</div>
 
@@ -51,9 +51,9 @@ function Login() {
 				<LoginStateProvider>
 					<LoginForm />
 					<MobileForm />
-					<QrCodeFrom />
+					{/* <QrCodeFrom />
 					<RegisterForm />
-					<ResetForm />
+					<ResetForm /> */}
 				</LoginStateProvider>
 			</div>
 

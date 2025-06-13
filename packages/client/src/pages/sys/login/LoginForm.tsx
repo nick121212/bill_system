@@ -33,12 +33,12 @@ function LoginForm() {
 				size="large"
 				initialValues={{
 					remember: true,
-					username: "admin",
-					password: "demo1234",
+					// username: "admin",
+					// password: "demo1234",
 				}}
 				onFinish={handleFinish}
 			>
-				<div className="mb-4 flex flex-col">
+				{/* <div className="mb-4 flex flex-col">
 					<Alert
 						description={
 							<div className="flex flex-col">
@@ -56,7 +56,7 @@ function LoginForm() {
 						}
 						showIcon
 					/>
-				</div>
+				</div> */}
 
 				<Form.Item name="username" rules={[{ required: true, message: t("sys.login.accountPlaceholder") }]}>
 					<Input placeholder={t("sys.login.userName")} />
@@ -72,14 +72,14 @@ function LoginForm() {
 							</Form.Item>
 						</Col>
 						<Col span={12} className="text-right">
-							<Button
+							{/* <Button
 								type="link"
 								className="!underline"
 								onClick={() => setLoginState(LoginStateEnum.RESET_PASSWORD)}
 								size="small"
 							>
 								{t("sys.login.forgetPassword")}
-							</Button>
+							</Button> */}
 						</Col>
 					</Row>
 				</Form.Item>
@@ -89,7 +89,7 @@ function LoginForm() {
 					</Button>
 				</Form.Item>
 
-				<Row align="middle" gutter={8}>
+				{/* <Row align="middle" gutter={8}>
 					<Col span={9} flex="1">
 						<Button className="w-full !text-sm" onClick={() => setLoginState(LoginStateEnum.MOBILE)}>
 							{t("sys.login.mobileSignInFormTitle")}
@@ -111,7 +111,7 @@ function LoginForm() {
 					<AiFillGithub />
 					<AiFillWechat />
 					<AiFillGoogleCircle />
-				</div>
+				</div> */}
 			</Form>
 		</>
 	);

@@ -1,8 +1,8 @@
-import * as dayjs from "dayjs";
-import * as _ from "lodash";
-import xlsx, { WorkSheet } from "node-xlsx";
-import { Between, EntityManager, In, Like, Repository } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
+import * as dayjs from 'dayjs';
+import * as _ from 'lodash';
+import xlsx, { WorkSheet } from 'node-xlsx';
+import { Between, EntityManager, In, Like, Repository } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
 import {
   OrderCategoryEntity,
   OrderEntity,
@@ -10,31 +10,30 @@ import {
   ProductCategoryEntity,
   ProductEntity,
   UserEntity,
-} from "@bill/database/dist/entities";
-import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
+} from '@bill/database/dist/entities';
+import { OrderStatus } from '@bill/database/dist/enums/OrderStatus';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import dataFilter from "@/common/utils/dataFilter";
-import { toPrice } from "@/common/utils/price";
+import { ApiException } from '@/common/exception/api.exception';
+import dataFilter from '@/common/utils/dataFilter';
+import { toPrice } from '@/common/utils/price';
 
-import { CustomerService } from "../customer/customer.service";
-import { RedisService } from "../redis/redis.service";
+import { CustomerService } from '../customer/customer.service';
+import { RedisService } from '../redis/redis.service';
 import {
   OrderExportRequest,
   OrderProduct,
   OrderQuery,
   OrderRequest,
   OrderStatusRequest,
-} from "./order.interface";
+} from './order.interface';
 
 const statusMap = {
-  "0": "未支付",
-  "1": "已支付",
-  "2": "已取消",
+  '0': '未支付',
+  '1': '已支付',
+  '2': '已取消',
 };
 
 @Injectable()
@@ -48,12 +47,11 @@ export class OrderService {
     private repoPro: Repository<OrderProductEntity>,
     private customerService: CustomerService,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
-    private readonly redisService: RedisService
+    private readonly redisService: RedisService,
   ) {}
 
   async all(
     query: OrderQuery,
-    user: ActiveUserData
   ): Promise<{ rows: OrderEntity[]; count: number }> {
     const { startDate, endDate, no, phone, ...rest } = query.where ?? {};
     const whereClause = {
@@ -122,13 +120,13 @@ export class OrderService {
 
     if (!order) {
       throw new ApiException(
-        "can not find record",
+        'can not find record',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "OrderEntity",
-        }
+          type: 'OrderEntity',
+        },
       );
     }
 
@@ -160,7 +158,7 @@ export class OrderService {
       },
     });
 
-    const categoryMap = _.keyBy(categories, "id");
+    const categoryMap = _.keyBy(categories, 'id');
 
     for (const cp of categoryProducts) {
       const category = categoryMap[cp.orderCategory.id];
@@ -178,7 +176,7 @@ export class OrderService {
 
   async saveData(child: OrderEntity, body: OrderRequest, remove = false) {
     const customer = await this.customerService.getByIdWithError(
-      body.customerId
+      body.customerId,
     );
     return await this.em.transaction(async (entityManager: EntityManager) => {
       const order = await entityManager.save(OrderEntity, {
@@ -220,7 +218,7 @@ export class OrderService {
               ProductCategoryEntity,
               {
                 id: p.productCategoryId,
-              }
+              },
             );
 
           const orderProduct = new OrderProductEntity().extend({
@@ -258,27 +256,27 @@ export class OrderService {
     });
   }
 
-  async create(body: OrderRequest, user: ActiveUserData): Promise<OrderEntity> {
+  async create(body: OrderRequest): Promise<OrderEntity> {
     const { categories, no, ...rest } = body;
     const order = new OrderEntity().extend({
       ...rest,
       no,
-      companyId: user.companyId,
-      userId: user.id,
+      companyId: this.request.userEntity.company?.id,
+      userId: this.request.userEntity.id,
     });
-    const key = `${user.companyId}-${dayjs().format("YYYYMMDD")}`;
+    const key = `${this.request.userEntity.company?.id}-${dayjs().format('YYYYMMDD')}`;
     const orderNo = await this.generateIndex(key);
     const orderFromNo = await this.getByNo(orderNo);
 
     if (orderFromNo) {
       throw new ApiException(
-        "order no already exists",
+        'order no already exists',
         ApiStatusCode.KEY_ALREADY_EXISTS,
         HttpStatus.OK,
         {
           no: orderNo,
-          type: "OrderEntity",
-        }
+          type: 'OrderEntity',
+        },
       );
     }
 
@@ -302,15 +300,15 @@ export class OrderService {
 
   async changeStatus(
     id: number,
-    body: OrderStatusRequest
+    body: OrderStatusRequest,
   ): Promise<OrderEntity> {
     const order = await this.getByIdWithError(id);
 
     if (order.status !== OrderStatus.UNPAYED) {
       throw new ApiException(
-        "Status has been closed.",
+        'Status has been closed.',
         ApiStatusCode.UNKOWN_ERROR,
-        HttpStatus.OK
+        HttpStatus.OK,
       );
     }
 
@@ -341,8 +339,8 @@ export class OrderService {
 
   /**
    * 获取订单详情sheet
-   * @param orderMap 
-   * @returns 
+   * @param orderMap
+   * @returns
    */
   generateOrderSheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
     const dataSheet1: Array<Array<any>> = [];
@@ -353,61 +351,61 @@ export class OrderService {
       if (Object.prototype.hasOwnProperty.call(orderMap, key)) {
         const order = orderMap[key];
 
-        dataSheet1.push(["订单编号", order.no?.toString(), "", "", "", "", ""]);
+        dataSheet1.push(['订单编号', order.no?.toString(), '', '', '', '', '']);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
         dataSheet1.push([
-          "客户",
+          '客户',
           order.customer.fullname,
-          "",
-          "",
-          "电话",
+          '',
+          '',
+          '电话',
           order.customer.phone,
-          "",
+          '',
         ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
         ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
         dataSheet1.push([
-          "地址",
+          '地址',
           order.customer.address,
-          "",
-          "",
-          "邮箱",
+          '',
+          '',
+          '邮箱',
           order.customer.email,
-          "",
+          '',
         ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
         ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
         dataSheet1.push([
-          "结款信息",
+          '结款信息',
           statusMap[order.status],
-          "",
-          "",
-          "订单日期",
-          dayjs(order.createTime).format("YYYYMMDD HH:mm:ss"),
-          "",
+          '',
+          '',
+          '订单日期',
+          dayjs(order.createTime).format('YYYYMMDD HH:mm:ss'),
+          '',
         ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
         ranges.push({ s: { c: 5, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
-        dataSheet1.push(["", "", "", "", "", "", ""]);
+        dataSheet1.push(['', '', '', '', '', '', '']);
         ranges.push({ s: { c: 0, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
         dataSheet1.push([
-          "分类名称",
-          "产品名称",
-          "单位",
-          "价格(元)",
-          "单份数量",
-          "份数",
-          "总计(元)",
+          '分类名称',
+          '产品名称',
+          '单位',
+          '价格(元)',
+          '单份数量',
+          '份数',
+          '总计(元)',
         ]);
         rowIndex++;
 
@@ -430,42 +428,63 @@ export class OrderService {
           }
         }
 
-        dataSheet1.push(["总价(元)", order.totalPrice, "", "", "", "", ""]);
+        dataSheet1.push(['总价(元)', order.totalPrice, '', '', '', '', '']);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 
-        dataSheet1.push(["", "", "", "", "", "", ""]);
+        dataSheet1.push(['', '', '', '', '', '', '']);
         ranges.push({ s: { c: 0, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
       }
     }
 
     return {
-      name: "orders",
+      name: 'orders',
       data: dataSheet1,
       options: {
-        "!merges": ranges,
+        '!merges': ranges,
       },
     };
   }
 
   /**
    * 获取订单汇总sheet
-   * @param orderMap 
-   * @returns 
+   * @param orderMap
+   * @returns
    */
   generateSummarySheet(orderMap: Record<string, OrderEntity>): WorkSheet<any> {
-    const dataSheet1: Array<Array<string | number | undefined>> = [
-      ["订单编号", "订单日期", "客户", "总金额(元)", "操作员"],
+    const dataSheet1: Array<Array<string | number | undefined | object>> = [
+      ['订单编号', '订单日期', '客户', '总金额(元)', '操作员'],
     ];
+
+    const contentCellStyle = {
+      border: {
+        top: {
+          style: 'medium',
+          color: '#000',
+        },
+        bottom: {
+          style: 'medium',
+          color: '#000',
+        },
+        left: {
+          style: 'medium',
+          color: '#000',
+        },
+        right: {
+          style: 'medium',
+          color: '#000',
+        },
+      },
+    };
 
     for (const key in orderMap) {
       if (Object.prototype.hasOwnProperty.call(orderMap, key)) {
         const order = orderMap[key];
 
         dataSheet1.push([
-          order.no,
-          dayjs(order.createTime).format("YYYYMMDD HH:mm:ss"),
+          { v: order.no, s: contentCellStyle },
+          dayjs(order.createTime).format('YYYYMMDD HH:mm:ss'),
           order.customer.fullname,
           order.totalPrice,
           order.user?.fullname,
@@ -474,20 +493,20 @@ export class OrderService {
     }
 
     return {
-      name: "summary",
+      name: 'summary',
       data: dataSheet1,
-      options: { "!outline": true } as any,
+      options: {},
     };
   }
 
   /**
    * 生成excel
-   * @param orders 
-   * @param products 
-   * @returns 
+   * @param orders
+   * @param products
+   * @returns
    */
   generateExcel(orders: OrderEntity[], products: OrderProductEntity[]) {
-    const orderMap = _.keyBy(orders, "id");
+    const orderMap = _.keyBy(orders, 'id');
 
     products.forEach((p) => {
       if (!orderMap[p.orderId].categories) {
@@ -523,7 +542,7 @@ export class OrderService {
     ];
   }
 
-  getQuery(body: OrderExportRequest, key: "id" | "orderId" = "id") {
+  getQuery(body: OrderExportRequest, key: 'id' | 'orderId' = 'id') {
     if (body.orderIds.length) {
       return {
         where: {
@@ -591,6 +610,6 @@ export class OrderService {
 
     const data = this.generateExcel(orders, categoryProducts);
 
-    return xlsx.build(data);
+    return xlsx.build(data, {});
   }
 }

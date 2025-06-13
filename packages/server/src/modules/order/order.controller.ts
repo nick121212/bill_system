@@ -1,9 +1,7 @@
-import * as fs from "fs";
-import { PassThrough } from "stream";
-import { Role } from "@bill/database";
+import { PassThrough } from 'stream';
+import { Role } from '@bill/database';
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -11,91 +9,78 @@ import {
   Put,
   Delete,
   Query,
-  Req,
   Res,
   Patch,
-  StreamableFile,
-  UseInterceptors,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
-import { Public } from "@/common/decorators/public.decorator";
-import { Roles } from "@/common/decorators/roles.decorator";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
+import { Roles } from '@/common/decorators/roles.decorator';
 
 import {
   OrderExportRequest,
   OrderQuery,
   OrderRequest,
   OrderStatusRequest,
-} from "./order.interface";
-import { OrderService } from "./order.service";
+} from './order.interface';
+import { OrderService } from './order.service';
 
 @Controller({
-  path: ["orders"],
+  path: ['orders'],
 })
 @Roles(Role.User)
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
-  @Get("/")
-  async all(@Query() query: OrderQuery, @ActiveUser() user: ActiveUserData) {
-    return this.orderService.all(query, user);
+  @Get('/')
+  async all(@Query() query: OrderQuery) {
+    return this.orderService.all(query);
   }
 
-  @Get("/:id")
-  async one(@Param("id") id: number) {
+  @Get('/:id')
+  async one(@Param('id') id: number) {
     return this.orderService.getById(id);
   }
 
-  @Get("/:id/categories")
-  async oneWithCategories(@Param("id") id: number) {
+  @Get('/:id/categories')
+  async oneWithCategories(@Param('id') id: number) {
     return this.orderService.getByIdWithCategories(id);
   }
 
-  @Post("/")
-  async create(@Body() body: OrderRequest, @ActiveUser() user: ActiveUserData) {
-    return this.orderService.create(body, user);
+  @Post('/')
+  async create(@Body() body: OrderRequest) {
+    return this.orderService.create(body);
   }
 
-  @Put("/:id")
-  async update(
-    @Param("id") id: number,
-    @Body() body: OrderRequest,
-    @ActiveUser() user: ActiveUserData
-  ) {
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: OrderRequest) {
     return this.orderService.update(id, body);
   }
 
-  @Put("/:id/status")
+  @Put('/:id/status')
   async updateStatus(
-    @Param("id") id: number,
+    @Param('id') id: number,
     @Body() body: OrderStatusRequest,
-    @ActiveUser() user: ActiveUserData
   ) {
     return this.orderService.changeStatus(id, body);
   }
 
-  @Delete("/:id")
-  async remote(@Param("id") id: number) {
+  @Delete('/:id')
+  async remote(@Param('id') id: number) {
     return this.orderService.remove(id);
   }
 
-  @Patch("/export")
+  @Patch('/export')
   async export(@Body() body: OrderExportRequest, @Res() res: any) {
     const data = await this.orderService.export(body);
 
-    // 创建一个bufferstream
     const bufferStream = new PassThrough();
-    //将Buffer写入
     bufferStream.end(data);
 
-    // return bufferStream.pipe(res);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return bufferStream.pipe(res);
   }
 
-  @Patch("/uuid/:key")
-  async getUUID(@Param("key") key: string) {
+  @Patch('/uuid/:key')
+  async getUUID(@Param('key') key: string) {
     return this.orderService.generateIndex(key);
   }
 }
