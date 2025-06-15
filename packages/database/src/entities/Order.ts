@@ -59,6 +59,16 @@ export class OrderEntity extends BaseEntity<OrderEntity> {
   totalPrice: number;
 
   /**
+   * 订单总价 实收
+   * @type {number}
+   */
+    @Column({
+      type: "float",
+      default: 0,
+    })
+    realTotalPrice: number;
+
+  /**
    * 订单折扣金额
    * @type {number}
    */

@@ -1,5 +1,5 @@
-import { Layout, Menu, type MenuProps } from "antd";
 import { useEffect, useMemo, useState } from "react";
+import { Layout, Menu, type MenuProps } from "antd";
 import { useMatches, useNavigate } from "react-router";
 
 import Scrollbar from "@/components/scrollbar";
@@ -8,9 +8,7 @@ import { menuFilter } from "@/router/utils";
 import { useSettingActions, useSettings } from "@/store/settingStore";
 
 import { NAV_WIDTH } from "../config";
-
 import NavLogo from "./nav-logo";
-
 import { ThemeLayout, ThemeMode } from "#/enum";
 
 const { Sider } = Layout;

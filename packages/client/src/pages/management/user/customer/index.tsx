@@ -11,10 +11,11 @@ import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
 import Create from './create';
+import Detail from './detail';
 import Edit from './edit';
 import Remove from './remove';
 import Search from './search';
-import Detail from './detail';
+import Upload from './upload';
 
 export default function ProductUnit() {
   const { t } = useTranslation();
@@ -70,6 +71,11 @@ export default function ProductUnit() {
       align: 'center',
     },
     {
+      title: t('cls.customer.discount'),
+      dataIndex: 'discount',
+      align: 'center',
+    },
+    {
       title: t('cls.customer.paytime'),
       dataIndex: 'paytime',
       align: 'center',
@@ -109,6 +115,12 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
+          <Upload
+            title={'上传客户资料'}
+            onSuccess={() => {
+              pag.refresh();
+            }}
+          />
           <Create
             title={t('cls.customer.modal.cTitle')}
             onSuccess={pag.refresh}

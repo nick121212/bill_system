@@ -63,6 +63,7 @@ export class UserEntity extends BaseEntity<UserEntity> {
   isActive: boolean;
 
   permissions?: MenuEntity[];
+  returnDate?: string;
 
   @Column({ default: 30, type: "bigint" })
   validateDate?: number;

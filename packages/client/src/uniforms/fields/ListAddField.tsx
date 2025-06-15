@@ -1,5 +1,5 @@
-import { Button, type ButtonProps } from "antd";
-import cloneDeep from "lodash/cloneDeep";
+import { Button, type ButtonProps } from 'antd';
+import cloneDeep from 'lodash/cloneDeep';
 import {
   type ConnectedField,
   type FieldProps,
@@ -7,22 +7,21 @@ import {
   filterDOMProps,
   joinName,
   useField,
-} from "uniforms";
-import { PlusOutlined } from "@ant-design/icons";
-
+} from 'uniforms';
+import { PlusOutlined } from '@ant-design/icons';
 
 export type ListAddFieldProps = FieldProps<unknown, ButtonProps>;
 
-const defaultStyle = { width: "100%" };
+const defaultStyle = { width: '100%' };
 
 function ListAdd({
   disabled,
   icon = <PlusOutlined />,
   name,
   readOnly,
-  size = "small",
+  size = 'small',
   style = defaultStyle,
-  type = "default",
+  type = 'default',
   value,
   ...props
 }: ListAddFieldProps) {
@@ -31,7 +30,7 @@ function ListAdd({
   const parent = useField<{ maxCount?: number }, unknown[]>(
     parentName,
     {},
-    { absoluteName: true }
+    { absoluteName: true },
   )[0];
 
   const limitNotReached =
@@ -40,14 +39,18 @@ function ListAdd({
 
   return (
     <Button
-    shape="circle"
+      shape="circle"
       {...filterDOMProps(props)}
       disabled={!limitNotReached}
       icon={icon}
       onClick={() => {
         if (!readOnly) {
           // biome-ignore lint/style/noNonNullAssertion: <explanation>
-          parent.onChange(parent.value!.concat([cloneDeep(value)]));
+          parent.onChange(
+            parent.value!.concat([
+              cloneDeep(typeof value === 'function' ? value(parent.value) : value),
+            ]),
+          );
         }
       }}
       size={size}
@@ -64,5 +67,5 @@ type ListAddFieldType = ConnectedField<ListAddFieldProps>;
 
 export default connectField<ListAddFieldProps>(ListAdd, {
   initialValue: false,
-  kind: "leaf",
+  kind: 'leaf',
 }) as ListAddFieldType;

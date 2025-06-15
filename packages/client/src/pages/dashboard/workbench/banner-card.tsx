@@ -15,7 +15,7 @@ export default function BannerCard({
   children?: React.ReactNode;
 }) {
   const { t } = useTranslation();
-  const { fullname, expireDay } = useUserInfo();
+  const { fullname, expireDay, returnDate } = useUserInfo();
 
   const bg = `linear-gradient(135deg, rgba(${themeVars.colors.palette.primary.lightChannel}, .2), rgba(${themeVars.colors.palette.primary.defaultChannel}, .2)) ${themeVars.colors.common.white}`;
 
@@ -49,6 +49,12 @@ export default function BannerCard({
           <br />
           <br />
           您的账号有效期还剩下：<span className="font-bold">{expireDay}</span>天
+          <br />
+          {returnDate ? (
+            <>
+              您可在<span className="font-bold">{returnDate}</span>前申请退款。
+            </>
+          ) : null}
         </div>
       </Col>
 

@@ -42,20 +42,26 @@ function ListViewField<T>({
       <List
         {...filterDOMProps(props)}
         dataSource={value}
-        renderItem={(item, itemIndex) => (
-          <List.Item key={itemIndex}>
-            {Children.map(children, (child, childIndex) =>
-              isValidElement(child)
-                ? cloneElement(child as ReactElement, {
-                    key: `${itemIndex}-${childIndex.toString()}`,
-                    name: child.props.name?.replace('$', `${itemIndex}`),
-                    labelCol,
-                    wrapperCol,
-                  })
-                : child,
-            )}
-          </List.Item>
-        )}
+        renderItem={(item, itemIndex) => {
+          console.log('=======', item, itemIndex);
+
+          return (
+            <List.Item key={itemIndex}>
+              {Children.map(children, (child, childIndex) => {
+                console.log('=======', child, childIndex);
+                return isValidElement(child)
+                  ? cloneElement(child as ReactElement, {
+                      key: `${itemIndex}-${childIndex.toString()}`,
+                      name: child.props.name?.replace('$', `${itemIndex}`),
+                      itemIndex,
+                      labelCol,
+                      wrapperCol,
+                    })
+                  : child;
+              })}
+            </List.Item>
+          );
+        }}
       />
       {addButton || (
         <ListAddField type="link" shape="default" name="$">

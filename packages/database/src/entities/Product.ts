@@ -51,7 +51,7 @@ export class ProductEntity extends BaseEntity<ProductEntity> {
   userId?: number;
 
   // @ManyToOne(() => ProductCategoryEntity)
-  // @JoinColumn()
+  // @JoinTable()
   // category: ProductCategoryEntity;
 
   @ManyToOne(() => ProductUnitEntity)

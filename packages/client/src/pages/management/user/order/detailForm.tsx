@@ -46,6 +46,8 @@ import {
   TableField,
   VisibleField,
   SelectField,
+  TextField,
+  NumField,
 } from '@/uniforms/fields';
 import {
   convertEmptyToSearchAll,
@@ -73,8 +75,12 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
     rows: categories,
     loading: categoryLoad,
     onSearch: debouncedOnCategorySearch,
-  } = useData<ProductEntity[]>('product/categories', id ? { id } : {});
+  } = useData<ProductEntity[]>('product/categories', id ? { id } : {}, false);
   const [field] = useField(`${name}.productId`, {});
+
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
 
   return (
     <div className="w-full">
@@ -133,8 +139,9 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     id
       ? { productId: id, categoryId: field.value }
       : { categoryId: field.value },
+    false,
   );
-  const mounted = useMountedState();
+  // const mounted = useMountedState();
 
   useEffect(() => {
     // if (!mounted() || !fieldPrice.changed) {
@@ -208,7 +215,7 @@ function TemplateSelect() {
     rows: templates,
     loading: tempLoading,
     onSearch: debouncedOnTemplateSearch,
-  } = useData<TemplateEntity[]>('templates', {});
+  } = useData<TemplateEntity[]>('templates', { useDefaultData: true });
   const [{ data: categories, loading: categoriesLoading }, fetchCategories] =
     useAxios<
       (TemplateCategoryEntity & {
@@ -217,11 +224,11 @@ function TemplateSelect() {
     >(``, { manual: true });
 
   useEffect(() => {
-    if (!categories) {
+    if (!categories && !categoriesLoading) {
       return;
     }
 
-    field.onChange(
+    let categroirsCopy =
       categories?.map((cate) => {
         return {
           name: cate.name,
@@ -239,9 +246,9 @@ function TemplateSelect() {
               })
             : [],
         };
-      }),
-      field.name,
-    );
+      }) || [];
+
+    field.onChange(categroirsCopy, field.name);
   }, [categories]);
 
   return (
@@ -272,6 +279,8 @@ function TemplateSelect() {
 }
 
 function CategoryItem(props: any) {
+  console.log(props, '----------');
+
   return (
     <>
       <Collapse
@@ -289,7 +298,13 @@ function CategoryItem(props: any) {
                 <AutoField name={`${props.name}.name`} />
               </div>
             ),
-            extra: <ListDelField color="danger" className="ml-2" name={`$`} />,
+            extra: (
+              <ListDelField
+                color="danger"
+                className="ml-2"
+                name={`${props.name}`}
+              />
+            ),
             children: (
               <TableField
                 size="small"
@@ -424,8 +439,8 @@ function TotalPrice() {
     {},
     (OrderCategoryEntity & { products: OrderProductEntity[] })[]
   >(`categories`, {});
-  const [filedDiscount] = useField<any, number>(
-    `discount`,
+  const [realTotalPriceField] = useField<any, number>(
+    `realTotalPrice`,
     {},
     {
       absoluteName: true,
@@ -443,6 +458,13 @@ function TotalPrice() {
 
   // totalPrice = (totalPrice * (filedDiscount.value || 100)) / 100;
 
+  useEffect(() => {
+    realTotalPriceField.onChange(
+      totalPrice.toFixed(2) * 1,
+      realTotalPriceField.name,
+    );
+  }, [totalPrice]);
+
   return (
     <div style={{ color: 'red', fontSize: 18 }} className="text-red-600 mb-2">
       <Row gutter={24}>
@@ -450,7 +472,7 @@ function TotalPrice() {
           span={5}
           style={{ textAlign: 'right', padding: 0, marginLeft: 10 }}
         >
-          总价：
+          应收总价：
         </Col>
         <Col span={18}>{totalPrice.toFixed(2)}</Col>
       </Row>
@@ -482,7 +504,6 @@ export default function DetailForm({
 
   const confirm = () => {
     const data = formRef.current.getModel();
-    console.log(111222, data);
     modal.confirm({
       title: '确认提交',
       icon: <ExclamationCircleOutlined />,
@@ -494,12 +515,12 @@ export default function DetailForm({
       okText: '确认',
       cancelText: '取消',
       onOk: () => {
-        if(data.categories?.length === 0){
+        if (data.categories?.length === 0) {
           message.error('请至少添加一个分类');
           return;
         }
 
-        if(data.categories?.some((cate: any) => cate.products?.length === 0)){
+        if (data.categories?.some((cate: any) => cate.products?.length === 0)) {
           message.error('请至少添加一个商品');
           return;
         }
@@ -533,26 +554,26 @@ export default function DetailForm({
             schema={bridge}
             model={
               {
+                templateId: order?.templateId || -1,
                 ...order,
                 customerId: order?.customer?.id,
-                categories:
-                  categories?.map((cate) => {
-                    return {
-                      name: cate.name,
-                      products: cate.products.map((product) => {
-                        return {
-                          product: product.product,
-                          product1: product.product,
-                          productId: product.product.id,
-                          productCategoryId: product.productCategory.id,
-                          count: product.count,
-                          times: product.times,
-                          desc: product.product.desc,
-                          price: product.price,
-                        };
-                      }),
-                    };
-                  }) || [],
+                categories: categories?.map((cate) => {
+                  return {
+                    name: cate.name,
+                    products: cate.products.map((product) => {
+                      return {
+                        product: product.product,
+                        product1: product.product,
+                        productId: product.product.id,
+                        productCategoryId: product.productCategory.id,
+                        count: product.count,
+                        times: product.times,
+                        desc: product.product.desc,
+                        price: product.price,
+                      };
+                    }),
+                  };
+                }),
               } as any
             }
             onSubmit={(formData: {
@@ -570,6 +591,7 @@ export default function DetailForm({
               no: string;
               customerId: number;
               templateId: number;
+              realTotalPrice: number;
               desc: string;
             }) => {
               // 转换价格为整数后提交
@@ -590,6 +612,7 @@ export default function DetailForm({
                   templateId: formData.templateId,
                   categories: processedCategories,
                   desc: formData.desc,
+                  realTotalPrice: formData.realTotalPrice,
                 },
               });
             }}
@@ -603,7 +626,7 @@ export default function DetailForm({
             <VisibleField
               name="categories"
               condition={(model) => {
-                return model.templateId && model.templateId > 0;
+                return model.templateId;
               }}
             >
               <EmptyField name="categories">
@@ -611,7 +634,11 @@ export default function DetailForm({
                   label=""
                   name="categories"
                   rowKey={(item) => {
-                    return item;
+                    if (item.key) {
+                      return item.key;
+                    }
+                    item.key = Date.now();
+                    return item.key;
                   }}
                   addButton={
                     <ListAddField
@@ -621,6 +648,12 @@ export default function DetailForm({
                       size="large"
                       color="danger"
                       variant="text"
+                      value={(cates) => {
+                        return {
+                          key: Date.now(),
+                          name: `分类${cates?.length ? cates?.length + 1 : 1}`,
+                        };
+                      }}
                       icon={<PlusOutlined />}
                     >
                       添加分类
@@ -643,6 +676,8 @@ export default function DetailForm({
               ]}
             />
             <TotalPrice />
+
+            <NumField name="realTotalPrice" />
           </AutoForm>
         </Spin>
       </Form>
@@ -651,14 +686,6 @@ export default function DetailForm({
         <Button loading={loadingAjax} onClick={onCloseProps}>
           {t('crud.cancel')}
         </Button>
-        {/* <Button
-            loading={loadingAjax}
-            onClick={onSubmit}
-            type="primary"
-            className="mr-20"
-          >
-            {t('crud.confirm')}
-          </Button> */}
         <Button type="primary" onClick={confirm}>
           {t('crud.confirm')}
         </Button>

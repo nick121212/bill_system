@@ -1,6 +1,6 @@
-import { createReadStream } from "fs";
-import { join } from "path";
-import { Role } from "@bill/database";
+import { createReadStream } from 'fs';
+import { join } from 'path';
+import { Role } from '@bill/database';
 import {
   Controller,
   Get,
@@ -17,57 +17,57 @@ import {
   ParseFilePipe,
   Res,
   StreamableFile,
-} from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
-import { Roles } from "@/common/decorators/roles.decorator";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { Log4jsService } from "@/modules/log4js";
+import { ActiveUser } from '@/common/decorators/active-user.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import { Log4jsService } from '@/modules/log4js';
 
-import { ProductBodyRequest, ProductQuery } from "./product.interface";
-import { ProductService } from "./product.service";
+import { ProductBodyRequest, ProductQuery } from './product.interface';
+import { ProductService } from './product.service';
 
 @Controller({
-  path: ["products"],
+  path: ['products'],
 })
 @Roles(Role.User)
 export class ProductController {
   constructor(
     private productService: ProductService,
-    private readonly log4jService: Log4jsService
+    private readonly log4jService: Log4jsService,
   ) {}
 
-  @Get("/")
-  async all(@Query() query: ProductQuery, @ActiveUser() user: ActiveUserData) {
-    return this.productService.all(query, user);
+  @Get('/')
+  async all(@Query() query: ProductQuery) {
+    return this.productService.all(query);
   }
 
-  @Get("/:id")
-  async one(@Param("id") id: number) {
+  @Get('/:id')
+  async one(@Param('id') id: number) {
     return this.productService.getById(id);
   }
 
-  @Post("/")
+  @Post('/')
   async create(
     @Body() body: ProductBodyRequest,
-    @ActiveUser() user: ActiveUserData
+    @ActiveUser() user: ActiveUserData,
   ) {
     return this.productService.create(body, user);
   }
 
-  @Put("/:id")
-  async update(@Param("id") id: number, @Body() body: ProductBodyRequest) {
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: ProductBodyRequest) {
     return this.productService.update(id, body);
   }
 
-  @Delete("/:id")
-  async remote(@Param("id") id: number) {
+  @Delete('/:id')
+  async remote(@Param('id') id: number) {
     return this.productService.remove(id);
   }
 
-  @Post("upload")
-  @UseInterceptors(FileInterceptor("file"))
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file'))
   uploadFile(
     @UploadedFile(
       new ParseFilePipe({
@@ -75,12 +75,12 @@ export class ProductController {
           new MaxFileSizeValidator({ maxSize: 1000000 }),
           new FileTypeValidator({
             fileType:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
           }),
         ],
-      })
+      }),
     )
-    file: Express.Multer.File
+    file: Express.Multer.File,
   ) {
     return this.productService.uploadFile(file);
   }

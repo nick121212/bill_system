@@ -33,7 +33,7 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
   const props: UploadProps = useMemo(() => {
     return {
       name: 'file',
-      action: axiosInstance.defaults.baseURL + '/products/upload',
+      action: axiosInstance.defaults.baseURL + '/customers/upload',
       headers: {
         ...getAuthHeader(),
       },
@@ -62,53 +62,16 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       },
     };
   }, []);
-  const columns: ColumnsType<ProductEntity> = [
-    {
-      title: t('cls.com.idx'),
-      dataIndex: 'index',
-      align: 'center',
-      width: 80,
-      render: (_, __, index) => index + 1,
-    },
-    {
-      title: t('cls.product.name'),
-      dataIndex: 'name',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.price'),
-      dataIndex: 'price',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.cost'),
-      dataIndex: 'cost',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.unit'),
-      dataIndex: 'unit',
-      align: 'center',
-      render: (obj: ProductUnitEntity) => obj?.name,
-    },
-    {
-      title: t('cls.com.desc'),
-      dataIndex: 'desc',
-      align: 'center',
-      width: '15%',
-      ellipsis: true,
-    },
-  ];
   const download = () => {
     axiosInstanceFile
-      .get('product.xlsx', {
+      .get('customer.xlsx', {
         responseType: 'blob',
       })
       .then((response) => {
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', '商品模板.xlsx');
+        link.setAttribute('download', '客户模板.xlsx');
         document.body.appendChild(link);
         link.click();
       });
@@ -134,8 +97,6 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       }}
     >
       <Upload multiple={false} {...props} />
-
-      {/* <Table indentSize={1000} dataSource={data} columns={columns}></Table> */}
     </Drawer>
   );
 }

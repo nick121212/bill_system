@@ -77,6 +77,12 @@ export default function OrderPage() {
       render: (val) => convertPriceFromServer(val),
     },
     {
+      title: t('cls.order.realTotalPrice'),
+      dataIndex: 'realTotalPrice',
+      align: 'center',
+      render: (val) => convertPriceFromServer(val),
+    },
+    {
       title: t('cls.order.status'),
       dataIndex: 'status',
       align: 'center',

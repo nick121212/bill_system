@@ -76,7 +76,11 @@ export default function ProductTemplateDetail({
         <DetailForm
           title={title}
           order={
-            { no: '', ...data, customerProducts: products?.map || {} } as any
+            {
+              no: '',
+              ...data,
+              customerProducts: products?.map || {},
+            } as any
           }
           categories={categories as any}
           onSuccess={() => {

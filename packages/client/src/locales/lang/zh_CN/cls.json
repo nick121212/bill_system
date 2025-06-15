@@ -15,6 +15,7 @@
       "address": "客户地址",
       "desc": "客户简介",
       "paytime": "账期",
+      "discount": "折扣",
       "modal": {
         "cTitle": "新建客户",
         "eTitle": "编辑客户",
@@ -71,6 +72,7 @@
       "customer": "客户名称",
       "status": "订单状态",
       "totalPrice": "订单总价",
+      "realTotalPrice": "实收价格",
       "statusStr": {
         "0": "未付款",
         "1": "已付款",

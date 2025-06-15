@@ -18,6 +18,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { ApiException } from '@/common/exception/api.exception';
 import dataFilter from '@/common/utils/dataFilter';
+import { dataDesensitization } from '@/common/utils/phone';
 import { toPrice } from '@/common/utils/price';
 
 import { CustomerService } from '../customer/customer.service';
@@ -112,6 +113,15 @@ export class OrderService {
       },
     });
 
+    if (data?.customer) {
+      data.customer.phone = dataDesensitization(
+        data.customer.phone,
+        'tel',
+        3,
+        4,
+      );
+    }
+
     return data || null;
   }
 
@@ -187,6 +197,7 @@ export class OrderService {
         status: OrderStatus.UNPAYED,
         customer: customer,
         templateId: body.templateId,
+        realTotalPrice: body.realTotalPrice,
       });
       const categories: Promise<unknown>[] = [];
       const products: Promise<unknown>[] = [];
@@ -361,7 +372,7 @@ export class OrderService {
           '',
           '',
           '电话',
-          order.customer.phone,
+          dataDesensitization(order.customer.phone, 'tel', 3, 4),
           '',
         ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });
@@ -405,7 +416,8 @@ export class OrderService {
           '价格(元)',
           '单份数量',
           '份数',
-          '总计(元)',
+          '总应收金额(元)',
+          '实收金额(元)',
         ]);
         rowIndex++;
 
@@ -418,7 +430,7 @@ export class OrderService {
             dataSheet1.push([
               c.name,
               p.name,
-              p.product.unit.name,
+              p.product?.unit?.name,
               p.price,
               p.count,
               p.times,
@@ -429,6 +441,18 @@ export class OrderService {
         }
 
         dataSheet1.push(['总价(元)', order.totalPrice, '', '', '', '', '']);
+        ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
+        rowIndex++;
+
+        dataSheet1.push([
+          '实收金额(元)',
+          order.realTotalPrice,
+          '',
+          '',
+          '',
+          '',
+          '',
+        ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 6, r: rowIndex } });
         rowIndex++;
 

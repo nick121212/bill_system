@@ -28,6 +28,8 @@ export function OrderDetail(props: IProps) {
     ProductCategoryEntity[]
   >(`orders/${orderId}`, 'categories', !!orderId);
 
+  const totalRealPrice = data?.realTotalPrice || 0;
+
   const flattenData = useMemo(() => {
     const data: any[] = [];
     let totalPrice = 0;
@@ -47,13 +49,22 @@ export function OrderDetail(props: IProps) {
       });
     });
     data.push({
-      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>总价</span>,
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>应收总价</span>,
       times: (
         <span style={{ fontWeight: 'bold' }}>
           {convertPriceFromServer(totalPrice)}
         </span>
       ),
     });
+    data.push({
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>实收总价</span>,
+      times: (
+        <span style={{ fontWeight: 'bold' }}>
+          {convertPriceFromServer(totalRealPrice)}
+        </span>
+      ),
+    });
+
     return data;
   }, [categories]);
 

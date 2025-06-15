@@ -1,25 +1,25 @@
-import { BigNumber } from "bignumber.js";
-import xlsx from "node-xlsx";
-import { Like, Repository, Not, In, ILike } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
+import { BigNumber } from 'bignumber.js';
+import xlsx from 'node-xlsx';
+import { Like, Repository, Not, In, ILike } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
 import {
   ProductCategoryEntity,
   ProductEntity,
   UserEntity,
-} from "@bill/database/dist/entities";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
+} from '@bill/database/dist/entities';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import dataFilter from "@/common/utils/dataFilter";
-import { toPrice } from "@/common/utils/price";
-import { Log4jsService } from "@/modules/log4js";
-import { ProductCategoryService } from "@/modules/productCategory/category.service";
-import { ProductUnitService } from "@/modules/productUnit/unit.service";
+import { ApiException } from '@/common/exception/api.exception';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import dataFilter from '@/common/utils/dataFilter';
+import { toPrice } from '@/common/utils/price';
+import { Log4jsService } from '@/modules/log4js';
+import { ProductCategoryService } from '@/modules/productCategory/category.service';
+import { ProductUnitService } from '@/modules/productUnit/unit.service';
 
-import { ProductBodyRequest, ProductQuery } from "./product.interface";
+import { ProductBodyRequest, ProductQuery } from './product.interface';
 
 @Injectable()
 export class ProductService {
@@ -28,12 +28,11 @@ export class ProductService {
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
     private productUnitService: ProductUnitService,
     private productCategoryService: ProductCategoryService,
-    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
   ) {}
 
   async all(
     query: ProductQuery,
-    user: ActiveUserData
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const { name, excludeIds, ...otherConditions } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -62,7 +61,7 @@ export class ProductService {
 
   async getProductsThroughCategory(
     category: ProductCategoryEntity,
-    query: ProductQuery
+    query: ProductQuery,
   ) {
     const { name, productId, ...rest } = query.where || {};
 
@@ -111,13 +110,13 @@ export class ProductService {
 
     if (!category) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "ProductEntity",
-        }
+          type: 'ProductEntity',
+        },
       );
     }
 
@@ -126,7 +125,7 @@ export class ProductService {
 
   async create(
     body: ProductBodyRequest,
-    user?: ActiveUserData
+    user?: ActiveUserData,
   ): Promise<ProductEntity> {
     const { unitId, id, ...rest } = body;
     const unit = await this.productUnitService.getByIdWithError(unitId);
@@ -168,12 +167,12 @@ export class ProductService {
 
     if (workSheetsFromBuffer.length <= 0) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
-          type: "ProductEntity",
-        }
+          type: 'ProductEntity',
+        },
       );
     }
 
@@ -183,8 +182,8 @@ export class ProductService {
     const categoryMap: Record<string, ProductCategoryEntity> = {};
 
     for (const row of rows) {
-      const cateName = row[0] as string;
-      const unit = await this.productUnitService.findOrCreate(row[4]);
+      const cateName = row[2] as string;
+      const unit = await this.productUnitService.findOrCreate(row[5] as string);
 
       if (!categoryMap[cateName]) {
         categoryMap[cateName] = await this.productCategoryService.findOrCreate(
@@ -193,16 +192,14 @@ export class ProductService {
         );
       }
 
-      // let product = ;
-
       const product =
-        (await this.getByName(row[1])) ||
+        (await this.getByName(row[1] as string)) ||
         new ProductEntity().extend({
-          name: row[1],
-          price: toPrice(row[6]),
-          cost: toPrice(row[5]),
-          desc: row[3] || row[4] || "",
-          label: row[1] || "",
+          name: row[1] as string,
+          price: toPrice(row[3] * 1),
+          cost: toPrice(row[4] * 1),
+          desc: (row[6] as string) || (row[1] as string) || '',
+          label: (row[1] as string) || '',
           companyId: this.request.userEntity.company?.id,
           userId: this.request.userEntity.id,
           unit,

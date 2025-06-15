@@ -97,7 +97,7 @@ function ProductCreateForm({ title, onSuccess, onClose }: ProductModalProps) {
           >
             <ErrorsField />
 
-            <AutoFields fields={['name', 'label', 'price', 'cost']} />
+            <AutoFields fields={['name', 'price', 'cost']} />
 
             <AutoField
               name="unitId"

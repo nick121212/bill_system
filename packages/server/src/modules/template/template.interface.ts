@@ -52,4 +52,5 @@ export class TemplateBodyRequest {
 
 export class TemplateQuery extends BaseQuery {
   ids?: number[];
+  useDefaultData?: boolean;
 }

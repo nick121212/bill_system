@@ -108,7 +108,7 @@ function ProductCreateForm({
           >
             <ErrorsField />
 
-            <AutoFields fields={['name', 'label', 'price', 'cost']} />
+            <AutoFields fields={['name', 'price', 'cost']} />
 
             <AutoField
               name="unitId"

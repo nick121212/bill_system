@@ -51,6 +51,8 @@ export class OrderRequest {
 
   totalPrice?: number;
 
+  realTotalPrice?: number;
+
   @ArrayMinSize(1)
   @ArrayMaxSize(100)
   categories: OrderCategory[];

@@ -1,27 +1,29 @@
-import * as _ from "lodash";
-import { Repository, Not, Equal, IsNull, EntityManager, Like } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
+import * as _ from 'lodash';
+import xlsx from 'node-xlsx';
+import { Repository, Not, Equal, IsNull, EntityManager, Like } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
 import {
   CustomerEntity,
   ProductEntity,
   ProductPriceEntity,
   UserEntity,
-} from "@bill/database/dist/entities";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
+} from '@bill/database/dist/entities';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import dataFilter from "@/common/utils/dataFilter";
-import { toPrice } from "@/common/utils/price";
-import { ProductService } from "@/modules/product/product.service";
+import { ApiException } from '@/common/exception/api.exception';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import dataFilter from '@/common/utils/dataFilter';
+import { dataDesensitization } from '@/common/utils/phone';
+import { toPrice } from '@/common/utils/price';
+import { ProductService } from '@/modules/product/product.service';
 
 import {
   CustomerPriceRequest,
   CustomerQuery,
   CustomerRequest,
-} from "./customer.interface";
+} from './customer.interface';
 
 @Injectable()
 export class CustomerService {
@@ -32,12 +34,12 @@ export class CustomerService {
     @InjectRepository(ProductPriceEntity)
     private repoForPrice: Repository<ProductPriceEntity>,
     private productService: ProductService,
-    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
   ) {}
 
   async all(
     query: CustomerQuery,
-    user: ActiveUserData
+    user: ActiveUserData,
   ): Promise<{ rows: CustomerEntity[]; count: number }> {
     const { fullname, phone, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -53,6 +55,10 @@ export class CustomerService {
       withDeleted: false,
     });
 
+    rows.map((row) => {
+      row.phone = dataDesensitization(row.phone, 'tel', 3, 4);
+    });
+
     return {
       rows,
       count,
@@ -61,7 +67,7 @@ export class CustomerService {
 
   async getById(
     id?: number,
-    loadRelationIds = false
+    loadRelationIds = false,
   ): Promise<CustomerEntity | null> {
     const data = await this.repo.findOne({
       where: {
@@ -69,6 +75,10 @@ export class CustomerService {
       },
       loadRelationIds: loadRelationIds,
     });
+
+    if (data) {
+      data.phone = dataDesensitization(data.phone, 'tel', 3, 4);
+    }
 
     return data || null;
   }
@@ -78,13 +88,13 @@ export class CustomerService {
 
     if (!customer) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "CustomerEntity",
-        }
+          type: 'CustomerEntity',
+        },
       );
     }
 
@@ -95,14 +105,14 @@ export class CustomerService {
     const customer = await this.getByIdWithError(id);
 
     const [rows, count] = await this.repoForPrice
-      .createQueryBuilder("product_price")
+      .createQueryBuilder('product_price')
       .where({
         customer: customer,
       })
       .innerJoinAndSelect(
-        "product_price.product",
-        "product",
-        "product.id = product_price.productId"
+        'product_price.product',
+        'product',
+        'product.id = product_price.productId',
       )
       .getManyAndCount();
 
@@ -139,18 +149,18 @@ export class CustomerService {
               discount: element.discount,
               price: toPrice(element.price),
               product: await this.productService.getById(element.productId),
-            })
+            }),
           );
         }
 
         return await entityManager.save(pricesEntities);
-      }
+      },
     );
   }
 
   async create(
     body: CustomerRequest,
-    user: ActiveUserData
+    user: ActiveUserData,
   ): Promise<CustomerEntity> {
     const { ...rest } = body;
     const customer = new CustomerEntity().extend({
@@ -175,5 +185,48 @@ export class CustomerService {
     const customer = await this.getByIdWithError(id);
 
     return this.repo.softRemove(customer);
+  }
+
+  async uploadFile(file: Express.Multer.File) {
+    const workSheetsFromBuffer = xlsx.parse(file.buffer);
+
+    if (workSheetsFromBuffer.length <= 0) {
+      throw new ApiException(
+        'can not find recoed',
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          type: 'ProductEntity',
+        },
+      );
+    }
+
+    const workSheet = workSheetsFromBuffer[0];
+    const rows = workSheet.data.splice(1);
+    const customers: CustomerEntity[] = [];
+
+    for (const row of rows) {
+      customers.push(
+        new CustomerEntity().extend({
+          fullname: row[1] as string,
+          phone: (row[3] as string) || '',
+          email: (row[2] as string) || '',
+          contact: '',
+          paytime: (row[6] as any) * 1 || 0,
+          address: (row[4] as string) || '',
+          desc: (row[5] as string) || '',
+          companyId: this.request.userEntity.company?.id,
+          userId: this.request.userEntity.id,
+          level: 0,
+          discount: (row[7] as any) * 1 || 100,
+          template: 0,
+          no: '',
+        }),
+      );
+    }
+
+    const result = await this.repo.save(customers);
+
+    return result;
   }
 }

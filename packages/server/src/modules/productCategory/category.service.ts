@@ -1,40 +1,40 @@
-import { EntityManager, ILike, In, Like, Repository } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
+import { EntityManager, ILike, In, Like, Repository } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
 import {
   ProductCategoryEntity,
   ProductEntity,
   UserEntity,
-} from "@bill/database/dist/entities";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectEntityManager, InjectRepository } from "@nestjs/typeorm";
+} from '@bill/database/dist/entities';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { BaseQuery } from "@/common/interfaces/query";
-import dataFilter from "@/common/utils/dataFilter";
-import { Log4jsService } from "@/modules/log4js";
+import { ApiException } from '@/common/exception/api.exception';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import { BaseQuery } from '@/common/interfaces/query';
+import dataFilter from '@/common/utils/dataFilter';
+import { Log4jsService } from '@/modules/log4js';
 
-import { ProductService } from "../product/product.service";
+import { ProductService } from '../product/product.service';
 import {
   ProductCategoryProductQuery,
   ProductCategoryQuery,
   ProductCategoryRequest,
-} from "./category.interface";
+} from './category.interface';
 
 @Injectable()
 export class ProductCategoryService {
   constructor(
     @InjectRepository(ProductCategoryEntity)
     private repo: Repository<ProductCategoryEntity>,
-    @InjectRepository(ProductEntity) private repoProduct: Repository<ProductEntity>,
+    @InjectRepository(ProductEntity)
+    private repoProduct: Repository<ProductEntity>,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
-    @InjectEntityManager() private em: EntityManager
+    @InjectEntityManager() private em: EntityManager,
   ) {}
 
   async all(
     query: ProductCategoryQuery,
-    user?: ActiveUserData
   ): Promise<{ rows: ProductCategoryEntity[]; count: number }> {
     const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -62,7 +62,7 @@ export class ProductCategoryService {
       where: {
         id,
       },
-      relations: ["products"],
+      relations: ['products'],
       loadRelationIds: true,
     });
 
@@ -71,7 +71,7 @@ export class ProductCategoryService {
 
   async findOrCreate(
     name: string,
-    body: ProductCategoryRequest
+    body: ProductCategoryRequest,
   ): Promise<ProductCategoryEntity> {
     const data = await this.repo.findOneBy({
       name,
@@ -87,12 +87,12 @@ export class ProductCategoryService {
 
   async getProducts(
     id: number,
-    query: ProductCategoryProductQuery
+    query: ProductCategoryProductQuery,
   ): Promise<{ rows: ProductEntity[]; count: number }> {
     const category = await this.getByIdWithError(id);
     const { name, productId, ...rest } = query.where || {};
 
-     const [rows, count] = await this.repoProduct.findAndCount({
+    const [rows, count] = await this.repoProduct.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
@@ -114,17 +114,20 @@ export class ProductCategoryService {
   }
 
   async getByIdWithError(id?: number): Promise<ProductCategoryEntity> {
+    if (!id) {
+      return new ProductCategoryEntity();
+    }
     const category = await this.getById(id);
 
     if (!category) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "ProductCategoryEntity",
-        }
+          type: 'ProductCategoryEntity',
+        },
       );
     }
 
@@ -133,7 +136,7 @@ export class ProductCategoryService {
 
   async create(
     body: ProductCategoryRequest,
-    user?: ActiveUserData
+    user?: ActiveUserData,
   ): Promise<ProductCategoryEntity> {
     const { products, ...rest } = body;
     const category = new ProductCategoryEntity().extend({
@@ -161,7 +164,7 @@ export class ProductCategoryService {
 
   async update(
     id: number,
-    body: ProductCategoryRequest
+    body: ProductCategoryRequest,
   ): Promise<ProductCategoryEntity> {
     const { products, ...rest } = body;
     const category = await this.getByIdWithError(id);

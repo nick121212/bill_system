@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
 import { Descriptions, Space, Table } from 'antd';
 import type { DescriptionsProps, TableProps } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import {  CustomerEntity } from '@bill/database/esm';
-import dayjs from 'dayjs';
+
 import { convertNo, convertPriceFromServer } from '@/utils';
 
 interface IProps {
@@ -26,6 +27,7 @@ interface IProps {
     desc: string;
     status: number;
     createTime?: Date;
+    realTotalPrice?: number;
   }
 }
 
@@ -51,10 +53,19 @@ const ConfrimDetail = ({formData}: IProps) => {
       });
     });
     data.push({
-      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>总价</span>,
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>应收总价</span>,
       times: (
         <span style={{ fontWeight: 'bold' }}>
           {convertPriceFromServer(totalPrice)}
+        </span>
+      ),
+    });
+
+    data.push({
+      fitstCategoryName: <span style={{ fontWeight: 'bold' }}>实收总价</span>,
+      times: (
+        <span style={{ fontWeight: 'bold' }}>
+          {convertPriceFromServer(formData?.realTotalPrice || 0)}
         </span>
       ),
     });

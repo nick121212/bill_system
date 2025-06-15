@@ -1,4 +1,4 @@
-import { Role } from "@bill/database";
+import { Role } from '@bill/database';
 import {
   Controller,
   Request,
@@ -9,56 +9,56 @@ import {
   Put,
   Delete,
   Query,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
-import { Roles } from "@/common/decorators/roles.decorator";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { Log4jsService } from "@/modules/log4js";
+import { ActiveUser } from '@/common/decorators/active-user.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import { Log4jsService } from '@/modules/log4js';
 
-import { TemplateBodyRequest, TemplateQuery } from "./template.interface";
-import { TemplateService } from "./template.service";
+import { TemplateBodyRequest, TemplateQuery } from './template.interface';
+import { TemplateService } from './template.service';
 
 @Controller({
-  path: ["templates"],
+  path: ['templates'],
 })
 @Roles(Role.User)
 export class MenuController {
   constructor(
     private templateService: TemplateService,
-    private readonly log4jService: Log4jsService
+    private readonly log4jService: Log4jsService,
   ) {}
 
-  @Get("/")
-  async all(@Query() query: TemplateQuery, @ActiveUser() user: ActiveUserData) {
-    return this.templateService.all(query, user);
+  @Get('/')
+  async all(@Query() query: TemplateQuery) {
+    return this.templateService.all(query);
   }
 
-  @Get("/:id")
-  async one(@Param("id") id: number) {
+  @Get('/:id')
+  async one(@Param('id') id: number) {
     return this.templateService.getById(id);
   }
 
-  @Get("/:id/categories")
-  async oneWithCategories(@Param("id") id: number) {
+  @Get('/:id/categories')
+  async oneWithCategories(@Param('id') id: number) {
     return this.templateService.getByIdWithCategories(id);
   }
 
-  @Post("/")
+  @Post('/')
   async create(
     @Body() body: TemplateBodyRequest,
-    @ActiveUser() user: ActiveUserData
+    @ActiveUser() user: ActiveUserData,
   ) {
     return this.templateService.create(body, user);
   }
 
-  @Put("/:id")
-  async update(@Param("id") id: number, @Body() body: TemplateBodyRequest) {
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: TemplateBodyRequest) {
     return this.templateService.update(id, body);
   }
 
-  @Delete("/:id")
-  async remote(@Param("id") id: number) {
+  @Delete('/:id')
+  async remote(@Param('id') id: number) {
     return this.templateService.remove(id);
   }
 }

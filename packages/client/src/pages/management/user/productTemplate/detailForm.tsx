@@ -149,7 +149,7 @@ function CategoryItem(props: any) {
                 <AutoField name={`${props.name}.name`} />
               </div>
             ),
-            extra: <ListDelField color="danger" className="ml-2" name={`$`} />,
+            extra: <ListDelField color="danger" className="ml-2" name={`${props.name}`} />,
             children: (
               <TableField
                 size="small"
@@ -286,7 +286,7 @@ export default function DetailForm({
               categories: categories?.map((cate) => {
                 return {
                   name: cate.name,
-                  products: cate.products.map((product) => {
+                  products: cate.products?.map((product) => {
                     return {
                       productId: product.product.id,
                       productCategoryId: product.productCategory.id,
@@ -300,10 +300,10 @@ export default function DetailForm({
               }),
             }}
             onSubmit={(formData) => {
-              const processedCategories = formData.categories.map(
+              const processedCategories = formData.categories?.map(
                 (category) => ({
                   ...category,
-                  products: category.products.map((product) => ({
+                  products: category.products?.map((product) => ({
                     ...product,
                     price: convertPriceToServer(product.price),
                   })),

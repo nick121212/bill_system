@@ -51,11 +51,11 @@ export default function PermissionPage() {
       dataIndex: 'name',
       align: 'center',
     },
-    {
-      title: t('cls.product.label'),
-      dataIndex: 'label',
-      align: 'center',
-    },
+    // {
+    //   title: t('cls.product.label'),
+    //   dataIndex: 'label',
+    //   align: 'center',
+    // },
     {
       title: t('cls.product.price'),
       dataIndex: 'price',

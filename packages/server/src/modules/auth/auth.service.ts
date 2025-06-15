@@ -1,16 +1,16 @@
-import { randomUUID } from "crypto";
-import * as dayjs from "dayjs";
-import { UserEntity } from "@bill/database/dist/entities";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
+import { randomUUID } from 'crypto';
+import * as dayjs from 'dayjs';
+import { UserEntity } from '@bill/database/dist/entities';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { RedisService } from "@/modules/redis/redis.service";
-import { RoleService } from "@/modules/role/role.service";
-import { UserService } from "@/modules/user/user.service";
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import { RedisService } from '@/modules/redis/redis.service';
+import { RoleService } from '@/modules/role/role.service';
+import { UserService } from '@/modules/user/user.service';
 
-import { AuthRequest } from "./auth.interface";
+import { AuthRequest } from './auth.interface';
 
 @Injectable()
 export class AuthService {
@@ -19,12 +19,12 @@ export class AuthService {
     private roleService: RoleService,
     private jwtService: JwtService,
     private readonly redisService: RedisService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async validateUser(
     email: string,
-    pass: string
+    pass: string,
   ): Promise<Partial<UserEntity> | null> {
     const user = await this.usersService.findOne(email, pass);
 
@@ -45,7 +45,7 @@ export class AuthService {
     }
 
     const role = await this.roleService.getByIdWithPermission(
-      user.role?.id ?? 0
+      user.role?.id ?? 0,
     );
 
     user.permissions = role.menus;
@@ -63,11 +63,18 @@ export class AuthService {
       company: true,
     });
     const role = await this.roleService.getByIdWithPermission(
-      userEntity.role?.id ?? 0
+      userEntity.role?.id ?? 0,
     );
 
     userEntity.permissions = role.menus;
-    userEntity.password = "";
+    userEntity.password = '';
+
+    if (dayjs(userEntity.createTime).add(65, 'day') > dayjs()) {
+      userEntity.returnDate = dayjs(userEntity.createTime)
+        .add(65, 'day')
+        .format('YYYY-MM-DD');
+    }
+
     // userEntity.expireDay = dayjs((userEntity.validateDate ?? 0) * 1)
     //   .startOf("day")
     //   .diff(dayjs().startOf("day"), "day");
@@ -76,7 +83,7 @@ export class AuthService {
   }
 
   async generateAccessToken(
-    user: UserEntity
+    user: UserEntity,
   ): Promise<{ accessToken: string; user?: UserEntity }> {
     const tokenId = randomUUID();
 
@@ -90,8 +97,8 @@ export class AuthService {
         tokenId,
       } as ActiveUserData,
       {
-        secret: this.configService.get("jwt").secret,
-      }
+        secret: this.configService.get('jwt').secret,
+      },
     );
 
     return { accessToken, user };
