@@ -40,7 +40,7 @@ const processData = (
   convert = false,
 ): DataItem => {
   const currentValue = +cur[key];
-  const previousValue = +(pre?.[key] || "0");
+  const previousValue: number = +(pre?.[key] || '0');
   const iconType =
     currentValue > previousValue
       ? 'rise'

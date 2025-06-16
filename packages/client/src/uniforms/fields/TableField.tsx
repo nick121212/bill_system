@@ -1,10 +1,7 @@
 import { Ref } from 'react';
 import { Table, TableProps } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
-import classNames from 'classnames';
 import { connectField, FieldProps, filterDOMProps } from 'uniforms';
-
-import ListAddField from './ListAddField';
 
 export type TableFieldProps = FieldProps<
   AnyObject[],

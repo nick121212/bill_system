@@ -17,7 +17,7 @@ interface DataItem {
 }
 
 export default function OrderChart() {
-  const [{ data: rows, loading }, refresh] = useAxios(
+  const [{ data: rows }, refresh] = useAxios(
     {
       url: '/statistics/totalAmountGroupByTime',
     },

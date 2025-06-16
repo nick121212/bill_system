@@ -1,8 +1,8 @@
-import { Col, Row, Space } from 'antd';
+import { Col, Row } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
-import { useTranslation } from 'react-i18next';
 
+// import { useTranslation } from 'react-i18next';
 import Character3 from '@/assets/images/characters/character_3.png';
 import { useUserInfo } from '@/store/userStore';
 import { themeVars } from '@/theme/theme.css';
@@ -14,7 +14,7 @@ export default function BannerCard({
 }: {
   children?: React.ReactNode;
 }) {
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
   const { fullname, expireDay, returnDate } = useUserInfo();
 
   const bg = `linear-gradient(135deg, rgba(${themeVars.colors.palette.primary.lightChannel}, .2), rgba(${themeVars.colors.palette.primary.defaultChannel}, .2)) ${themeVars.colors.common.white}`;

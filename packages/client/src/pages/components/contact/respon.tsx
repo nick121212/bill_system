@@ -1,6 +1,6 @@
-import { Typography, Divider, Image } from 'antd';
+import { Typography } from 'antd';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title, Paragraph } = Typography;
 
 export function Respon() {
   return (

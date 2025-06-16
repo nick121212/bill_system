@@ -1,8 +1,7 @@
-import { Typography, Divider, Image } from 'antd';
+import { Typography, Image } from 'antd';
 
-import { Respon } from './respon';
 
-const { Title, Paragraph, Text, Link } = Typography;
+const { Title, Paragraph } = Typography;
 
 export default function () {
   return (

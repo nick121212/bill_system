@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import { Button, Drawer, Form, SliderSingleProps, Space, Spin } from 'antd';
+import { Button, Drawer, Form, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { EditOutlined } from '@ant-design/icons';
 import type { CustomerEntity } from '@bill/database/esm';
@@ -12,7 +12,6 @@ import {
   AutoForm,
   ErrorsField,
   NumField,
-  SliderField,
   TextAreaField,
 } from '@/uniforms/fields';
 
@@ -53,9 +52,6 @@ export default function CategoryEditModal({
     },
     onSuccessCall,
   );
-  const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (
-    value,
-  ) => `${(value ?? 0) / 10}折`;
 
   return (
     <>

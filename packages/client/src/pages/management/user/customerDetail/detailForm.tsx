@@ -29,11 +29,9 @@ import {
   ErrorsField,
   ListAddField,
   ListDelField,
-  NumField,
-  PriceField,
   TableField,
 } from '@/uniforms/fields';
-import { convertPriceToServer, convertPriceFromServer } from '@/utils';
+import { convertPriceToServer } from '@/utils';
 
 import schema from './schemas/create.json';
 
@@ -69,7 +67,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
             data: c,
           };
         })}
-        onChangeData={(e: number, data: any) => {
+        onChangeData={(_e: number, data: any) => {
           field.onChange(data.data.price, field.name);
         }}
         label={undefined}
@@ -229,7 +227,7 @@ export default function CategoryDrawer({
                   dataIndex: 'productId',
                   align: 'center',
                   width: 200,
-                  render: (val, record, index) => {
+                  render: (val, _record, index) => {
                     return <ProductSelect name={`${index}`} id={val} />;
                   },
                 },
@@ -238,7 +236,7 @@ export default function CategoryDrawer({
                   dataIndex: 'price',
                   align: 'center',
                   width: 200,
-                  render: (val, record, index) => {
+                  render: (_val, _record, index) => {
                     return <AutoField name={`${index}.price`} />;
                   },
                 },
@@ -247,14 +245,14 @@ export default function CategoryDrawer({
                   dataIndex: 'discount',
                   align: 'center',
                   width: 200,
-                  render: (val, record, index) => {
+                  render: (_val, _record, index) => {
                     return <AutoField name={`${index}.discount`} />;
                   },
                 },
                 {
                   title: '',
                   width: 100,
-                  render: (val, record, index) => {
+                  render: (_val, _record, index) => {
                     return <ListDelField name={`${index}`} />;
                   },
                 },

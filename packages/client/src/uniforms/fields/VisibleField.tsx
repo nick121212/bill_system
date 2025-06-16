@@ -9,7 +9,6 @@ type VisibleFieldProps = {
 
 function Visible({
   children,
-  value,
   condition,
 }: VisibleFieldProps) {
   const form = useForm();

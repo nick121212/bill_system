@@ -1,5 +1,5 @@
-import { useEffect, useState, memo, useMemo } from 'react';
-import { Col, Row, Space, Select } from 'antd';
+import { useEffect, memo, useMemo } from 'react';
+import { Row, Space } from 'antd';
 import useAxios from 'axios-hooks';
 import type { OrderEntity } from '@bill/database/esm';
 
@@ -16,7 +16,7 @@ interface Props {
 type Row = { status: OrderEntity['status']; totalAmount: string };
 
 const AmountStatus = ({ dateType }: Props) => {
-  const [{ data: rows, loading }, refresh] = useAxios(
+  const [{ data: rows, loading: _loading }, refresh] = useAxios(
     {
       url: '/statistics/totalAmountGroupByStatus',
     },

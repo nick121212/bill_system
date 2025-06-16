@@ -1,6 +1,5 @@
 import Logo from "@/components/logo";
 
-import SettingButton from "./setting-button";
 import AccountDropdown from "./account-dropdown";
 
 

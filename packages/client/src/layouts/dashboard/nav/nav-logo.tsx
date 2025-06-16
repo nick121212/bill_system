@@ -1,6 +1,5 @@
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 
-import Logo from "@/components/logo";
 import { useSettings } from "@/store/settingStore";
 import { useUserInfo } from "@/store/userStore";
 import { cn } from "@/utils";

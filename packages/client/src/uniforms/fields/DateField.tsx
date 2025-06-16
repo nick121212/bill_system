@@ -37,7 +37,7 @@ function DateD({
       ref={props.inputRef}
       showTime={showTime}
       style={style}
-      value={dayjs(props.value ? props.value * 1 : new Date())}
+      value={dayjs(props.value ? props.value : new Date())}
       {...filterDOMProps(props)}
     />,
   );

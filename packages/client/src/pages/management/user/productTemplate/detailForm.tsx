@@ -69,7 +69,7 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
         loading={categoryLoad}
         showSearch
         filterOption={false}
-        onChangeData={(id: number, data: ProductEntity) => {
+        onChangeData={(_id: number, _data: ProductEntity) => {
           field.onChange(undefined, field.name);
         }}
         onSearch={(val: string) =>
@@ -109,7 +109,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
             data: c,
           };
         })}
-        onChangeData={(e: number, data: { data: ProductEntity }) => {
+        onChangeData={(_e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
           fieldPrice.onChange(data.data.price, fieldPrice.name);
         }}
@@ -149,7 +149,13 @@ function CategoryItem(props: any) {
                 <AutoField name={`${props.name}.name`} />
               </div>
             ),
-            extra: <ListDelField color="danger" className="ml-2" name={`${props.name}`} />,
+            extra: (
+              <ListDelField
+                color="danger"
+                className="ml-2"
+                name={`${props.name}`}
+              />
+            ),
             children: (
               <TableField
                 size="small"
@@ -160,14 +166,14 @@ function CategoryItem(props: any) {
                   {
                     title: '分类',
                     dataIndex: 'productCategoryId',
-                    render: (val, record, index) => {
+                    render: (val, _record, index) => {
                       return <CategorySelect name={`${index}`} id={val || 0} />;
                     },
                   },
                   {
                     title: '商品',
                     dataIndex: 'productId',
-                    render: (val, record, index) => {
+                    render: (val, _record, index) => {
                       return <ProductSelect name={`${index}`} id={val || 0} />;
                     },
                   },
@@ -179,14 +185,14 @@ function CategoryItem(props: any) {
                   {
                     title: '价格',
                     dataIndex: 'price',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return <PriceField label="" name={`${index}.price`} />;
                     },
                   },
                   {
                     title: '数量',
                     dataIndex: 'count',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return (
                         <AutoField step={1} label="" name={`${index}.count`} />
                       );
@@ -195,7 +201,7 @@ function CategoryItem(props: any) {
                   {
                     title: '份数',
                     dataIndex: 'times',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return (
                         <AutoField step={1} label="" name={`${index}.times`} />
                       );
@@ -204,7 +210,7 @@ function CategoryItem(props: any) {
                   {
                     title: '',
                     width: 100,
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return <ListDelField name={`${index}`} />;
                     },
                   },
@@ -299,9 +305,9 @@ export default function DetailForm({
                 };
               }),
             }}
-            onSubmit={(formData) => {
+            onSubmit={(formData: any) => {
               const processedCategories = formData.categories?.map(
-                (category) => ({
+                (category: { products: any[] }) => ({
                   ...category,
                   products: category.products?.map((product) => ({
                     ...product,

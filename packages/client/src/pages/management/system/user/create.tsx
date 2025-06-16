@@ -108,7 +108,7 @@ export default function PermissionModal({ title, onSuccess }: RoleModalProps) {
               <SelectField
                 name="company"
                 loading={comLoad}
-                onSearch={onSearch}
+                onSearch={onSearch as any}
                 options={company?.map((r: CompanyEntity) => {
                   return {
                     label: r.name,

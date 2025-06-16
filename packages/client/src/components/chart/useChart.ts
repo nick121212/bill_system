@@ -1,11 +1,11 @@
-import { themeVars } from "@/theme/theme.css";
-import { removePx } from "@/utils/theme";
 import type { ApexOptions } from "apexcharts";
 import { mergeDeepRight } from "ramda";
 
 import { useSettings } from "@/store/settingStore";
+import { themeVars } from "@/theme/theme.css";
 import { breakpointsTokens } from "@/theme/tokens/breakpoints";
 import { paletteColors, presetsColors } from "@/theme/tokens/color";
+import { removePx } from "@/utils/theme";
 
 export default function useChart(options: ApexOptions) {
 	const { themeColorPresets } = useSettings();
@@ -54,13 +54,13 @@ export default function useChart(options: ApexOptions) {
 			hover: {
 				filter: {
 					type: "lighten",
-					value: 0.04,
+					// value: 0.04,
 				},
 			},
 			active: {
 				filter: {
 					type: "darken",
-					value: 0.88,
+					// value: 0.88,
 				},
 			},
 		},

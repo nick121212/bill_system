@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Card, Typography } from 'antd';
 import useAxios from 'axios-hooks';
 
@@ -11,7 +11,7 @@ import { getDateRanges, DateType } from './util';
 type Row = { fullname: string; totalAmount: string };
 
 const AmountTop = () => {
-  const [{ data: rows, loading }, refresh] = useAxios(
+  const [{ data: rows }, refresh] = useAxios(
     {
       url: '/statistics/totalAmountGroupByCustomer',
     },

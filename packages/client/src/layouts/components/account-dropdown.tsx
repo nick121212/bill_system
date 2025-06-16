@@ -10,11 +10,11 @@ import { useRouter } from "@/router/hooks";
 import { useLogout, useUserActions, useUserInfo } from "@/store/userStore";
 import { useTheme } from "@/theme/hooks";
 
-import SettingButton from "./setting-button";
 import ChangePassword from "./change-password";
 import Report from "./report";
+import SettingButton from "./setting-button";
 
-const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
+// const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
 /**
  * Account Dropdown

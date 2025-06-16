@@ -4,7 +4,6 @@ import {
   Button,
   Drawer,
   Form,
-  type SliderSingleProps,
   Space,
   Spin,
 } from 'antd';
@@ -19,7 +18,6 @@ import {
   AutoForm,
   ErrorsField,
   NumField,
-  SliderField,
   TextAreaField,
 } from '@/uniforms/fields';
 
@@ -62,9 +60,6 @@ export default function UnitCreateModal({
     },
     onSuccessCall,
   );
-  const formatter: NonNullable<SliderSingleProps['tooltip']>['formatter'] = (
-    value,
-  ) => `${(value ?? 0) / 10}折`;
 
   return (
     <>
