@@ -9,7 +9,6 @@ import type { TemplateEntity } from '@bill/database/esm';
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
 
-import Create from './create';
 import Create1 from './create1';
 import Remove from './remove';
 import Search from './search';

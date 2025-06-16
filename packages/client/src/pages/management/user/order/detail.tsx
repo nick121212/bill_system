@@ -18,13 +18,13 @@ export function OrderDetail(props: IProps) {
   const { orderId, onClose } = props;
   const { t } = useTranslation();
 
-  const { data, loading } = useDetailData<OrderEntity>(
+  const { data } = useDetailData<OrderEntity>(
     'orders',
     orderId,
     !!orderId,
   );
 
-  const { data: categories, loading: categoriesLoading } = useDetailData<
+  const { data: categories } = useDetailData<
     ProductCategoryEntity[]
   >(`orders/${orderId}`, 'categories', !!orderId);
 

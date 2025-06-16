@@ -3,7 +3,7 @@ import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Button, Drawer, Form, Space, Spin } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { EditOutlined } from "@ant-design/icons";
-import type { ProductCategoryEntity } from '@bill/database/esm';
+import type { ProductUnitEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
@@ -12,14 +12,14 @@ import { AutoFields, AutoForm, ErrorsField, TextAreaField } from '@/uniforms/fie
 import schema from './schemas/create.json';
 
 export type ProductModalProps = {
-  record: ProductCategoryEntity;
+  record: ProductUnitEntity;
   title: string;
   onSuccess: () => void;
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function CategoryEditModal({
+export default function UnitEditModal({
   record,
   title,
   onSuccess,

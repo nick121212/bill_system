@@ -12,7 +12,7 @@ import Remove from './remove';
 export default function Report() {
   const { t } = useTranslation();
 
-  const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
+  const [{ data: rows, loading }, refresh] = useAxios(
     {
       url: '/reports',
     },

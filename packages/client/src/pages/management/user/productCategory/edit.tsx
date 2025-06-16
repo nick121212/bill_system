@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button, Spin } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 import type { ProductCategoryEntity } from '@bill/database/esm';

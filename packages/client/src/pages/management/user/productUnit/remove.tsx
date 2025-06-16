@@ -2,17 +2,17 @@ import { useCallback, useRef } from 'react';
 import { Button, Modal, Space, Tag } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { DeleteOutlined } from '@ant-design/icons';
-import type { ProductCategoryEntity } from '@bill/database/esm';
+import type { ProductUnitEntity } from '@bill/database/esm';
 
 import useFormAction from '@/hooks/form/useFormAction';
 
 export type ModalProps = {
-  record: ProductCategoryEntity;
+  record: ProductUnitEntity;
   title: string;
   onSuccess: () => void;
 };
 
-export default function PermissionModal({
+export default function UnitRemoveModal({
   title,
   record,
   onSuccess,

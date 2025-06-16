@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Checkbox, Col, Form, Input, Row, Statistic } from "antd";
+import { Button, Col, Form, Input, Row, Statistic } from "antd";
 import { useTranslation } from "react-i18next";
 
 import { ReturnButton } from "./components/ReturnButton";

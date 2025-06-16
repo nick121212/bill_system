@@ -4,7 +4,7 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ExportOutlined, ReloadOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import type { OrderEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
@@ -50,7 +50,6 @@ export default function OrderPage() {
   };
 
   useEffect(() => {
-    console.log('selectedRowKeys:', selectedRowKeys);
     if (selectedRowKeys.length === 0) {
       setSelectedIds((ids) => {
         return ids.filter(
@@ -111,7 +110,7 @@ export default function OrderPage() {
       title: t('cls.order.status'),
       dataIndex: 'status',
       align: 'center',
-      render: (val, record) => {
+      render: (val, _record) => {
         return (
           <Tag color={colorStatus[val]}>{t(`cls.order.statusStr.${val}`)}</Tag>
         );

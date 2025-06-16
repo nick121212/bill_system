@@ -95,7 +95,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
     id
       ? { productId: id, categoryId: field.value }
       : { categoryId: field.value },
-    field.value,
+    field.value as any,
   );
 
   return (

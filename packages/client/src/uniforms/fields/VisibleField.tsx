@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { connectField, useField, useForm } from 'uniforms';
+import { connectField, useForm } from 'uniforms';
 
 type VisibleFieldProps = {
   children: ReactNode;

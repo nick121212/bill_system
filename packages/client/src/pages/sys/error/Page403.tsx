@@ -2,11 +2,9 @@ import { Divider, Typography } from 'antd';
 import { m } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 
-import Character4 from '@/assets/images/characters/character_4.png';
 import MotionContainer from '@/components/animate/motion-container';
 import { varBounce } from '@/components/animate/variants/bounce';
 import Contact from '@/pages/components/contact/contact';
-import { themeVars } from '@/theme/theme.css';
 
 export default function Page403() {
   return (

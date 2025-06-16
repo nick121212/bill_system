@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { Button } from 'antd';
 import { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
-import { EditOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { TemplateCategoryEntity, TemplateEntity } from '@bill/database/esm';
 
-import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
 
 import DetailForm from './detailForm';

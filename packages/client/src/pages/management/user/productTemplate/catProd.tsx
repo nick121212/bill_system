@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Select, Table, Button, Card, InputNumber, Input } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { PlusOutlined, CloseOutlined, DeleteOutlined } from '@ant-design/icons';

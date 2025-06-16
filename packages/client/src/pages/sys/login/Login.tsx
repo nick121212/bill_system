@@ -1,5 +1,4 @@
 import { Layout, Typography } from "antd";
-import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router";
 
 import DashboardImg from "@/assets/images/background/dashboard.png";
@@ -13,14 +12,10 @@ import { rgbAlpha } from "@/utils/theme";
 import LoginForm from "./LoginForm";
 import MobileForm from "./MobileForm";
 import { LoginStateProvider } from "./providers/LoginStateProvider";
-import QrCodeFrom from "./QrCodeForm";
-import RegisterForm from "./RegisterForm";
-import ResetForm from "./ResetForm";
 
 const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
 function Login() {
-	const { t } = useTranslation();
 	const token = useUserToken();
 
 	// 判断用户是否有权限

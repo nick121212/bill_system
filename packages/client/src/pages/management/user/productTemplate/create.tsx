@@ -51,7 +51,6 @@ export default function TemplateCreateModal({
     onSubmit,
     showModal,
     setShowModal,
-    setFormData,
     onClose,
     callAjax,
     loadingAjax,

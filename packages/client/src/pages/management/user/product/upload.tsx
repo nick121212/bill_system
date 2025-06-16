@@ -1,12 +1,10 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Button, Drawer, message, Table, UploadProps } from 'antd';
+import { Button, Drawer, message, UploadProps } from 'antd';
 import type { ButtonType } from 'antd/es/button';
-import { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   ApiStatusCode,
-  ProductUnitEntity,
   type ProductEntity,
 } from '@bill/database/esm';
 
@@ -27,9 +25,7 @@ export type ProductModalProps = {
 };
 
 function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
-  const [loading, setLoading] = useState(false);
-  const { t } = useTranslation();
-  const [data, setData] = useState<ProductEntity[]>([]);
+  // const { t } = useTranslation();
   const props: UploadProps = useMemo(() => {
     return {
       name: 'file',
@@ -40,7 +36,7 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       accept: '.xlsx',
       showUploadList: false,
       onChange(info) {
-        setLoading(info.file.status === 'uploading');
+        // setLoading(info.file.status === 'uploading');
 
         if (info.file.status === 'error') {
           return message.error(`${info.file.name} file upload failed.`);
@@ -51,7 +47,7 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
         }
 
         if (info.file.response?.code == ApiStatusCode.SUCCESS) {
-          setData(info.file.response.data);
+          // setData(info.file.response.data);
           onSuccess?.();
         } else if (info.file.response?.code != ApiStatusCode.SUCCESS) {
           message.error(
@@ -62,43 +58,6 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
       },
     };
   }, []);
-  const columns: ColumnsType<ProductEntity> = [
-    {
-      title: t('cls.com.idx'),
-      dataIndex: 'index',
-      align: 'center',
-      width: 80,
-      render: (_, __, index) => index + 1,
-    },
-    {
-      title: t('cls.product.name'),
-      dataIndex: 'name',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.price'),
-      dataIndex: 'price',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.cost'),
-      dataIndex: 'cost',
-      align: 'center',
-    },
-    {
-      title: t('cls.product.unit'),
-      dataIndex: 'unit',
-      align: 'center',
-      render: (obj: ProductUnitEntity) => obj?.name,
-    },
-    {
-      title: t('cls.com.desc'),
-      dataIndex: 'desc',
-      align: 'center',
-      width: '15%',
-      ellipsis: true,
-    },
-  ];
   const download = () => {
     axiosInstanceFile
       .get('product.xlsx', {

@@ -5,7 +5,7 @@ import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ProductEntity } from '@bill/database/esm';
-import { ProductCategoryEntity, ProductUnitEntity } from '@bill/database/esm';
+import { ProductUnitEntity } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
 import useFormAction from '@/hooks/form/useFormAction';

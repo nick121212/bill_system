@@ -3,7 +3,6 @@ import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import {
   Button,
   Collapse,
-  Descriptions,
   Drawer,
   Form,
   Flex,
@@ -15,7 +14,6 @@ import {
 } from 'antd';
 import useAxios from 'axios-hooks';
 import { useTranslation } from 'react-i18next';
-import { useMount, useMountedState } from 'react-use';
 import { useField, useForm } from 'uniforms';
 import { PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import {
@@ -46,7 +44,6 @@ import {
   TableField,
   VisibleField,
   SelectField,
-  TextField,
   NumField,
 } from '@/uniforms/fields';
 import {
@@ -97,7 +94,7 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
         loading={categoryLoad}
         showSearch
         filterOption={false}
-        onChangeData={(id: number, data: ProductEntity) => {
+        onChangeData={(_id: number, _data: ProductEntity) => {
           field.onChange(undefined, field.name);
         }}
         onSearch={(val: string) =>
@@ -183,7 +180,7 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
             data: c,
           };
         })}
-        onChangeData={(e: number, data: { data: ProductEntity }) => {
+        onChangeData={(_e: number, data: { data: ProductEntity }) => {
           fieldDesc.onChange(data.data.desc, fieldDesc.name);
           fieldPrice.onChange(
             convertPriceFromServer(data.data.price),
@@ -279,8 +276,6 @@ function TemplateSelect() {
 }
 
 function CategoryItem(props: any) {
-  console.log(props, '----------');
-
   return (
     <>
       <Collapse
@@ -315,14 +310,14 @@ function CategoryItem(props: any) {
                   {
                     title: '分类',
                     dataIndex: 'productCategoryId',
-                    render: (val, record, index) => {
+                    render: (val, _record, index) => {
                       return <CategorySelect name={`${index}`} id={val || 0} />;
                     },
                   },
                   {
                     title: '商品',
                     dataIndex: 'productId',
-                    render: (val, record, index) => {
+                    render: (val, _record, index) => {
                       return <ProductSelect name={`${index}`} id={val || 0} />;
                     },
                   },
@@ -334,14 +329,14 @@ function CategoryItem(props: any) {
                   {
                     title: '价格',
                     dataIndex: 'price',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return <PriceField label="" name={`${index}.price`} />;
                     },
                   },
                   {
                     title: '数量',
                     dataIndex: 'count',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return (
                         <AutoField step={1} label="" name={`${index}.count`} />
                       );
@@ -350,7 +345,7 @@ function CategoryItem(props: any) {
                   {
                     title: '份数',
                     dataIndex: 'times',
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return (
                         <AutoField step={1} label="" name={`${index}.times`} />
                       );
@@ -359,7 +354,7 @@ function CategoryItem(props: any) {
                   {
                     title: '',
                     width: 100,
-                    render: (val, record, index) => {
+                    render: (_val, _record, index) => {
                       return <ListDelField name={`${index}`} />;
                     },
                   },
@@ -460,7 +455,7 @@ function TotalPrice() {
 
   useEffect(() => {
     realTotalPriceField.onChange(
-      totalPrice.toFixed(2) * 1,
+      (totalPrice.toFixed(2) as any) * 1,
       realTotalPriceField.name,
     );
   }, [totalPrice]);
@@ -648,7 +643,7 @@ export default function DetailForm({
                       size="large"
                       color="danger"
                       variant="text"
-                      value={(cates) => {
+                      value={(cates: any) => {
                         return {
                           key: Date.now(),
                           name: `分类${cates?.length ? cates?.length + 1 : 1}`,

@@ -5,7 +5,7 @@ import {
   ReactElement,
   Ref,
 } from 'react';
-import { Space, List, ListProps } from 'antd';
+import { List, ListProps } from 'antd';
 import { AnyObject } from 'antd/es/_util/type';
 import classNames from 'classnames';
 import { connectField, FieldProps, filterDOMProps } from 'uniforms';
