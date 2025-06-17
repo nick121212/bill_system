@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 
 import { OrderStatus } from "../enums/OrderStatus";
+import { PaymentMethod } from "../enums/PaymentMethod";
 import { BaseEntity } from "./Base";
 import { CompanyEntity } from "./Company";
 import { CustomerEntity } from "./Customer";
@@ -62,11 +63,11 @@ export class OrderEntity extends BaseEntity {
    * 订单总价 实收
    * @type {number}
    */
-    @Column({
-      type: "float",
-      default: 0,
-    })
-    realTotalPrice: number;
+  @Column({
+    type: "float",
+    default: 0,
+  })
+  realTotalPrice: number;
 
   /**
    * 订单折扣金额
@@ -127,6 +128,13 @@ export class OrderEntity extends BaseEntity {
     default: OrderStatus.UNPAYED,
   })
   status: OrderStatus;
+
+  @Column({
+    type: "enum",
+    enum: PaymentMethod,
+    default: PaymentMethod.COUPAY,
+  })
+  payment: PaymentMethod;
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

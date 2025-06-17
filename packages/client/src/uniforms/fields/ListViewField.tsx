@@ -43,12 +43,9 @@ function ListViewField<T>({
         {...filterDOMProps(props)}
         dataSource={value}
         renderItem={(item, itemIndex) => {
-          console.log('=======', item, itemIndex);
-
           return (
             <List.Item key={itemIndex}>
               {Children.map(children, (child, childIndex) => {
-                console.log('=======', child, childIndex);
                 return isValidElement(child)
                   ? cloneElement(child as ReactElement, {
                       key: `${itemIndex}-${childIndex.toString()}`,

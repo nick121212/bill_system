@@ -75,10 +75,6 @@ function CategorySelect({ name, id }: { name: string; id?: number }) {
   } = useData<ProductEntity[]>('product/categories', id ? { id } : {}, false);
   const [field] = useField(`${name}.productId`, {});
 
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
-
   return (
     <div className="w-full">
       <AutoField

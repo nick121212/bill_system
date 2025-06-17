@@ -17,16 +17,15 @@ interface IProps {
 export function OrderDetail(props: IProps) {
   const { orderId, onClose } = props;
   const { t } = useTranslation();
+  const [print, setPrint] = useState(true);
 
-  const { data } = useDetailData<OrderEntity>(
-    'orders',
-    orderId,
+  const { data } = useDetailData<OrderEntity>('orders', orderId, !!orderId);
+
+  const { data: categories } = useDetailData<ProductCategoryEntity[]>(
+    `orders/${orderId}`,
+    'categories',
     !!orderId,
   );
-
-  const { data: categories } = useDetailData<
-    ProductCategoryEntity[]
-  >(`orders/${orderId}`, 'categories', !!orderId);
 
   const totalRealPrice = data?.realTotalPrice || 0;
 
@@ -145,6 +144,14 @@ export function OrderDetail(props: IProps) {
     },
   ];
 
+  function doPrint() {
+    setPrint(false);
+    setTimeout(() => {
+      window.print();
+      setPrint(true);
+    }, 100);
+  }
+
   return (
     <Drawer
       destroyOnClose
@@ -152,12 +159,19 @@ export function OrderDetail(props: IProps) {
       title={t('cls.order.detail.title')}
       onClose={onClose}
       open={true}
+      closable={print}
       extra={
         <Space>
-          {/* <Button onClick={onClose}>{t('crud.cancel')}</Button> */}
-          <Button type="primary" onClick={()=>{
-            window.print();
-          }}>{t('crud.print')}</Button>
+          {print && (
+            <Button
+              type="primary"
+              onClick={() => {
+                doPrint();
+              }}
+            >
+              {t('crud.print')}
+            </Button>
+          )}
         </Space>
       }
     >
