@@ -1,28 +1,25 @@
-import { EntityManager, Like, Repository } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
-import { ProductUnitEntity, UserEntity } from "@bill/database/dist/entities";
-import { HttpStatus, Inject, Injectable } from "@nestjs/common";
-import { REQUEST } from "@nestjs/core";
-import { InjectRepository } from "@nestjs/typeorm";
+import { Like, Repository } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
+import { ProductUnitEntity, UserEntity } from '@bill/database/dist/entities';
+import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import dataFilter from "@/common/utils/dataFilter";
-import { Log4jsService } from "@/modules/log4js";
+import { ApiException } from '@/common/exception/api.exception';
+import dataFilter from '@/common/utils/dataFilter';
 
-import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
+import { ProductUnitBodyRequest, ProductUnitQuery } from './unit.interface';
 
 @Injectable()
 export class ProductUnitService {
   constructor(
     @InjectRepository(ProductUnitEntity)
     private repo: Repository<ProductUnitEntity>,
-    @Inject(REQUEST) private request: Request & { userEntity: UserEntity }
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
   ) {}
 
   async all(
     query: ProductUnitQuery,
-    user?: ActiveUserData
   ): Promise<{ rows: ProductUnitEntity[]; count: number }> {
     const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -55,7 +52,6 @@ export class ProductUnitService {
       name,
       label: name,
       desc: name,
-      
     });
   }
 
@@ -76,23 +72,20 @@ export class ProductUnitService {
 
     if (!category) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "ProductUnitEntity",
-        }
+          type: 'ProductUnitEntity',
+        },
       );
     }
 
     return category;
   }
 
-  async create(
-    body: ProductUnitBodyRequest,
-    user?: ActiveUserData
-  ): Promise<ProductUnitEntity> {
+  async create(body: ProductUnitBodyRequest): Promise<ProductUnitEntity> {
     const { ...rest } = body;
 
     const child = new ProductUnitEntity().extend({
@@ -106,7 +99,7 @@ export class ProductUnitService {
 
   async update(
     id: number,
-    body: ProductUnitBodyRequest
+    body: ProductUnitBodyRequest,
   ): Promise<ProductUnitEntity> {
     const child = await this.getByIdWithError(id);
 

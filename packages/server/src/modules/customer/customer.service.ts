@@ -181,6 +181,14 @@ export class CustomerService {
     return this.repo.save(customer);
   }
 
+  async updateBalance(id: number, balance?: number): Promise<CustomerEntity> {
+    const customer = await this.getByIdWithError(id);
+
+    customer.balance = balance;
+
+    return this.repo.save(customer);
+  }
+
   async remove(id: number) {
     const customer = await this.getByIdWithError(id);
 

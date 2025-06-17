@@ -12,7 +12,7 @@ import { BaseEntity } from "./Base";
 @Entity({
   name: "company",
 })
-export class CompanyEntity extends BaseEntity<CompanyEntity> {
+export class CompanyEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -13,7 +13,7 @@ import { BaseEntity } from "./Base";
 @Entity({
   name: "customer",
 })
-export class CustomerEntity extends BaseEntity<CustomerEntity> {
+export class CustomerEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -49,6 +49,12 @@ export class CustomerEntity extends BaseEntity<CustomerEntity> {
 
   @Column()
   desc: string;
+
+  @Column({
+    type: "float",
+    default: 0,
+  })
+  balance?: number;
 
   @Column({
     nullable: true,

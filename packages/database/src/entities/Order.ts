@@ -23,7 +23,7 @@ import { UserEntity } from "./User";
  * @extends {BaseEntity<OrderEntity>}
  */
 @Entity({})
-export class OrderEntity extends BaseEntity<OrderEntity> {
+export class OrderEntity extends BaseEntity {
   /**
    * 订单唯一标识符
    * @type {number}

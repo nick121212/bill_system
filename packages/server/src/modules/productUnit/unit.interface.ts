@@ -1,6 +1,6 @@
-import { IsNumber, IsString, Max, Min } from "class-validator";
+import { IsString } from 'class-validator';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class ProductUnitBodyRequest {
   id?: number;
@@ -15,7 +15,8 @@ export class ProductUnitBodyRequest {
   desc: string;
 }
 
-export class ProductUnitQuery extends BaseQuery {
-
+export class ProductUnitQueryWhere {
+  name?: string;
 }
 
+export class ProductUnitQuery extends BaseQuery<ProductUnitQueryWhere> {}

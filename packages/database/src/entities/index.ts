@@ -14,3 +14,4 @@ export * from "./Order";
 export * from "./OrderProduct";
 export * from "./OrderCategory";
 export * from "./Report";
+export * from "./Charge";

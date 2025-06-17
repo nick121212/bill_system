@@ -16,7 +16,7 @@ import { BaseEntity } from "./Base";
   name: "menu",
 })
 @Tree("closure-table")
-export class MenuEntity extends BaseEntity<MenuEntity> {
+export class MenuEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -1,10 +1,22 @@
-import * as _ from "lodash";
+import {
+  BaseEntity as TypeORMBaseEntity,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from "typeorm";
 
-export class BaseEntity<T> {
-  extend(partial: Partial<T>) {
-    Object.assign(this, _.defaults(partial, this));
+export class BaseEntity extends TypeORMBaseEntity {
+  @CreateDateColumn()
+  createdAt: Date;
 
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
+
+  extend(partial: Partial<this>) {
+    Object.assign(this, partial);
     return this;
   }
 }
-

@@ -20,7 +20,7 @@ import { TemplateCategoryEntity } from "./TemplateCategory";
  * 模板分类产品关联表
  * 用于存储模板分类和产品之间的关联关系，包括产品价格和数量
  */
-export class TemplateCategoryProductEntity extends BaseEntity<TemplateCategoryProductEntity> {
+export class TemplateCategoryProductEntity extends BaseEntity {
   /** 主键ID */
   @PrimaryGeneratedColumn()
   id: number;

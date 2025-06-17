@@ -14,7 +14,7 @@ import { UserEntity } from "./User";
 @Entity({
   name: "report",
 })
-export class ReportEntity extends BaseEntity<ReportEntity> {
+export class ReportEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -2,43 +2,48 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinColumn,
   UpdateDateColumn,
   CreateDateColumn,
   DeleteDateColumn,
   ManyToOne,
-  OneToMany,
+  JoinColumn,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
-import { ProductPriceEntity } from "./ProductPrice";
-import { ProductUnitEntity } from "./ProductUnit";
+import { CustomerEntity } from "./Customer";
+import { UserEntity } from "./User";
 
 @Entity({
-  name: "product",
+  name: "charges",
 })
-export class ProductEntity extends BaseEntity {
+export class ChargeEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
-
-  @Column()
-  label: string;
-
-  @Column()
-  desc: string;
+  @ManyToOne(() => UserEntity)
+  @JoinColumn()
+  user: UserEntity;
 
   @Column({
     type: "float",
+    default: 0,
   })
-  price: number;
+  balance?: number;
+
+  @Column({
+    nullable: true,
+  })
+  customerId?: number;
+
+  @ManyToOne(() => CustomerEntity)
+  @JoinColumn()
+  customer?: CustomerEntity;
 
   @Column({
     type: "float",
+    default: 0,
   })
-  cost: number;
+  extra?: number;
 
   @Column({
     nullable: true,
@@ -49,18 +54,6 @@ export class ProductEntity extends BaseEntity {
     nullable: true,
   })
   userId?: number;
-
-  // @ManyToOne(() => ProductCategoryEntity)
-  // @JoinTable()
-  // category: ProductCategoryEntity;
-
-  @ManyToOne(() => ProductUnitEntity)
-  @JoinColumn()
-  unit: ProductUnitEntity;
-
-  @OneToMany(() => ProductPriceEntity, (photo) => photo.product)
-  @JoinColumn()
-  customerPrices?: ProductPriceEntity[];
 
   @CreateDateColumn({ type: "datetime", name: "create_time" })
   createTime: Date;

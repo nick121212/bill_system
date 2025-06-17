@@ -29,9 +29,9 @@ export class AuthService {
     const user = await this.usersService.findOne(email, pass);
 
     if (user) {
-      const { password, ...result } = user;
+      user.password = undefined;
 
-      return result;
+      return user;
     }
 
     return null;
@@ -74,10 +74,6 @@ export class AuthService {
         .add(65, 'day')
         .format('YYYY-MM-DD');
     }
-
-    // userEntity.expireDay = dayjs((userEntity.validateDate ?? 0) * 1)
-    //   .startOf("day")
-    //   .diff(dayjs().startOf("day"), "day");
 
     return userEntity;
   }

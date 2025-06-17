@@ -98,7 +98,7 @@ export default function UnitCreateModal({
             >
               <ErrorsField />
 
-              <AutoFields fields={['name', 'label']} />
+              <AutoFields fields={['name']} />
 
               <TextAreaField name="desc" />
             </AutoForm>

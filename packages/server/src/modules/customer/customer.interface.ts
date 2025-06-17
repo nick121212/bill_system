@@ -40,6 +40,9 @@ export class CustomerRequest {
 
   @IsString()
   desc: string;
+
+  @IsNumber()
+  balance: number;
 }
 
 export class CustomerPrice {

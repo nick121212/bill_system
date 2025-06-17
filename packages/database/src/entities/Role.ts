@@ -19,7 +19,7 @@ import { MenuEntity } from "./Menu";
  * 角色实体
  * 用于管理系统中的角色信息及其对应的权限菜单
  */
-export class RoleEntity extends BaseEntity<RoleEntity> {
+export class RoleEntity extends BaseEntity {
   /** 主键ID */
   @PrimaryGeneratedColumn()
   id: number;

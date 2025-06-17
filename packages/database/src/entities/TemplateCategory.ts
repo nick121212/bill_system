@@ -11,7 +11,7 @@ import { BaseEntity } from "./Base";
 @Entity({
   name: "template_category",
 })
-export class TemplateCategoryEntity extends BaseEntity<TemplateCategoryEntity> {
+export class TemplateCategoryEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -16,7 +16,7 @@ import { ProductCategoryEntity } from "./ProductCategory";
 @Entity({
   name: "order_products",
 })
-export class OrderProductEntity extends BaseEntity<OrderProductEntity> {
+export class OrderProductEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -60,8 +60,6 @@ export class OrderProductEntity extends BaseEntity<OrderProductEntity> {
   @ManyToOne(() => ProductCategoryEntity)
   @JoinColumn()
   productCategory: ProductCategoryEntity;
-
-  
 
   @ManyToOne(() => OrderCategoryEntity)
   @JoinColumn()

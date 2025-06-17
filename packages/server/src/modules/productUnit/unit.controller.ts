@@ -1,7 +1,6 @@
-import { Role } from "@bill/database";
+import { Role } from '@bill/database';
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -9,54 +8,46 @@ import {
   Put,
   Delete,
   Query,
-} from "@nestjs/common";
+} from '@nestjs/common';
 
-import { ActiveUser } from "@/common/decorators/active-user.decorator";
-import { Roles } from "@/common/decorators/roles.decorator";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import { Log4jsService } from "@/modules/log4js";
+import { Roles } from '@/common/decorators/roles.decorator';
+import { Log4jsService } from '@/modules/log4js';
 
-import { ProductUnitBodyRequest, ProductUnitQuery } from "./unit.interface";
-import { ProductUnitService } from "./unit.service";
+import { ProductUnitBodyRequest, ProductUnitQuery } from './unit.interface';
+import { ProductUnitService } from './unit.service';
 
 @Controller({
-  path: ["product/units"],
+  path: ['product/units'],
 })
 @Roles(Role.User)
 export class ProductUnitController {
   constructor(
     private ProductUnitService: ProductUnitService,
-    private readonly log4jService: Log4jsService
+    private readonly log4jService: Log4jsService,
   ) {}
 
-  @Get("/")
-  async all(
-    @Query() query: ProductUnitQuery,
-    @ActiveUser() user: ActiveUserData
-  ) {
-    return this.ProductUnitService.all(query, user);
+  @Get('/')
+  async all(@Query() query: ProductUnitQuery) {
+    return this.ProductUnitService.all(query);
   }
 
-  @Get("/:id")
-  async one(@Param("id") id: number) {
+  @Get('/:id')
+  async one(@Param('id') id: number) {
     return this.ProductUnitService.getById(id);
   }
 
-  @Post("/")
-  async create(
-    @Body() body: ProductUnitBodyRequest,
-    @ActiveUser() user: ActiveUserData
-  ) {
-    return this.ProductUnitService.create(body, user);
+  @Post('/')
+  async create(@Body() body: ProductUnitBodyRequest) {
+    return this.ProductUnitService.create(body);
   }
 
-  @Put("/:id")
-  async update(@Param("id") id: number, @Body() body: ProductUnitBodyRequest) {
+  @Put('/:id')
+  async update(@Param('id') id: number, @Body() body: ProductUnitBodyRequest) {
     return this.ProductUnitService.update(id, body);
   }
 
-  @Delete("/:id")
-  async remote(@Param("id") id: number) {
+  @Delete('/:id')
+  async remote(@Param('id') id: number) {
     return this.ProductUnitService.remove(id);
   }
 }

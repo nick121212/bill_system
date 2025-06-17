@@ -2,17 +2,18 @@ import { useCallback } from 'react';
 import { Button, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
+import dayjs from "dayjs";
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
 import type { ProductUnitEntity } from '@bill/database/esm';
-import dayjs from "dayjs";
 
 import TablePage from '@/components/table';
+import usePagination from '@/hooks/data/usePagination';
+
 import Create from './create';
 import Edit from "./edit";
 import Remove from "./remove";
 import Search from "./search";
-import usePagination from '@/hooks/data/usePagination';
 
 export default function ProductUnit() {
   const { t } = useTranslation();
@@ -47,11 +48,11 @@ export default function ProductUnit() {
       dataIndex: 'name',
       align: 'center',
     },
-    {
-      title: t('cls.proUnit.label'),
-      dataIndex: 'label',
-      align: 'center',
-    },
+    // {
+    //   title: t('cls.proUnit.label'),
+    //   dataIndex: 'label',
+    //   align: 'center',
+    // },
     {
       title: t('cls.com.desc'),
       dataIndex: 'desc',

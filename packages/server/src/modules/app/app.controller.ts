@@ -15,24 +15,20 @@ export class AppController {
   @Get('/product.xlsx')
   getFile(@Res() res: any) {
     const file = readFileSync(join(process.cwd(), 'template.xlsx'));
-    // 创建一个bufferstream
     const bufferStream = new PassThrough();
-    //将Buffer写入
     bufferStream.end(file);
 
-    // return bufferStream.pipe(res);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return bufferStream.pipe(res);
   }
 
   @Get('/customer.xlsx')
   getCustomerFile(@Res() res: any) {
     const file = readFileSync(join(process.cwd(), 'customer.xlsx'));
-    // 创建一个bufferstream
     const bufferStream = new PassThrough();
-    //将Buffer写入
     bufferStream.end(file);
 
-    // return bufferStream.pipe(res);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return bufferStream.pipe(res);
   }
 }

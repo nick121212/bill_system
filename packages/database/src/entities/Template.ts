@@ -12,7 +12,7 @@ import { BaseEntity } from "./Base";
 @Entity({
   name: "template",
 })
-export class TemplateEntity extends BaseEntity<TemplateEntity> {
+export class TemplateEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

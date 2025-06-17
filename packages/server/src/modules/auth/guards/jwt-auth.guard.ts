@@ -1,16 +1,15 @@
-import { Request } from "express";
+import { Request } from 'express';
 import {
   CanActivate,
   ExecutionContext,
-  Inject,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 
-import { RedisService } from "@/modules/redis/redis.service";
+import { RedisService } from '@/modules/redis/redis.service';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -18,11 +17,11 @@ export class JwtAuthGuard implements CanActivate {
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
     private readonly redisService: RedisService,
-    private reflector: Reflector
+    private reflector: Reflector,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isPublic = this.reflector.getAllAndOverride<boolean>("isPublic", [
+    const isPublic = this.reflector.getAllAndOverride<boolean>('isPublic', [
       context.getHandler(),
       context.getClass(),
     ]);
@@ -33,33 +32,33 @@ export class JwtAuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.getToken(request);
     if (!token) {
-      throw new UnauthorizedException("Authorization token is required");
+      throw new UnauthorizedException('Authorization token is required');
     }
 
     try {
       const payload = await this.jwtService.verifyAsync<{
         id: string;
         tokenId: string;
-      }>(token, this.configService.get("jwt"));
+      }>(token, this.configService.get('jwt'));
 
       const isValidToken = await this.redisService.validate(
         `user-${payload.id}`,
-        payload.tokenId
+        payload.tokenId,
       );
       if (!isValidToken) {
-        throw new UnauthorizedException("Authorization token is not valid");
+        throw new UnauthorizedException('Authorization token is not valid');
       }
 
       request.user = payload;
-    } catch (error) {
-      throw new UnauthorizedException(error.message);
+    } catch (error: unknown) {
+      throw new UnauthorizedException((error as Error).message);
     }
 
     return true;
   }
 
   private getToken(request: Request) {
-    const [_, token] = request.headers.authorization?.split(" ") ?? [];
+    const [_, token] = request.headers.authorization?.split(' ') ?? [];
     return token;
   }
 }

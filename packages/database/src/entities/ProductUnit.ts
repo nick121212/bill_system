@@ -11,7 +11,7 @@ import { BaseEntity } from "./Base";
 @Entity({
   name: "product_unit",
 })
-export class ProductUnitEntity extends BaseEntity<ProductUnitEntity> {
+export class ProductUnitEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -21,7 +21,7 @@ import { RoleEntity } from "./Role";
   name: "user",
 })
 @Unique(["email", "fullname"])
-export class UserEntity extends BaseEntity<UserEntity> {
+export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
