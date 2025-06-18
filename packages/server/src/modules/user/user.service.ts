@@ -122,6 +122,7 @@ export class UserService {
     const { password, company, role, ...rest } = body;
     const user = new UserEntity().extend({
       ...rest,
+      avatar: rest.avatar || '',
       password: hashPwd(
         password ?? '123456789',
         this.configService.get('app').secret,
@@ -139,6 +140,7 @@ export class UserService {
 
     user.extend({
       ...rest,
+      avatar: rest.avatar || '',
       password: user.password,
       validateDate: (validateDate as any) * 1 || 0,
       role: await this.roleService.getById(role),
