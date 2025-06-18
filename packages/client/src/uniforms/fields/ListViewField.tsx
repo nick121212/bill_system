@@ -42,7 +42,7 @@ function ListViewField<T>({
       <List
         {...filterDOMProps(props)}
         dataSource={value}
-        renderItem={(item, itemIndex) => {
+        renderItem={(_item, itemIndex) => {
           return (
             <List.Item key={itemIndex}>
               {Children.map(children, (child, childIndex) => {
