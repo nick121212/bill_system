@@ -21,7 +21,7 @@ import SettingButton from "./setting-button";
  */
 export default function AccountDropdown() {
   const { replace } = useRouter();
-  const { fullname, email } = useUserInfo();
+  const { fullname, email, avatar } = useUserInfo();
   const { clearUserInfoAndToken } = useUserActions();
   const { backToLogin } = useLoginStateContext();
   const logoutAction = useLogout();
@@ -118,7 +118,7 @@ export default function AccountDropdown() {
       trigger={["click"]}
       dropdownRender={dropdownRender}
     >
-      <Avatar icon={<UserOutlined />} />
+      {avatar ? <Avatar src={avatar} /> : <Avatar icon={<UserOutlined />} />}
     </Dropdown>
   );
 }

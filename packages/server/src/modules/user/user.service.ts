@@ -1,22 +1,22 @@
-import * as dayjs from "dayjs";
-import type { FindOptionsRelations, Repository } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
-import { UserEntity } from "@bill/database/dist/entities";
-import { Global, HttpStatus, Injectable } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { InjectRepository } from "@nestjs/typeorm";
+import * as dayjs from 'dayjs';
+import type { FindOptionsRelations, Repository } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
+import { UserEntity } from '@bill/database/dist/entities';
+import { Global, HttpStatus, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
-import { ActiveUserData } from "@/common/interfaces/active-user-data.interface";
-import hashPwd from "@/common/utils/hash";
-import { RoleService } from "@/modules/role/role.service";
+import { ApiException } from '@/common/exception/api.exception';
+import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
+import hashPwd from '@/common/utils/hash';
+import { RoleService } from '@/modules/role/role.service';
 
-import { CompanyService } from "../company/company.service";
+import { CompanyService } from '../company/company.service';
 import type {
   UserPasswordRequest,
   UserQuery,
   UserRequest,
-} from "./user.interface";
+} from './user.interface';
 
 @Injectable()
 @Global()
@@ -25,7 +25,7 @@ export class UserService {
     private configService: ConfigService,
     private roleService: RoleService,
     private companyService: CompanyService,
-    @InjectRepository(UserEntity) private repo: Repository<UserEntity>
+    @InjectRepository(UserEntity) private repo: Repository<UserEntity>,
   ) {}
 
   async all(query: UserQuery): Promise<{ rows: UserEntity[]; count: number }> {
@@ -41,17 +41,17 @@ export class UserService {
         role: true,
         company: true,
       },
-      select: ["role", "company"],
+      select: ['role', 'company'],
       withDeleted: false,
     });
 
     return {
       rows: rows.map((u) => {
-        u.password = "";
+        u.password = '';
         u.validateDate = (u.validateDate || 0) * 1;
         u.expireDay = dayjs(u.validateDate)
-          .startOf("day")
-          .diff(dayjs().startOf("day"), "day");
+          .startOf('day')
+          .diff(dayjs().startOf('day'), 'day');
         return u;
       }),
       count,
@@ -60,7 +60,7 @@ export class UserService {
 
   async getById(
     id?: number,
-    relations?: FindOptionsRelations<UserEntity>
+    relations?: FindOptionsRelations<UserEntity>,
   ): Promise<UserEntity | null> {
     if (!id) {
       return null;
@@ -72,12 +72,12 @@ export class UserService {
     });
 
     if (data) {
-      data.expireDay = dayjs(data.validateDate)
-        .startOf("day")
-        .diff(dayjs().startOf("day"), "day");
+      data.expireDay = dayjs((data.validateDate || 0) * 1)
+        .startOf('day')
+        .diff(dayjs().startOf('day'), 'day');
     }
 
-    if (data?.role?.label === "admin") {
+    if (data?.role?.label === 'admin') {
       data.expireDay = 9999;
     }
 
@@ -86,19 +86,19 @@ export class UserService {
 
   async getByIdWithError(
     id?: number,
-    relations?: FindOptionsRelations<UserEntity>
+    relations?: FindOptionsRelations<UserEntity>,
   ): Promise<UserEntity> {
     const user = await this.getById(id, relations);
 
     if (!user) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          type: "UserEntity",
-        }
+          type: 'UserEntity',
+        },
       );
     }
 
@@ -109,7 +109,7 @@ export class UserService {
     return this.repo.findOne({
       where: {
         email,
-        password: hashPwd(pass, this.configService.get("app").secret),
+        password: hashPwd(pass, this.configService.get('app').secret),
       },
       relations: {
         role: true,
@@ -123,8 +123,8 @@ export class UserService {
     const user = new UserEntity().extend({
       ...rest,
       password: hashPwd(
-        password ?? "123456789",
-        this.configService.get("app").secret
+        password ?? '123456789',
+        this.configService.get('app').secret,
       ),
       role: (await this.roleService.getById(role)) ?? undefined,
       company: (await this.companyService.getById(company)) ?? undefined,
@@ -135,10 +135,12 @@ export class UserService {
 
   async update(id: number, body: UserRequest): Promise<UserEntity> {
     const user = await this.getByIdWithError(id);
-    const { company, role, ...rest } = body;
+    const { company, role, validateDate, ...rest } = body;
 
     user.extend({
       ...rest,
+      password: user.password,
+      validateDate: (validateDate as any) * 1 || 0,
       role: await this.roleService.getById(role),
       company: await this.companyService.getById(company),
     });
@@ -157,26 +159,26 @@ export class UserService {
 
     if (
       userEntity.password !==
-      hashPwd(body.password, this.configService.get("app").secret)
+      hashPwd(body.password, this.configService.get('app').secret)
     ) {
       throw new ApiException(
-        "password not correct",
+        'password not correct',
         ApiStatusCode.PASSWORD_NOT_CORRECT,
-        HttpStatus.OK
+        HttpStatus.OK,
       );
     }
 
     if (body.passwordNew !== body.passwordNewAgain) {
       throw new ApiException(
-        "2 passwords are not match.",
+        '2 passwords are not match.',
         ApiStatusCode.TWO_PASSWORDS_NOT_MATCH,
-        HttpStatus.OK
+        HttpStatus.OK,
       );
     }
 
     userEntity.password = hashPwd(
       body.passwordNew,
-      this.configService.get("app").secret
+      this.configService.get('app').secret,
     );
 
     return this.repo.save(userEntity);

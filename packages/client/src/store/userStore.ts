@@ -115,25 +115,25 @@ export const useProfile = () => {
       const res = await profileMutation.mutateAsync();
       res?.data && setUserInfo(res.data);
 
-      if ((res.data.expireDay ?? 0) < 0) {
+      if ((res.data.expireDay ?? 0) <= 0) {
         return navigate("/403");
       }
 
-      if ((res.data.expireDay ?? 0) < 7) {
+      if ((res.data.expireDay ?? 0) <= 7) {
         return Modal.warning({
           content:"账号有效期还剩一周, 请联系管理员续费。",
           title:"通知"
         });
       }
 
-      if ((res.data.expireDay ?? 0) < 14) {
+      if ((res.data.expireDay ?? 0) <= 14) {
         return Modal.warning({
           content: "账号有效期还剩半个月, 请联系管理员续费。",
           title:"通知"
         });
       }
 
-      if ((res.data.expireDay ?? 0) < 30) {
+      if ((res.data.expireDay ?? 0) <= 30) {
        return  Modal.warning({
           content: "账号有效期已不足30天, 请联系管理员续费。",
           title:"通知"

@@ -32,8 +32,6 @@
     "fullname",
     "password",
     "email",
-    "avatar",
-    "address",
     "phone",
     "company",
     "validateDate",

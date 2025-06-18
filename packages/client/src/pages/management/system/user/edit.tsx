@@ -130,7 +130,7 @@ export default function PermissionModal({
               {/* <AutoField name="password" /> */}
               <AutoField name="phone" />
               <DateField name="validateDate" showTime={false}/>
-              <AutoField name="isActive" />
+              {/* <AutoField name="isActive" /> */}
 
               <SelectField
                 name="role"
