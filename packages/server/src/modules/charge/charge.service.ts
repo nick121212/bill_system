@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ApiException } from '@/common/exception/api.exception';
 import { CustomerService } from '@/modules/customer/customer.service';
 
-import type { ChargeQuery } from './charge.interface';
+import type { ChargeQuery, ChargeRequest } from './charge.interface';
 
 @Injectable()
 @Global()
@@ -70,11 +70,8 @@ export class ChargeService {
     return charge;
   }
 
-  async create(
-    customerId: number,
-    balance: number,
-    extra: number = 0,
-  ): Promise<ChargeEntity> {
+  async create(body: ChargeRequest): Promise<ChargeEntity> {
+    const { customerId, balance, extra } = body;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const data = new ChargeEntity().extend({
       balance,

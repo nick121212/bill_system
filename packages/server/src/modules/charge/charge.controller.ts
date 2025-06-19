@@ -1,9 +1,17 @@
 import { Role, ChargeEntity } from '@bill/database';
-import { Controller, Get, Param, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Delete,
+  Query,
+  Post,
+  Body,
+} from '@nestjs/common';
 
 import { Roles } from '@/common/decorators/roles.decorator';
 
-import { ChargeQuery } from './charge.interface';
+import { ChargeQuery, ChargeRequest } from './charge.interface';
 import { ChargeService } from './charge.service';
 
 @Controller({
@@ -16,6 +24,11 @@ export class ChargeController {
   @Get('/')
   async all(@Query() query: ChargeQuery) {
     return this.chargeService.all(query);
+  }
+
+  @Post('/')
+  async create(@Body() body: ChargeRequest) {
+    return this.chargeService.create(body);
   }
 
   @Get('/:id')
