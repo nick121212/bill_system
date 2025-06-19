@@ -14,6 +14,7 @@ import redisConfig from '@/config/redis.config';
 import { AppController } from '@/modules/app/app.controller';
 import { AuthModule } from '@/modules/auth/auth.module';
 import { JwtAuthGuard } from '@/modules/auth/guards/jwt-auth.guard';
+import { ChargeModule } from '@/modules/charge/charge.module';
 import { CompanyModule } from '@/modules/company/company.module';
 import { CustomerModule } from '@/modules/customer/customer.module';
 import { Log4jsGlobalModule } from '@/modules/log4js/log4js.module';
@@ -75,6 +76,7 @@ import { UserModule } from '@/modules/user/user.module';
     OrderModule,
     StatisticsModule,
     ReportModule,
+    ChargeModule,
   ],
   providers: [
     {

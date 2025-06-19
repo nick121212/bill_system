@@ -9,7 +9,7 @@ import { ChargeService } from './charge.service';
 @Controller({
   path: ['charges'],
 })
-@Roles(Role.Admin)
+@Roles(Role.User)
 export class ChargeController {
   constructor(private chargeService: ChargeService) {}
 
@@ -24,7 +24,7 @@ export class ChargeController {
   }
 
   @Delete('/:id')
-  async remote(@Param('id') id: number): Promise<ChargeEntity | null> {
+  async remote(@Param('id') id: number): Promise<ChargeEntity> {
     return this.chargeService.remove(id);
   }
 }

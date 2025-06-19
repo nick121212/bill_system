@@ -46,10 +46,6 @@ export class ChargeService {
 
   // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   async getById(id?: number): Promise<ChargeEntity | null> {
-    if (!id) {
-      return null;
-    }
-
     return await this.repoCharge.findOne({
       where: { id },
     });
