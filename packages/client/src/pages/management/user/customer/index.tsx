@@ -76,6 +76,11 @@ export default function ProductUnit() {
       align: 'center',
     },
     {
+      title: t('cls.customer.balance'),
+      dataIndex: 'balance',
+      align: 'center',
+    },
+    {
       title: t('cls.customer.paytime'),
       dataIndex: 'paytime',
       align: 'center',

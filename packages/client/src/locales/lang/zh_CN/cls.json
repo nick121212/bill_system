@@ -16,6 +16,7 @@
       "desc": "客户简介",
       "paytime": "账期",
       "discount": "折扣",
+      "balance": "余额",
       "modal": {
         "cTitle": "新建客户",
         "eTitle": "编辑客户",
