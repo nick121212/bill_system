@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect, Children } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import {
   Button,
@@ -9,14 +9,19 @@ import {
   Form,
   Space,
   Spin,
+  Tabs,
+  Table,
 } from 'antd';
+import type { TabsProps, DescriptionsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useField, useForm } from 'uniforms';
+import dayjs from 'dayjs';
 import { PlusOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
   ProductPriceEntity,
   type ProductEntity,
+  ChargeEntity,
 } from '@bill/database/esm';
 
 import useData from '@/hooks/data/useData';
@@ -47,9 +52,9 @@ function ProductSelect({ name, id }: { name: string; id?: number }) {
   const [props] = useField(name, {});
   const [field] = useField(`${name}.price`, {});
   const form = useForm();
-  const excludeIds = (form?.model?.prices as ProductPriceEntity[])?.filter(
-    (p) => p?.product?.id !== props.value,
-  ).map(p => p?.product?.id);
+  const excludeIds = (form?.model?.prices as ProductPriceEntity[])
+    ?.filter((p) => p?.product?.id !== props.value)
+    .map((p) => p?.product?.id);
   const {
     rows: products,
     loading: productLoad,
@@ -111,6 +116,203 @@ export default function CategoryDrawer({
     customerId,
     true,
   );
+  // 充值记录
+  const {
+    rows: rowsCharge,
+    loading: loadingCharge,
+    onSearch: getCharges,
+  } = useData<ChargeEntity[]>(`charges`, {customerId});
+
+  const [activeKey, setActiveKey] = useState('1');
+
+  const TabItems: TabsProps['items'] = [
+    {
+      key: '1',
+      label: '商品列表',
+      forceRender: true,
+      children: (
+        <Form
+          labelCol={{ span: 5 }}
+          wrapperCol={{ span: 14 }}
+          preserve={false}
+          layout="horizontal"
+          labelAlign="right"
+        >
+          <Spin spinning={loadingAjax}>
+            <AutoForm
+              ref={formRef as any}
+              showInlineError
+              schema={bridge}
+              model={{
+                prices: (rows || []).map(
+                  (
+                    r: ProductPriceEntity & {
+                      customerPrices: ProductPriceEntity[];
+                    },
+                  ) => {
+                    let price = r.price;
+                    if (r.customerPrices && r.customerPrices.length > 0) {
+                      price = r.customerPrices[0].price;
+                    }
+
+                    return { ...r, productId: r.product?.id, price };
+                  },
+                ),
+              }}
+              onSubmit={(formData) => {
+                const processedPrices = (
+                  formData as { prices: ProductEntity[] }
+                ).prices.map((price) => ({
+                  ...price,
+                  price: convertPriceToServer(price.price),
+                }));
+
+                callAjax({
+                  data: {
+                    ...formData,
+                    prices: processedPrices,
+                  },
+                });
+              }}
+            >
+              <ErrorsField />
+
+              {/* <Divider orientation="left">商品列表</Divider> */}
+              <TableField
+                size="small"
+                name="prices"
+                loading={loading}
+                dataSource={rows}
+                pagination={false}
+                columns={[
+                  {
+                    title: '名称',
+                    dataIndex: 'productId',
+                    align: 'center',
+                    width: 200,
+                    render: (val, _record, index) => {
+                      return <ProductSelect name={`${index}`} id={val} />;
+                    },
+                  },
+                  {
+                    title: '价格',
+                    dataIndex: 'price',
+                    align: 'center',
+                    width: 200,
+                    render: (_val, _record, index) => {
+                      return <AutoField name={`${index}.price`} />;
+                    },
+                  },
+                  {
+                    title: '折扣',
+                    dataIndex: 'discount',
+                    align: 'center',
+                    width: 200,
+                    render: (_val, _record, index) => {
+                      return <AutoField name={`${index}.discount`} />;
+                    },
+                  },
+                  {
+                    title: '',
+                    width: 100,
+                    render: (_val, _record, index) => {
+                      return <ListDelField name={`${index}`} />;
+                    },
+                  },
+                ]}
+              >
+                <ListAddField
+                  name="$"
+                  shape="default"
+                  ghost
+                  size="large"
+                  type="primary"
+                  icon={<PlusOutlined />}
+                >
+                  添加商品
+                </ListAddField>
+              </TableField>
+            </AutoForm>
+          </Spin>
+        </Form>
+      )
+    },
+    {
+      key: '2',
+      label: '充值记录',
+      forceRender: true,
+      children: (
+        <Table
+          size="small"
+          loading={loadingCharge}
+          dataSource={rowsCharge}
+          pagination={false}
+          columns={[
+            {
+              title: '充值金额',
+              dataIndex: 'balance',
+              align: 'center',
+            },
+            {
+              title: '赠送金额',
+              dataIndex: 'extra',
+              align: 'center',
+            },
+            {
+              title: '充值时间',
+              dataIndex: 'createTime',
+              align: 'center',
+              render: (text) => dayjs(text).format('YYYY-MM-DD HH:mm:ss'),
+            },
+          ]}
+        />
+      ),
+    },
+  ];
+
+  const items: DescriptionsProps['items'] = [
+    {
+      label: '客户名称',
+      span: 2,
+      children: info?.fullname,
+    },
+    {
+      label: '账户余额',
+      span: 2,
+      children: info?.balance || 0,
+    },
+    {
+      label: '客户邮箱',
+      span: 2,
+      children: info?.email,
+    },
+    {
+      label: '客户手机',
+      span: 2,
+      children: info?.phone,
+    },
+    {
+      label: '客户地址',
+      span: 2,
+      children: info?.address,
+    },
+    {
+      label: '客户折扣',
+      span: 2,
+      children: info?.discount,
+    },
+    {
+      label: '客户简介',
+      span: 2,
+      children: info?.desc,
+    },
+  ];
+
+  useEffect(() => {
+    if (activeKey === '2') {
+      getCharges();
+    }
+  }, [activeKey]);
 
   return (
     <Drawer
@@ -129,149 +331,14 @@ export default function CategoryDrawer({
         </Space>
       }
     >
-      <Form
-        labelCol={{ span: 5 }}
-        wrapperCol={{ span: 14 }}
-        preserve={false}
-        layout="horizontal"
-        labelAlign="right"
-      >
-        <Spin spinning={loadingAjax}>
-          <AutoForm
-            ref={formRef as any}
-            showInlineError
-            schema={bridge}
-            model={{
-              prices: (rows || []).map(
-                (
-                  r: ProductPriceEntity & {
-                    customerPrices: ProductPriceEntity[];
-                  },
-                ) => {
-                  let price = r.price;
-                  if (r.customerPrices && r.customerPrices.length > 0) {
-                    price = r.customerPrices[0].price;
-                  }
-
-                  return { ...r, productId: r.product?.id, price };
-                },
-              ),
-            }}
-            onSubmit={(formData) => {
-              const processedPrices = (
-                formData as { prices: ProductEntity[] }
-              ).prices.map((price) => ({
-                ...price,
-                price: convertPriceToServer(price.price),
-              }));
-
-              callAjax({
-                data: {
-                  ...formData,
-                  prices: processedPrices,
-                },
-              });
-            }}
-          >
-            <ErrorsField />
-
-            <Space size={10} direction="vertical">
-              <Card variant="borderless">
-                <Descriptions
-                  items={[
-                    {
-                      key: '1',
-                      label: '客户名称',
-                      children: info?.fullname,
-                    },
-                    {
-                      key: '2',
-                      label: '客户邮箱',
-                      children: info?.email,
-                    },
-                    {
-                      key: '3',
-                      label: '客户手机',
-                      children: info?.phone,
-                    },
-                    {
-                      key: '4',
-                      label: '客户地址',
-                      children: info?.address,
-                    },
-                    {
-                      key: '5',
-                      label: '客户折扣',
-                      children: info?.discount,
-                    },
-                    {
-                      key: '5',
-                      label: '客户简介',
-                      children: info?.desc,
-                    },
-                  ]}
-                />
-              </Card>
-            </Space>
-
-            <Divider orientation="left">商品列表</Divider>
-            <TableField
-              size="small"
-              name="prices"
-              loading={loading}
-              dataSource={rows}
-              pagination={false}
-              columns={[
-                {
-                  title: '名称',
-                  dataIndex: 'productId',
-                  align: 'center',
-                  width: 200,
-                  render: (val, _record, index) => {
-                    return <ProductSelect name={`${index}`} id={val} />;
-                  },
-                },
-                {
-                  title: '价格',
-                  dataIndex: 'price',
-                  align: 'center',
-                  width: 200,
-                  render: (_val, _record, index) => {
-                    return <AutoField name={`${index}.price`} />;
-                  },
-                },
-                {
-                  title: '折扣',
-                  dataIndex: 'discount',
-                  align: 'center',
-                  width: 200,
-                  render: (_val, _record, index) => {
-                    return <AutoField name={`${index}.discount`} />;
-                  },
-                },
-                {
-                  title: '',
-                  width: 100,
-                  render: (_val, _record, index) => {
-                    return <ListDelField name={`${index}`} />;
-                  },
-                },
-              ]}
-            >
-              <ListAddField
-                name="$"
-                shape="default"
-                ghost
-                size="large"
-                type="primary"
-                icon={<PlusOutlined />}
-              >
-                添加商品
-              </ListAddField>
-            </TableField>
-          </AutoForm>
-        </Spin>
-      </Form>
+      <Space size={10} direction="vertical" className="w-full">
+        <Descriptions bordered title={'基本信息'} size="small" items={items} />
+        <Tabs
+          defaultActiveKey="1"
+          onChange={(key) => setActiveKey(key)}
+          items={TabItems}
+        />
+      </Space>
     </Drawer>
   );
 }

@@ -152,15 +152,6 @@ export default function PermissionPage() {
       width: '15%',
       ellipsis: true,
     },
-    // {
-    //   title: '操作',
-    //   key: 'operation',
-    //   align: 'center',
-    //   width: 100,
-    //   render: (_, record) => (
-    //     <Remove title="删除商品" record={record} onSuccess={onSuccess} />
-    //   ),
-    // },
   ];
 
   return (

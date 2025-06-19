@@ -1,0 +1,16 @@
+{  
+  "title": "Recharge",  
+  "type": "object",  
+  "properties": {  
+    "balance": {  
+      "type": "number",  
+      "title": "充值金额"
+    },
+    "extra": {  
+      "type": "number",  
+      "title": "赠送金额",
+      "default": 0
+    }
+  },  
+  "required": []  
+}
