@@ -33,8 +33,9 @@ export class ChargeService {
       },
       relations: {
         user: true,
+        customer: true,
       },
-      select: ['user'],
+      select: ['user', 'customer'],
       withDeleted: false,
     });
 
@@ -72,14 +73,16 @@ export class ChargeService {
 
   async create(body: ChargeRequest): Promise<ChargeEntity> {
     const { customerId, balance, extra } = body;
+    const customer = await this.customerService.getByIdWithError(customerId);
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     const data = new ChargeEntity().extend({
       balance,
       extra,
+      // customerId: customerId,
+      customer,
       companyId: this.request.userEntity.company?.id,
       userId: this.request.userEntity.id,
     });
-    const customer = await this.customerService.getByIdWithError(customerId);
 
     if (!customer.balance) {
       customer.balance = 0;
