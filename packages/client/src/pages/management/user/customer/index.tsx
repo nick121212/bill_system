@@ -103,7 +103,7 @@ export default function ProductUnit() {
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Recharge id={record.id}/>
+          <Recharge id={record.id}  onSuccess={pag.refresh}/>
           <Edit
             title={t('cls.customer.modal.eTitle')}
             record={record}

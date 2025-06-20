@@ -58,18 +58,18 @@ const RechargeModal: React.FC<any> = ({ id, onCancel, onSuccess }) => {
           schema={bridge}
           onSubmit={(formData) => {
             setFormData(formData);
-            callAjax({ data: {...formData, customerId: id} });
+            callAjax({ data: { ...formData, customerId: id } });
           }}
         >
-          <NumField name="balance" min={1} precision={2} decimal/>
-          <NumField name="extra" min={0} precision={2} decimal/>
+          <NumField name="balance" min={1} precision={2} decimal />
+          {/* <NumField name="extra" min={0} precision={2} decimal/> */}
         </AutoForm>
       </Form>
     </Modal>
   );
 };
 
-const Recharge: React.FC<{id: number}> = ({id}) => {
+const Recharge: React.FC<{ id: number; onSuccess: () => void }> = ({ id, onSuccess }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -84,7 +84,14 @@ const Recharge: React.FC<{id: number}> = ({id}) => {
     <div>
       <Button icon={<MoneyCollectOutlined />} type="text" onClick={showModal} />
       {isModalVisible && (
-        <RechargeModal id={id} onCancel={handleCancel} onSuccess={handleCancel} />
+        <RechargeModal
+          id={id}
+          onCancel={handleCancel}
+          onSuccess={() => {
+            onSuccess();
+            handleCancel()
+          }}
+        />
       )}
     </div>
   );
