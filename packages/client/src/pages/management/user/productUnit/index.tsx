@@ -72,8 +72,8 @@ export default function ProductUnit() {
       width: 200,
       render: (_, record) => (
         <Space size="middle">
-          <Edit title={t('cls.proUnit.modal.editTitle')} record={record} onSuccess={pag.refresh} />
-          <Remove title={t('cls.proUnit.modal.deleteTitle')} record={record} onSuccess={pag.refresh} />
+          <Edit title={t('cls.proUnit.modal.eTitle')} record={record} onSuccess={pag.refresh} />
+          <Remove title={t('cls.proUnit.modal.dTitle')} record={record} onSuccess={pag.refresh} />
         </Space>
       ),
     },
