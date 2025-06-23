@@ -7,6 +7,8 @@ import {  CustomerEntity } from '@bill/database/esm';
 
 import { convertNo, convertPriceFromServer } from '@/utils';
 
+import GenericDescriptions from '@/pages/components/genericDescriptions';
+
 interface IProps {
   formData: {
     categories: {
@@ -72,49 +74,6 @@ const ConfrimDetail = ({formData}: IProps) => {
     return data;
   }, [formData]);
 
-  const items: DescriptionsProps['items'] = [
-    {
-      label: '订单编号',
-      span: 'filled',
-      children: convertNo(formData?.no || ''),
-    },
-    {
-      label: '客户',
-      span: 2,
-      children: formData?.customer?.fullname,
-    },
-    {
-      label: '电话',
-      span: 2,
-      children: formData?.customer?.phone,
-    },
-    {
-      label: '地址',
-      span: 2,
-      children: formData?.customer?.address,
-    },
-    {
-      label: '邮箱',
-      span: 2,
-      children: formData?.customer?.email,
-    },
-    {
-      label: '结款信息',
-      span: 2,
-      children: t(`cls.order.statusStr.${formData?.status || 0}`),
-    },
-    {
-      label: '订单日期',
-      span: 2,
-      children: formData?.createTime ? dayjs(formData?.createTime).format('YYYY-MM-DD HH:mm:ss') : '--',
-    },
-    {
-      label: '描述',
-      span: 'filled',
-      children: formData?.customer?.desc,
-    },
-  ];
-
   const columns: TableProps<any>['columns'] = [
     {
       title: '分类名称',
@@ -151,7 +110,25 @@ const ConfrimDetail = ({formData}: IProps) => {
 
   return (
     <Space direction="vertical" size={16}>
-      <Descriptions bordered title={'基本信息'} items={items} size="small" />
+      <GenericDescriptions
+        info={{
+          ...(formData?.customer || {}),
+          no: formData?.no || '',
+          status: formData?.status || 0,
+          createTime: formData?.createTime || '--',
+        }}
+        title="基本信息"
+        itemsConfig={[
+          { label: '订单编号', key: 'no', formatter: (v) => convertNo(v || '') },
+          { label: '客户', key: 'fullname' },
+          { label: '电话', key: 'phone' },
+          { label: '地址', key: 'address' },
+          { label: '邮箱', key: 'email' },
+          { label: '结款信息', key: 'status', formatter: (v) => t(`cls.order.statusStr.${v || 0}`) },
+          { label: '订单日期', key: 'createTime', formatter: (v) => v ? dayjs(v).format('YYYY-MM-DD HH:mm:ss') : '--' },
+          { label: '描述', key: 'desc', span: 'filled' },
+        ]}
+      />
       <Descriptions title="产品列表" size="small">
         <Descriptions.Item label="" span={24}>
           <Table

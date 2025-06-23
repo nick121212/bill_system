@@ -16,7 +16,7 @@ import type { TabsProps, DescriptionsProps } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useField, useForm } from 'uniforms';
 import dayjs from 'dayjs';
-import { PlusOutlined } from '@ant-design/icons';
+import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
   ProductPriceEntity,
@@ -37,6 +37,7 @@ import {
   TableField,
 } from '@/uniforms/fields';
 import { convertPriceToServer } from '@/utils';
+import GenericDescriptions from '@/pages/components/genericDescriptions';
 
 import schema from './schemas/create.json';
 
@@ -121,7 +122,7 @@ export default function CategoryDrawer({
     rows: rowsCharge,
     loading: loadingCharge,
     onSearch: getCharges,
-  } = useData<ChargeEntity[]>(`charges`, {customerId});
+  } = useData<ChargeEntity[]>(`charges`, { customerId });
 
   const [activeKey, setActiveKey] = useState('1');
 
@@ -235,7 +236,7 @@ export default function CategoryDrawer({
             </AutoForm>
           </Spin>
         </Form>
-      )
+      ),
     },
     {
       key: '2',
@@ -270,44 +271,6 @@ export default function CategoryDrawer({
     },
   ];
 
-  const items: DescriptionsProps['items'] = [
-    {
-      label: '客户名称',
-      span: 2,
-      children: info?.fullname,
-    },
-    {
-      label: '账户余额',
-      span: 2,
-      children: info?.balance || 0,
-    },
-    {
-      label: '客户邮箱',
-      span: 2,
-      children: info?.email,
-    },
-    {
-      label: '客户手机',
-      span: 2,
-      children: info?.phone,
-    },
-    {
-      label: '客户地址',
-      span: 2,
-      children: info?.address,
-    },
-    {
-      label: '客户折扣',
-      span: 2,
-      children: info?.discount,
-    },
-    {
-      label: '客户简介',
-      span: 2,
-      children: info?.desc,
-    },
-  ];
-
   useEffect(() => {
     if (activeKey === '2') {
       getCharges();
@@ -332,11 +295,35 @@ export default function CategoryDrawer({
       }
     >
       <Space size={10} direction="vertical" className="w-full">
-        <Descriptions bordered title={'基本信息'} size="small" items={items} />
+        <GenericDescriptions
+          info={info}
+          title="基本信息"
+          itemsConfig={[
+            { label: '客户名称', key: 'fullname' },
+            { label: '账户余额', key: 'balance' },
+            { label: '客户邮箱', key: 'email' },
+            { label: '客户手机', key: 'phone' },
+            { label: '客户地址', key: 'address' },
+            { label: '客户折扣', key: 'discount' },
+            { label: '客户简介', key: 'desc' },
+          ]}
+        />
         <Tabs
           defaultActiveKey="1"
           onChange={(key) => setActiveKey(key)}
           items={TabItems}
+          tabBarExtraContent={{
+            right: activeKey === '2' && (
+              <Button
+                icon={<ReloadOutlined />}
+                loading={loadingCharge}
+                variant="outlined"
+                onClick={() => getCharges()}
+              >
+                {t('common.redo')}
+              </Button>
+            ),
+          }}
         />
       </Space>
     </Drawer>

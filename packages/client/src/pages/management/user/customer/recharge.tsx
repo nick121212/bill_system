@@ -58,7 +58,13 @@ const RechargeModal: React.FC<any> = ({ id, onCancel, onSuccess }) => {
           schema={bridge}
           onSubmit={(formData) => {
             setFormData(formData);
-            callAjax({ data: { ...formData, customerId: id } });
+            callAjax({
+              data: {
+                ...formData,
+                customerId: id,
+                type: 0, // 0-充值 1-消费 2-退款
+              },
+            });
           }}
         >
           <NumField name="balance" min={1} precision={0} />
@@ -69,7 +75,10 @@ const RechargeModal: React.FC<any> = ({ id, onCancel, onSuccess }) => {
   );
 };
 
-const Recharge: React.FC<{ id: number; onSuccess: () => void }> = ({ id, onSuccess }) => {
+const Recharge: React.FC<{ id: number; onSuccess: () => void }> = ({
+  id,
+  onSuccess,
+}) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const showModal = () => {
@@ -89,7 +98,7 @@ const Recharge: React.FC<{ id: number; onSuccess: () => void }> = ({ id, onSucce
           onCancel={handleCancel}
           onSuccess={() => {
             onSuccess();
-            handleCancel()
+            handleCancel();
           }}
         />
       )}
