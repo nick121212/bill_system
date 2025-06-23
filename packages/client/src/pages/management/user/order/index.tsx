@@ -83,6 +83,14 @@ export default function OrderPage() {
       render: (val) => convertPriceFromServer(val),
     },
     {
+      title: t('cls.order.payment'),
+      dataIndex: 'payment',
+      align: 'center',
+      render: (val) => {
+        return <Tag>{t(`cls.order.paymentStr.${val}`)}</Tag>;
+      },
+    },
+    {
       title: t('cls.order.status'),
       dataIndex: 'status',
       align: 'center',

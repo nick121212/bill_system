@@ -74,6 +74,7 @@
       "status": "订单状态",
       "totalPrice": "订单总价",
       "realTotalPrice": "实收价格",
+      "payment": "支付方式",
       "statusStr": {
         "0": "未付款",
         "1": "已付款",
