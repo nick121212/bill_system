@@ -137,10 +137,10 @@ export function OrderDetail(props: IProps) {
       <Space direction="vertical" size={16}>
         <GenericDescriptions
           info={{
-            ...data.customer,
-            no: data.no,
+            ...(data?.customer || {}),
+            no: data?.no,
             status: data?.status,
-            createTime: data.createTime,
+            createTime: data?.createTime,
           }}
           title="基本信息"
           itemsConfig={[

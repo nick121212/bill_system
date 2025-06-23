@@ -296,7 +296,7 @@ export default function CategoryDrawer({
     >
       <Space size={10} direction="vertical" className="w-full">
         <GenericDescriptions
-          info={info}
+          info={info || {}}
           title="基本信息"
           itemsConfig={[
             { label: '客户名称', key: 'fullname' },
