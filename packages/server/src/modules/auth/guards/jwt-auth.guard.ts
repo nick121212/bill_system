@@ -29,7 +29,7 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     }
 
-    const request = context.switchToHttp().getRequest();
+    const request: Request = context.switchToHttp().getRequest();
     const token = this.getToken(request);
     if (!token) {
       throw new UnauthorizedException('Authorization token is required');
@@ -58,7 +58,7 @@ export class JwtAuthGuard implements CanActivate {
   }
 
   private getToken(request: Request) {
-    const [_, token] = request.headers.authorization?.split(' ') ?? [];
+    const [, token] = request.headers.authorization?.split(' ') ?? [];
     return token;
   }
 }

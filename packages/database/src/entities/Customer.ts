@@ -54,7 +54,7 @@ export class CustomerEntity extends BaseEntity {
     type: "float",
     default: 0,
   })
-  balance?: number;
+  balance: number;
 
   @Column({
     nullable: true,

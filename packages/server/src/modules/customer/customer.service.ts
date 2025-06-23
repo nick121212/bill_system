@@ -1,10 +1,9 @@
 import * as _ from 'lodash';
 import xlsx from 'node-xlsx';
-import { Repository, Not, Equal, IsNull, EntityManager, Like } from 'typeorm';
+import { Repository, EntityManager, Like } from 'typeorm';
 import { ApiStatusCode } from '@bill/database';
 import {
   CustomerEntity,
-  ProductEntity,
   ProductPriceEntity,
   UserEntity,
 } from '@bill/database/dist/entities';
@@ -13,7 +12,6 @@ import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { ApiException } from '@/common/exception/api.exception';
-import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
 import dataFilter from '@/common/utils/dataFilter';
 import { dataDesensitization } from '@/common/utils/phone';
 import { toPrice } from '@/common/utils/price';
@@ -29,8 +27,6 @@ import {
 export class CustomerService {
   constructor(
     @InjectRepository(CustomerEntity) private repo: Repository<CustomerEntity>,
-    @InjectRepository(ProductEntity)
-    private repoForProduct: Repository<ProductEntity>,
     @InjectRepository(ProductPriceEntity)
     private repoForPrice: Repository<ProductPriceEntity>,
     private productService: ProductService,
@@ -39,7 +35,6 @@ export class CustomerService {
 
   async all(
     query: CustomerQuery,
-    user: ActiveUserData,
   ): Promise<{ rows: CustomerEntity[]; count: number }> {
     const { fullname, phone, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
@@ -158,15 +153,12 @@ export class CustomerService {
     );
   }
 
-  async create(
-    body: CustomerRequest,
-    user: ActiveUserData,
-  ): Promise<CustomerEntity> {
+  async create(body: CustomerRequest): Promise<CustomerEntity> {
     const { ...rest } = body;
     const customer = new CustomerEntity().extend({
       ...rest,
-      companyId: user.companyId,
-      userId: user.id,
+      companyId: this.request.userEntity.company?.id,
+      userId: this.request.userEntity.id,
     });
 
     return await this.repo.save(customer);
@@ -184,7 +176,7 @@ export class CustomerService {
   async updateBalance(id: number, balance?: number): Promise<CustomerEntity> {
     const customer = await this.getByIdWithError(id);
 
-    customer.balance = balance;
+    customer.balance = balance || 0;
 
     return this.repo.save(customer);
   }
@@ -220,13 +212,13 @@ export class CustomerService {
           phone: (row[3] as string) || '',
           email: (row[2] as string) || '',
           contact: '',
-          paytime: (row[6] as any) * 1 || 0,
+          paytime: (row[6] as number) * 1 || 0,
           address: (row[4] as string) || '',
           desc: (row[5] as string) || '',
           companyId: this.request.userEntity.company?.id,
           userId: this.request.userEntity.id,
           level: 0,
-          discount: (row[7] as any) * 1 || 100,
+          discount: (row[7] as number) * 1 || 100,
           template: 0,
           no: '',
         }),

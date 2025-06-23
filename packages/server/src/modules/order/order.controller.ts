@@ -15,6 +15,7 @@ import {
 
 import { Roles } from '@/common/decorators/roles.decorator';
 
+import { OrderExportService } from './excel.service';
 import {
   OrderExportRequest,
   OrderQuery,
@@ -28,7 +29,10 @@ import { OrderService } from './order.service';
 })
 @Roles(Role.User)
 export class OrderController {
-  constructor(private orderService: OrderService) {}
+  constructor(
+    private orderService: OrderService,
+    private orderExportService: OrderExportService,
+  ) {}
 
   @Get('/')
   async all(@Query() query: OrderQuery) {
@@ -70,7 +74,7 @@ export class OrderController {
 
   @Patch('/export')
   async export(@Body() body: OrderExportRequest, @Res() res: any) {
-    const data = await this.orderService.export(body);
+    const data = await this.orderExportService.export(body);
 
     const bufferStream = new PassThrough();
     bufferStream.end(data);

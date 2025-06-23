@@ -15,8 +15,9 @@ export class BaseEntity extends TypeORMBaseEntity {
   @DeleteDateColumn()
   deletedAt: Date | null;
 
-  extend(partial: Partial<this>) {
+  extend(partial: Partial<this>): this {
     Object.assign(this, partial);
+
     return this;
   }
 }

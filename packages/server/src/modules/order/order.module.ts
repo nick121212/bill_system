@@ -1,23 +1,25 @@
-import entities from "@bill/database";
-import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
+import entities from '@bill/database';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { ProductService } from "@/modules/product/product.service";
-import { ProductCategoryService } from "@/modules/productCategory/category.service";
-import { ProductUnitService } from "@/modules/productUnit/unit.service";
+import { ProductService } from '@/modules/product/product.service';
+import { ProductCategoryService } from '@/modules/productCategory/category.service';
+import { ProductUnitService } from '@/modules/productUnit/unit.service';
 
-import { OrderController } from "./order.controller";
-import { OrderService } from "./order.service";
+import { OrderExportService } from './excel.service';
+import { OrderController } from './order.controller';
+import { OrderService } from './order.service';
 
 @Module({
   controllers: [OrderController],
   imports: [TypeOrmModule.forFeature(entities)],
   providers: [
     OrderService,
+    OrderExportService,
     ProductCategoryService,
     ProductService,
     ProductUnitService,
   ],
-  exports: [OrderService],
+  exports: [OrderService, OrderExportService],
 })
 export class OrderModule {}

@@ -1,7 +1,6 @@
 import { Role } from '@bill/database';
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -9,8 +8,6 @@ import {
   Put,
   Delete,
   Query,
-  Req,
-  Res,
   UseInterceptors,
   UploadedFile,
   ParseFilePipe,
@@ -19,10 +16,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { ActiveUser } from '@/common/decorators/active-user.decorator';
-import { Public } from '@/common/decorators/public.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
-import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
 
 import {
   CustomerPriceRequest,
@@ -39,8 +33,8 @@ export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
   @Get('/')
-  async all(@Query() query: CustomerQuery, @ActiveUser() user: ActiveUserData) {
-    return this.customerService.all(query, user);
+  async all(@Query() query: CustomerQuery) {
+    return this.customerService.all(query);
   }
 
   @Get('/:id')
@@ -49,19 +43,12 @@ export class CustomerController {
   }
 
   @Post('/')
-  async create(
-    @Body() body: CustomerRequest,
-    @ActiveUser() user: ActiveUserData,
-  ) {
-    return this.customerService.create(body, user);
+  async create(@Body() body: CustomerRequest) {
+    return this.customerService.create(body);
   }
 
   @Put('/:id')
-  async update(
-    @Param('id') id: number,
-    @Body() body: CustomerRequest,
-    @ActiveUser() user: ActiveUserData,
-  ) {
+  async update(@Param('id') id: number, @Body() body: CustomerRequest) {
     return this.customerService.update(id, body);
   }
 

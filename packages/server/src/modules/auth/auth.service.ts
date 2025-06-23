@@ -93,7 +93,7 @@ export class AuthService {
         tokenId,
       } as ActiveUserData,
       {
-        secret: this.configService.get('jwt').secret,
+        secret: this.configService.get<{ secret: string }>('jwt')?.secret,
       },
     );
 

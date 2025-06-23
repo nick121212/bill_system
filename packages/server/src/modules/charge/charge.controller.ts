@@ -1,4 +1,5 @@
-import { Role, ChargeEntity } from '@bill/database';
+import { Role } from '@bill/database';
+import { ChargeEntity } from '@bill/database/dist/entities/Charge';
 import {
   Controller,
   Get,

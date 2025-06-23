@@ -12,6 +12,7 @@ import {
 import { OrderStatus } from "../enums/OrderStatus";
 import { PaymentMethod } from "../enums/PaymentMethod";
 import { BaseEntity } from "./Base";
+import { ChargeEntity } from "./Charge";
 import { CompanyEntity } from "./Company";
 import { CustomerEntity } from "./Customer";
 import { OrderCategoryEntity } from "./OrderCategory";
@@ -143,6 +144,20 @@ export class OrderEntity extends BaseEntity {
   updateTime: Date;
 
   categories?: OrderCategoryEntity[];
+
+  /**
+   * 订单关联的模板ID
+   * @type {number}
+   * @optional
+   */
+  @Column({
+    nullable: true,
+  })
+  chargeId?: number;
+
+  @ManyToOne(() => ChargeEntity)
+  @JoinColumn()
+  charge?: ChargeEntity | null;
 
   /**
    * 软删除时间

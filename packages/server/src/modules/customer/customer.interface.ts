@@ -1,8 +1,8 @@
-import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsString } from "class-validator";
-import { DeliverType } from "@bill/database";
+import { Type } from 'class-transformer';
+import { IsArray, IsNumber, IsString } from 'class-validator';
+import { DeliverType } from '@bill/database';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class CustomerRequest {
   @IsString()
@@ -62,11 +62,11 @@ export class CustomerPriceRequest {
 }
 
 export class CustomerWhere {
-    @IsString()
-    fullname?: string;
+  @IsString()
+  fullname?: string;
 
-    @IsString()
-    phone?: string;
+  @IsString()
+  phone?: string;
 }
 
 export class CustomerQuery extends BaseQuery<CustomerWhere> {

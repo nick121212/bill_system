@@ -42,7 +42,7 @@ import { UserModule } from '@/modules/user/user.module';
       useFactory: (configService: ConfigService) => {
         return {
           global: true,
-          secret: configService.get('jwt').secret,
+          secret: configService.get<{ secret: string }>('jwt')?.secret,
           signOptions: { expiresIn: '60s' },
         };
       },
@@ -55,7 +55,7 @@ import { UserModule } from '@/modules/user/user.module';
             entities: entities || [],
             synchronize: true,
           },
-          configService.get('database'),
+          configService.get<{ synchronize: boolean }>('database') || {},
           {},
         );
       },

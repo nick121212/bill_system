@@ -579,7 +579,9 @@ export default function DetailForm({
                   price: number;
                 }[];
               }[];
+              status: number;
               no: string;
+              payment: number;
               customerId: number;
               templateId: number;
               realTotalPrice: number;
@@ -603,6 +605,8 @@ export default function DetailForm({
                   templateId: formData.templateId,
                   categories: processedCategories,
                   desc: formData.desc,
+                  status: formData.status,
+                  payment: formData.payment,
                   realTotalPrice: formData.realTotalPrice,
                 },
               });
@@ -664,6 +668,13 @@ export default function DetailForm({
                 { label: '未结款', value: 0 },
                 { label: '已结款', value: 1 },
                 { label: '已取消', value: 2 },
+              ]}
+            />
+            <SelectField
+              name="payment"
+              options={[
+                { label: '现金', value: 0 },
+                { label: '余额', value: 1 },
               ]}
             />
             <TotalPrice />

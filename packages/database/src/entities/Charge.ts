@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from "typeorm";
 
+import { ChargeType } from "../enums/ChargeType";
 import { BaseEntity } from "./Base";
 import { CustomerEntity } from "./Customer";
 import { UserEntity } from "./User";
@@ -44,6 +45,13 @@ export class ChargeEntity extends BaseEntity {
     default: 0,
   })
   extra?: number;
+
+  @Column({
+    type: "enum",
+    enum: ChargeType,
+    default: ChargeType.CHARGE,
+  })
+  type?: ChargeType;
 
   @Column({
     nullable: true,

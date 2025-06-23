@@ -1,16 +1,19 @@
-{  
-  "title": "Recharge",  
-  "type": "object",  
-  "properties": {  
-    "balance": {  
-      "type": "number",  
-      "title": "充值金额"
+{
+  "title": "Recharge",
+  "type": "object",
+  "properties": {
+    "balance": {
+      "type": "number",
+      "title": "充值金额",
+      "default": 100,
+      "minimum": 1,
+      "maximum": 1000000
     },
-    "extra": {  
-      "type": "number",  
+    "extra": {
+      "type": "number",
       "title": "赠送金额",
       "default": 0
     }
-  },  
-  "required": []  
+  },
+  "required": []
 }

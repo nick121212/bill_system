@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import { Modal, Button, Form } from 'antd';
-import { MoneyCollectOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { MoneyCollectOutlined } from '@ant-design/icons';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
@@ -61,7 +61,7 @@ const RechargeModal: React.FC<any> = ({ id, onCancel, onSuccess }) => {
             callAjax({ data: { ...formData, customerId: id } });
           }}
         >
-          <NumField name="balance" min={1} precision={2} decimal />
+          <NumField name="balance" min={1} precision={0} />
           {/* <NumField name="extra" min={0} precision={2} decimal/> */}
         </AutoForm>
       </Form>

@@ -1,6 +1,8 @@
 import type { Repository } from 'typeorm';
-import { ApiStatusCode } from '@bill/database';
-import { ChargeEntity, UserEntity } from '@bill/database/dist/entities';
+import { UserEntity } from '@bill/database';
+import { ChargeEntity } from '@bill/database/dist/entities/Charge';
+import { ApiStatusCode } from '@bill/database/dist/enums/ApiStatusCode';
+import { ChargeType } from '@bill/database/dist/enums/ChargeType';
 import { Global, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -45,7 +47,6 @@ export class ChargeService {
     };
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
   async getById(id?: number): Promise<ChargeEntity | null> {
     return await this.repoCharge.findOne({
       where: { id },
@@ -53,12 +54,11 @@ export class ChargeService {
   }
 
   async getByIdWithError(id?: number): Promise<ChargeEntity> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const charge = await this.getById(id);
 
     if (!charge) {
       throw new ApiException(
-        'can not find recoed',
+        'can not find record',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
@@ -74,11 +74,11 @@ export class ChargeService {
   async create(body: ChargeRequest): Promise<ChargeEntity> {
     const { customerId, balance, extra } = body;
     const customer = await this.customerService.getByIdWithError(customerId);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    const data = new ChargeEntity().extend({
+    const data: ChargeEntity = new ChargeEntity().extend({
       balance,
       extra,
-      // customerId: customerId,
+      type: ChargeType.CHARGE,
+      customerId: customerId,
       customer,
       companyId: this.request.userEntity.company?.id,
       userId: this.request.userEntity.id,
@@ -91,13 +91,12 @@ export class ChargeService {
     customer.balance += balance;
     customer.balance += extra;
 
-    await this.customerService.updateBalance(customerId, customer.balance);
+    await this.customerService.updateBalance(customerId, customer.balance || 0);
 
-    return await this.repoCharge.save(data);
+    return this.repoCharge.save<ChargeEntity>(data);
   }
 
   async remove(id: number): Promise<ChargeEntity> {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const charge = await this.getByIdWithError(id);
 
     return this.repoCharge.softRemove(charge);

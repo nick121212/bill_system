@@ -1,4 +1,4 @@
-import { Type } from "class-transformer";
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -7,10 +7,11 @@ import {
   IsString,
   Max,
   Min,
-} from "class-validator";
-import { OrderStatus } from "@bill/database/dist/enums/OrderStatus";
+} from 'class-validator';
+import { OrderStatus } from '@bill/database/dist/enums/OrderStatus';
+import { PaymentMethod } from '@bill/database/dist/enums/PaymentMethod';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class OrderProduct {
   @IsNumber()
@@ -50,6 +51,10 @@ export class OrderRequest {
   templateId?: number;
 
   totalPrice?: number;
+
+  payment?: PaymentMethod;
+
+  status?: number;
 
   realTotalPrice?: number;
 
