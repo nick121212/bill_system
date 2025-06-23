@@ -12,8 +12,8 @@ import { RedisService } from './redis.service';
   providers: [
     {
       provide: IORedisKey,
-      useFactory: async (configService: ConfigService) => {
-        return new Redis(configService.get('redis') as any);
+      useFactory: (configService: ConfigService) => {
+        return new Redis(configService.get<any>('redis'));
       },
       inject: [ConfigService],
     },
@@ -24,9 +24,10 @@ import { RedisService } from './redis.service';
 export class RedisModule implements OnApplicationShutdown {
   constructor(private readonly moduleRef: ModuleRef) {}
 
-  async onApplicationShutdown(signal?: string): Promise<void> {
+  async onApplicationShutdown(): Promise<void> {
     return new Promise<void>((resolve) => {
       const redis = this.moduleRef.get(IORedisKey);
+
       redis.quit();
       redis.on('end', () => {
         resolve();

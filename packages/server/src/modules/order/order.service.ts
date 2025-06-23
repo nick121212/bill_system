@@ -187,20 +187,8 @@ export class OrderService {
       body.customerId,
     );
 
-    if (!customer.balance || customer.balance < (body.realTotalPrice || 0)) {
-      throw new ApiException(
-        'balance not enough',
-        ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK,
-        {
-          id: body.customerId,
-          type: 'CustomerEntity',
-        },
-      );
-    }
-
     return await this.em.transaction(async (entityManager: EntityManager) => {
-      const payment = body.payment || PaymentMethod.COUPAY;
+      const payment = body.payment;
       let charge = new ChargeEntity();
 
       if (child.charge?.balance) {
@@ -221,6 +209,20 @@ export class OrderService {
       }
 
       if (payment === PaymentMethod.COUPAY) {
+        if (
+          !customer.balance ||
+          customer.balance < (body.realTotalPrice || 0)
+        ) {
+          throw new ApiException(
+            'balance not enough',
+            ApiStatusCode.KEY_NOT_EXIST,
+            HttpStatus.OK,
+            {
+              id: body.customerId,
+              type: 'CustomerEntity',
+            },
+          );
+        }
         charge = await entityManager.save(ChargeEntity, {
           customerId: body.customerId,
           balance: -(body.realTotalPrice || 0),

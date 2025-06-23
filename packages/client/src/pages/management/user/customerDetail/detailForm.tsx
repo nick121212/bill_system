@@ -1,14 +1,6 @@
 import { useRef, useState, useEffect } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
-import {
-  Button,
-  Drawer,
-  Form,
-  Space,
-  Spin,
-  Tabs,
-  Table,
-} from 'antd';
+import { Button, Drawer, Form, Space, Spin, Tabs, Table } from 'antd';
 import type { TabsProps } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';

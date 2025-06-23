@@ -23,6 +23,7 @@ interface IProps {
     }[];
     customer: CustomerEntity;
     no: string;
+    payment: number;
     customerId: number;
     templateId: number;
     desc: string;
@@ -132,6 +133,7 @@ const ConfrimDetail = ({ formData }: IProps) => {
             key: 'status',
             formatter: (v) => t(`cls.order.statusStr.${v || 0}`),
           },
+          { label: '支付方式', key: 'payment', formatter: (v) => t(`cls.order.paymentStr.${v || 0}`) },
           {
             label: '订单日期',
             key: 'createTime',

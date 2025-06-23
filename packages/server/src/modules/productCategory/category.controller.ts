@@ -1,7 +1,6 @@
 import { Role } from '@bill/database';
 import {
   Controller,
-  Request,
   Get,
   Post,
   Body,
@@ -14,7 +13,6 @@ import {
 import { ActiveUser } from '@/common/decorators/active-user.decorator';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { ActiveUserData } from '@/common/interfaces/active-user-data.interface';
-import { BaseQuery } from '@/common/interfaces/query';
 import { Log4jsService } from '@/modules/log4js';
 
 import {

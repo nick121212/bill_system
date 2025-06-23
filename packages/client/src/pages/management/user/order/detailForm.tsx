@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import {
   Button,
@@ -6,7 +6,6 @@ import {
   Drawer,
   Form,
   Flex,
-  Spin,
   Row,
   Col,
   Modal,
@@ -493,6 +492,31 @@ export default function DetailForm({
     },
   );
 
+  const formModel = useMemo(() => {
+    return {
+      templateId: order?.templateId || -1,
+      ...order,
+      customerId: order?.customer?.id,
+      categories: categories?.map((cate) => {
+        return {
+          name: cate.name,
+          products: cate.products.map((product) => {
+            return {
+              product: product.product,
+              product1: product.product,
+              productId: product.product.id,
+              productCategoryId: product.productCategory.id,
+              count: product.count,
+              times: product.times,
+              desc: product.product.desc,
+              price: product.price,
+            };
+          }),
+        };
+      }),
+    };
+  }, [order, categories]);
+
   const confirm = () => {
     const data = formRef.current.getModel();
     modal.confirm({
@@ -538,150 +562,123 @@ export default function DetailForm({
         layout="horizontal"
         labelAlign="right"
       >
-        <Spin spinning={loadingAjax}>
-          <AutoForm
-            ref={formRef as any}
-            showInlineError
-            schema={bridge}
-            model={
-              {
-                templateId: order?.templateId || -1,
-                ...order,
-                customerId: order?.customer?.id,
-                categories: categories?.map((cate) => {
-                  return {
-                    name: cate.name,
-                    products: cate.products.map((product) => {
-                      return {
-                        product: product.product,
-                        product1: product.product,
-                        productId: product.product.id,
-                        productCategoryId: product.productCategory.id,
-                        count: product.count,
-                        times: product.times,
-                        desc: product.product.desc,
-                        price: product.price,
-                      };
-                    }),
-                  };
-                }),
-              } as any
-            }
-            onSubmit={(formData: {
-              categories: {
-                name: string;
-                products: {
-                  productId: number;
-                  productCategoryId: number;
-                  count: number;
-                  times: number;
-                  desc: string;
-                  price: number;
-                }[];
+        <AutoForm
+          ref={formRef as any}
+          showInlineError
+          schema={bridge}
+          model={formModel as any}
+          onSubmit={(formData: {
+            categories: {
+              name: string;
+              products: {
+                productId: number;
+                productCategoryId: number;
+                count: number;
+                times: number;
+                desc: string;
+                price: number;
               }[];
-              status: number;
-              no: string;
-              payment: number;
-              customerId: number;
-              templateId: number;
-              realTotalPrice: number;
-              desc: string;
-            }) => {
-              // 转换价格为整数后提交
-              const processedCategories = formData.categories.map(
-                (category) => ({
-                  ...category,
-                  products: category.products.map((product) => ({
-                    ...product,
-                    price: convertPriceToServer(product.price),
-                  })),
-                }),
-              );
+            }[];
+            status: number;
+            no: string;
+            payment: number;
+            customerId: number;
+            templateId: number;
+            realTotalPrice: number;
+            desc: string;
+          }) => {
+            // 转换价格为整数后提交
+            const processedCategories = formData.categories.map((category) => ({
+              ...category,
+              products: category.products.map((product) => ({
+                ...product,
+                price: convertPriceToServer(product.price),
+              })),
+            }));
 
-              callAjax({
-                data: {
-                  no: formData.no,
-                  customerId: formData.customerId,
-                  templateId: formData.templateId,
-                  categories: processedCategories,
-                  desc: formData.desc,
-                  status: formData.status,
-                  payment: formData.payment,
-                  realTotalPrice: formData.realTotalPrice,
-                },
-              });
+            callAjax({
+              data: {
+                no: formData.no,
+                customerId: formData.customerId,
+                templateId: formData.templateId,
+                categories: processedCategories,
+                desc: formData.desc,
+                status: formData.status,
+                payment: formData.payment,
+                realTotalPrice: formData.realTotalPrice,
+              },
+            });
+          }}
+        >
+          <ErrorsField />
+
+          <CustomerSelect />
+
+          <TemplateSelect />
+
+          <VisibleField
+            name="categories"
+            condition={(model) => {
+              return model.templateId;
             }}
           >
-            <ErrorsField />
-
-            <CustomerSelect />
-
-            <TemplateSelect />
-
-            <VisibleField
-              name="categories"
-              condition={(model) => {
-                return model.templateId;
-              }}
-            >
-              <EmptyField name="categories">
-                <ListViewField
-                  label=""
-                  name="categories"
-                  rowKey={(item) => {
-                    if (item.key) {
-                      return item.key;
-                    }
-                    item.key = Date.now();
+            <EmptyField name="categories">
+              <ListViewField
+                label=""
+                name="categories"
+                rowKey={(item) => {
+                  if (item.key) {
                     return item.key;
-                  }}
-                  addButton={
-                    <ListAddField
-                      name="$"
-                      shape="default"
-                      ghost
-                      size="large"
-                      color="danger"
-                      variant="text"
-                      value={(cates: any) => {
-                        return {
-                          key: Date.now(),
-                          name: `分类${cates?.length ? cates?.length + 1 : 1}`,
-                        };
-                      }}
-                      icon={<PlusOutlined />}
-                    >
-                      添加分类
-                    </ListAddField>
                   }
-                >
-                  <CategoryItem name="$" />
-                </ListViewField>
-              </EmptyField>
-            </VisibleField>
+                  item.key = Date.now();
+                  return item.key;
+                }}
+                addButton={
+                  <ListAddField
+                    name="$"
+                    shape="default"
+                    ghost
+                    size="large"
+                    color="danger"
+                    variant="text"
+                    value={(cates: any) => {
+                      return {
+                        key: Date.now(),
+                        name: `分类${cates?.length ? cates?.length + 1 : 1}`,
+                      };
+                    }}
+                    icon={<PlusOutlined />}
+                  >
+                    添加分类
+                  </ListAddField>
+                }
+              >
+                <CategoryItem name="$" />
+              </ListViewField>
+            </EmptyField>
+          </VisibleField>
 
-            <LongTextField name="desc" />
+          <LongTextField name="desc" />
 
-            <SelectField
-              name="status"
-              options={[
-                { label: '未结款', value: 0 },
-                { label: '已结款', value: 1 },
-                { label: '已取消', value: 2 },
-              ]}
-            />
-            <SelectField
-              name="payment"
-              options={[
-                { label: '现金', value: 0 },
-                { label: '余额', value: 1 },
-              ]}
-            />
-            <TotalPrice />
+          <SelectField
+            name="status"
+            options={[
+              { label: '未结款', value: 0 },
+              { label: '已结款', value: 1 },
+              { label: '已取消', value: 2 },
+            ]}
+          />
+          <SelectField
+            name="payment"
+            options={[
+              { label: '现金', value: 0 },
+              { label: '余额', value: 1 },
+            ]}
+          />
+          <TotalPrice />
 
-            <NumField name="realTotalPrice" />
-          </AutoForm>
-        </Spin>
+          <NumField name="realTotalPrice" />
+        </AutoForm>
       </Form>
 
       <Flex justify="center" gap={10}>

@@ -1,4 +1,3 @@
-import { BigNumber } from 'bignumber.js';
 import xlsx from 'node-xlsx';
 import { Like, Repository, Not, In, ILike } from 'typeorm';
 import { ApiStatusCode } from '@bill/database';
@@ -63,7 +62,7 @@ export class ProductService {
     category: ProductCategoryEntity,
     query: ProductQuery,
   ) {
-    const { name, productId, ...rest } = query.where || {};
+    const { name, productId } = query.where || {};
 
     return this.repo.findAndCount({
       skip: query.skip,
@@ -127,7 +126,7 @@ export class ProductService {
     body: ProductBodyRequest,
     user?: ActiveUserData,
   ): Promise<ProductEntity> {
-    const { unitId, id, ...rest } = body;
+    const { unitId, ...rest } = body;
     const unit = await this.productUnitService.getByIdWithError(unitId);
     const child = new ProductEntity().extend({
       ...rest,

@@ -1,7 +1,6 @@
-import { IsArray, IsNumber, IsString, Length, Max, Min } from "class-validator";
-import { PermissionType } from "@bill/database";
+import { IsArray, IsString } from 'class-validator';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class ProductCategoryRequest {
   @IsString()

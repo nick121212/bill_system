@@ -109,7 +109,10 @@ export class UserService {
     return this.repo.findOne({
       where: {
         email,
-        password: hashPwd(pass, this.configService.get('app').secret),
+        password: hashPwd(
+          pass,
+          this.configService.get<{ secret: string }>('app')?.secret || '',
+        ),
       },
       relations: {
         role: true,
@@ -125,7 +128,7 @@ export class UserService {
       avatar: rest.avatar || '',
       password: hashPwd(
         password ?? '123456789',
-        this.configService.get('app').secret,
+        this.configService.get<{ secret: string }>('app')?.secret || '',
       ),
       role: (await this.roleService.getById(role)) ?? undefined,
       company: (await this.companyService.getById(company)) ?? undefined,
@@ -161,7 +164,10 @@ export class UserService {
 
     if (
       userEntity.password !==
-      hashPwd(body.password, this.configService.get('app').secret)
+      hashPwd(
+        body.password,
+        this.configService.get<{ secret: string }>('app')?.secret || '',
+      )
     ) {
       throw new ApiException(
         'password not correct',
@@ -180,7 +186,7 @@ export class UserService {
 
     userEntity.password = hashPwd(
       body.passwordNew,
-      this.configService.get('app').secret,
+      this.configService.get<{ secret: string }>('app')?.secret || '',
     );
 
     return this.repo.save(userEntity);

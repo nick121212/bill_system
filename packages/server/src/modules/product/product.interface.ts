@@ -1,10 +1,8 @@
-import { IsNumber, IsString, Max, Min } from "class-validator";
+import { IsNumber, IsString } from 'class-validator';
 
-import { BaseQuery } from "@/common/interfaces/query";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class ProductBodyRequest {
-  id?: number;
-
   @IsString()
   name: string;
 

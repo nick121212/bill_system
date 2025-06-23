@@ -45,7 +45,10 @@ export default function ProductTemplateDetail({
     'products',
     showModal && !!data?.customer?.id,
   );
-  // const { uuid, loading: uuidLoading } = useUUID(showModal);
+  // const { uuid, loading: uuidLoading } = useUUID(showModal);  
+
+  console.log(data , categories , products);
+  
 
   return (
     <>
@@ -74,6 +77,7 @@ export default function ProductTemplateDetail({
 
       {showModal && ((data && categories && products) || !orderId) && (
         <DetailForm
+          key={orderId}
           title={title}
           order={
             {
