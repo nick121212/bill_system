@@ -1,13 +1,12 @@
 import { useMemo } from 'react';
 import { Descriptions, Space, Table } from 'antd';
-import type { DescriptionsProps, TableProps } from 'antd';
+import type { TableProps } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import {  CustomerEntity } from '@bill/database/esm';
-
-import { convertNo, convertPriceFromServer } from '@/utils';
+import { CustomerEntity } from '@bill/database/esm';
 
 import GenericDescriptions from '@/pages/components/genericDescriptions';
+import { convertNo, convertPriceFromServer } from '@/utils';
 
 interface IProps {
   formData: {
@@ -30,10 +29,10 @@ interface IProps {
     status: number;
     createTime?: Date;
     realTotalPrice?: number;
-  }
+  };
 }
 
-const ConfrimDetail = ({formData}: IProps) => {
+const ConfrimDetail = ({ formData }: IProps) => {
   const { t } = useTranslation();
   const flattenData = useMemo(() => {
     const data: any[] = [];
@@ -119,13 +118,26 @@ const ConfrimDetail = ({formData}: IProps) => {
         }}
         title="基本信息"
         itemsConfig={[
-          { label: '订单编号', key: 'no', formatter: (v) => convertNo(v || '') },
+          {
+            label: '订单编号',
+            key: 'no',
+            formatter: (v) => convertNo(v || ''),
+          },
           { label: '客户', key: 'fullname' },
           { label: '电话', key: 'phone' },
           { label: '地址', key: 'address' },
           { label: '邮箱', key: 'email' },
-          { label: '结款信息', key: 'status', formatter: (v) => t(`cls.order.statusStr.${v || 0}`) },
-          { label: '订单日期', key: 'createTime', formatter: (v) => v ? dayjs(v).format('YYYY-MM-DD HH:mm:ss') : '--' },
+          {
+            label: '结款信息',
+            key: 'status',
+            formatter: (v) => t(`cls.order.statusStr.${v || 0}`),
+          },
+          {
+            label: '订单日期',
+            key: 'createTime',
+            formatter: (v) =>
+              v ? dayjs(v).format('YYYY-MM-DD HH:mm:ss') : '--',
+          },
           { label: '描述', key: 'desc', span: 'filled' },
         ]}
       />

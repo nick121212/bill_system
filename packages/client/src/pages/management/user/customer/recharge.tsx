@@ -6,7 +6,7 @@ import { MoneyCollectOutlined } from '@ant-design/icons';
 
 import useFormAction from '@/hooks/form/useFormAction';
 import { getBridge } from '@/uniforms/ajv';
-import { AutoForm, TextField, NumField } from '@/uniforms/fields';
+import { AutoForm, NumField } from '@/uniforms/fields';
 
 import schema from './schemas/recharge.json';
 

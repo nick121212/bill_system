@@ -1,15 +1,14 @@
 import { useState, useMemo } from 'react';
 import { Button, Descriptions, Drawer, Space, Table } from 'antd';
-import type { DescriptionsProps, TableProps } from 'antd';
+import type { TableProps } from 'antd';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { AlignRightOutlined } from '@ant-design/icons';
 import { OrderEntity, ProductCategoryEntity } from '@bill/database/esm';
 
 import useDetailData from '@/hooks/data/useDetailData';
-import { convertNo, convertPriceFromServer } from '@/utils';
-
 import GenericDescriptions from '@/pages/components/genericDescriptions';
+import { convertNo, convertPriceFromServer } from '@/utils';
 
 interface IProps {
   orderId: number;

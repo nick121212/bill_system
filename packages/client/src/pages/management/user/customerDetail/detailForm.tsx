@@ -1,10 +1,7 @@
-import { useRef, useState, useEffect, Children } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { SomeJSONSchema } from 'ajv/dist/types/json-schema';
 import {
   Button,
-  Card,
-  Descriptions,
-  Divider,
   Drawer,
   Form,
   Space,
@@ -12,10 +9,10 @@ import {
   Tabs,
   Table,
 } from 'antd';
-import type { TabsProps, DescriptionsProps } from 'antd';
+import type { TabsProps } from 'antd';
+import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { useField, useForm } from 'uniforms';
-import dayjs from 'dayjs';
 import { PlusOutlined, ReloadOutlined } from '@ant-design/icons';
 import {
   CustomerEntity,
@@ -27,6 +24,7 @@ import {
 import useData from '@/hooks/data/useData';
 import useDetailData from '@/hooks/data/useDetailData';
 import useFormAction from '@/hooks/form/useFormAction';
+import GenericDescriptions from '@/pages/components/genericDescriptions';
 import { getBridge } from '@/uniforms/ajv';
 import {
   AutoField,
@@ -37,7 +35,6 @@ import {
   TableField,
 } from '@/uniforms/fields';
 import { convertPriceToServer } from '@/utils';
-import GenericDescriptions from '@/pages/components/genericDescriptions';
 
 import schema from './schemas/create.json';
 

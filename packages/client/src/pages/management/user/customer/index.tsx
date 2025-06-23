@@ -4,9 +4,8 @@ import type { ColumnsType } from 'antd/es/table';
 import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
-import { ReloadOutlined, MoneyCollectOutlined } from '@ant-design/icons';
+import { ReloadOutlined } from '@ant-design/icons';
 import type { CustomerEntity } from '@bill/database/esm';
-import { useRouter } from '@/router/hooks';
 
 import TablePage from '@/components/table';
 import usePagination from '@/hooks/data/usePagination';
@@ -14,14 +13,13 @@ import usePagination from '@/hooks/data/usePagination';
 import Create from './create';
 import Detail from './detail';
 import Edit from './edit';
+import Recharge from './recharge';
 import Remove from './remove';
 import Search from './search';
 import Upload from './upload';
-import Recharge from './recharge';
 
 export default function ProductUnit() {
   const { t } = useTranslation();
-  const { push } = useRouter();
   const [{ data: rows, loading }, refresh] = useAxios(
     {
       url: '/customers',

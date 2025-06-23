@@ -325,6 +325,8 @@ export class OrderService {
     const orderNo = await this.generateIndex(key);
     const orderFromNo = await this.getByNo(orderNo);
 
+    console.log(categories);
+
     if (orderFromNo) {
       throw new ApiException(
         'order no already exists',
@@ -349,6 +351,8 @@ export class OrderService {
   async update(id: number, body: OrderRequest): Promise<OrderEntity> {
     const order = await this.getByIdWithError(id);
     const { categories, ...rest } = body;
+
+    console.log(categories);
 
     order.extend(rest);
 
