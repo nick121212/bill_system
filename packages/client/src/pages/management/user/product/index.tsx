@@ -5,7 +5,7 @@ import useAxios from 'axios-hooks';
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 import { ReloadOutlined } from '@ant-design/icons';
-import type { ProductEntity } from '@bill/database/esm';
+import type { ProductEntity, ProductInfoEntity } from '@bill/database/esm';
 import type { ProductUnitEntity } from '@bill/database/esm';
 
 import TablePage from '@/components/table';
@@ -80,6 +80,12 @@ export default function PermissionPage() {
       align: 'center',
       width: '15%',
       ellipsis: true,
+    },
+    {
+      title: t('cls.product.stock'),
+      dataIndex: 'info',
+      align: 'center',
+      render: (obj: ProductInfoEntity) => obj?.stock ?? "-",
     },
     {
       title: t('cls.com.createTime'),

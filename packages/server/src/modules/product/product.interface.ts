@@ -7,6 +7,9 @@ export class ProductBodyRequest {
   name: string;
 
   @IsString()
+  sku?: string;
+
+  @IsString()
   label: string;
 
   @IsString()
@@ -22,6 +25,9 @@ export class ProductBodyRequest {
 
   @IsNumber()
   unitId: number;
+
+  @IsNumber()
+  stock?: number;
 }
 
 export class ProductQuery extends BaseQuery<{

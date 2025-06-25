@@ -6,7 +6,9 @@
     "label": { "type": "string", "title": "标签", "default": "" },
     "price": { "type": "number", "title": "价格" },
     "cost": { "type": "number", "title": "成本" },
+    "sku": { "type": "string", "title": "SKU", "default": "" },
     "desc": { "type": "string", "title": "介绍", "default": "" },
+    "stock": { "type": "number", "title": "库存", "default": 1, "minimum": 1 },
     "unitId": {
       "type": "number",
       "title": "单位"

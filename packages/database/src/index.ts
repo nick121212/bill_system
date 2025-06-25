@@ -16,6 +16,7 @@ import {
   OrderCategoryEntity,
   ReportEntity,
   ChargeEntity,
+  ProductInfoEntity,
 } from "./entities";
 import { ApiStatusCode } from "./enums/ApiStatusCode";
 import { ChargeType } from "./enums/ChargeType";
@@ -54,6 +55,7 @@ export {
   ReportEntity,
   ChargeEntity,
   TotalAmountView,
+  ProductInfoEntity
 };
 
 export default [
@@ -75,4 +77,5 @@ export default [
   TotalAmountView,
   ReportEntity,
   ChargeEntity,
+  ProductInfoEntity
 ];

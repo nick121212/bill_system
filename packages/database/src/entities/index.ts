@@ -15,3 +15,4 @@ export * from "./OrderProduct";
 export * from "./OrderCategory";
 export * from "./Report";
 export * from "./Charge";
+export * from "./ProductInfo";

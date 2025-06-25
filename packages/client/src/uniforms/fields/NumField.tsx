@@ -8,10 +8,12 @@ export type NumFieldProps = FieldProps<
   number,
   // FIXME: Why `onReset` fails with `wrapField`?
   Omit<InputNumberProps, 'onReset'>,
-  { decimal?: boolean; inputRef?: Ref<HTMLInputElement> }
+  { min?: number; max?: number; decimal?: boolean; inputRef?: Ref<HTMLInputElement> }
 >;
 
 function Num(props: NumFieldProps) {
+  console.log(props);
+  
   return wrapField(
     props,
     <InputNumber

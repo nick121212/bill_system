@@ -16,6 +16,7 @@ import {
   ErrorsField,
   TextAreaField,
   AutoField,
+  NumField,
 } from '@/uniforms/fields';
 import { convertPriceToServer } from '@/utils';
 
@@ -97,7 +98,8 @@ function ProductCreateForm({ title, onSuccess, onClose }: ProductModalProps) {
           >
             <ErrorsField />
 
-            <AutoFields fields={['name', 'price', 'cost']} />
+            <AutoFields fields={['sku', 'name', 'price', 'cost']} />
+            <NumField name="stock" decimal={false} min={1} />
 
             <AutoField
               name="unitId"

@@ -15,6 +15,7 @@ import {
   ErrorsField,
   TextAreaField,
   AutoField,
+  NumField,
 } from '@/uniforms/fields';
 import { convertPriceToServer, convertPriceFromServer } from '@/utils';
 
@@ -92,6 +93,8 @@ function ProductCreateForm({
                 unitId: formValue?.unit?.id,
                 price: convertPriceFromServer(formValue?.price as number),
                 cost: convertPriceFromServer(formValue?.cost as number),
+                stock: formValue?.info?.stock || 1,
+                sku: formValue?.sku || '',
               } as any
             }
             onSubmit={(formData) => {
@@ -108,7 +111,9 @@ function ProductCreateForm({
           >
             <ErrorsField />
 
-            <AutoFields fields={['name', 'price', 'cost']} />
+            <AutoFields fields={['sku', 'name', 'price', 'cost']} />
+
+            <NumField name="stock" decimal={false} min={1} />
 
             <AutoField
               name="unitId"

@@ -4,6 +4,7 @@ import { ApiStatusCode } from '@bill/database';
 import {
   ProductCategoryEntity,
   ProductEntity,
+  ProductInfoEntity,
   UserEntity,
 } from '@bill/database/dist/entities';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
@@ -25,6 +26,8 @@ export class ProductService {
   constructor(
     private logger: Log4jsService,
     @InjectRepository(ProductEntity) private repo: Repository<ProductEntity>,
+    @InjectRepository(ProductInfoEntity)
+    private infoRepo: Repository<ProductInfoEntity>,
     private productUnitService: ProductUnitService,
     private productCategoryService: ProductCategoryService,
     @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
@@ -48,6 +51,7 @@ export class ProductService {
       relations: {
         // category: true,
         unit: true,
+        info: true,
       },
       withDeleted: false,
     });
@@ -97,8 +101,15 @@ export class ProductService {
       return null;
     }
 
-    const data = await this.repo.findOneBy({
-      id,
+    const data = await this.repo.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        unit: true,
+        info: true,
+      },
+      withDeleted: false,
     });
 
     return data || null;
@@ -128,15 +139,18 @@ export class ProductService {
   ): Promise<ProductEntity> {
     const { unitId, ...rest } = body;
     const unit = await this.productUnitService.getByIdWithError(unitId);
+    const info = await this.infoRepo.save({ stock: body.stock || 0 });
     const child = new ProductEntity().extend({
       ...rest,
       price: toPrice(body.price),
       cost: toPrice(body.cost),
       companyId: user?.companyId,
       userId: user?.id,
+      sku: body.sku || undefined,
     });
 
     child.unit = unit;
+    child.info = info;
 
     return await this.repo.save(child);
   }
@@ -151,6 +165,12 @@ export class ProductService {
     product.desc = body.desc;
     product.price = toPrice(body.price);
     product.unit = unit;
+    product.sku = body.sku || undefined;
+
+    if (!product.info) {
+      product.info = await this.infoRepo.save({ stock: body.stock || 0 });
+    }
+    product.info.stock = body.stock || 0;
 
     return this.repo.save(product);
   }

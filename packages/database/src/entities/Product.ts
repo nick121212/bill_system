@@ -8,18 +8,27 @@ import {
   DeleteDateColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
+  Unique,
 } from "typeorm";
 
 import { BaseEntity } from "./Base";
+import { ProductInfoEntity } from "./ProductInfo";
 import { ProductPriceEntity } from "./ProductPrice";
 import { ProductUnitEntity } from "./ProductUnit";
 
 @Entity({
   name: "product",
 })
+@Unique(["sku"])
 export class ProductEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    default: null,
+  })
+  sku?: string;
 
   @Column()
   name: string;
@@ -50,9 +59,9 @@ export class ProductEntity extends BaseEntity {
   })
   userId?: number;
 
-  // @ManyToOne(() => ProductCategoryEntity)
-  // @JoinTable()
-  // category: ProductCategoryEntity;
+  @OneToOne(() => ProductInfoEntity)
+  @JoinColumn()
+  info?: ProductInfoEntity;
 
   @ManyToOne(() => ProductUnitEntity)
   @JoinColumn()
