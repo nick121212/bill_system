@@ -8,6 +8,7 @@ import {
   OrderProductEntity,
   ProductCategoryEntity,
   ProductEntity,
+  ProductInfoEntity,
   UserEntity,
 } from '@bill/database';
 import { ApiStatusCode } from '@bill/database/dist/enums/ApiStatusCode';
@@ -191,6 +192,7 @@ export class OrderService {
       const payment = body.payment;
       let charge = new ChargeEntity();
 
+      // 回溯订单的金额
       if (child.charge?.balance) {
         charge = await entityManager.save(ChargeEntity, {
           customerId: body.customerId,
@@ -235,6 +237,8 @@ export class OrderService {
 
         customer.balance = (customer.balance || 0) - (body.realTotalPrice || 0);
       }
+
+      // 保存订单
       const order = await entityManager.save(OrderEntity, {
         ...child,
         totalPrice: 0,
@@ -248,6 +252,7 @@ export class OrderService {
       });
       const categories: Promise<OrderCategoryEntity>[] = [];
       const products: Promise<OrderProductEntity>[] = [];
+      const productInfos: Promise<ProductInfoEntity>[] = [];
 
       if (remove) {
         await this.repoPro.delete({
@@ -268,9 +273,21 @@ export class OrderService {
         categories.push(entityManager.save(orderCategory));
 
         for (const p of c.products) {
-          const product = await entityManager.findOneByOrFail(ProductEntity, {
-            id: p.productId,
+          const product = await entityManager.findOneOrFail(ProductEntity, {
+            where: {
+              id: p.productId,
+            },
+            relations: {
+              info: true,
+            },
           });
+
+          if (!child.id && product.info?.stock) {
+            product.info.stock -= p.count * p.times;
+
+            productInfos.push(entityManager.save(product.info));
+          }
+
           const productCategory =
             await entityManager.findOneByOrFail<ProductCategoryEntity>(
               ProductCategoryEntity,
@@ -305,6 +322,7 @@ export class OrderService {
       await Promise.all([
         ...categories,
         ...products,
+        ...productInfos,
         entityManager.save(customer),
         // entityManager.save(order),
       ]).catch((e) => {

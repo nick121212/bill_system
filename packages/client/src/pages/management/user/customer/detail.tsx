@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
 
-import DetailForm from '../customerDetail/detailForm';
+import DetailForm from '../customerDetail';
 
 interface IProps {
   id: number;

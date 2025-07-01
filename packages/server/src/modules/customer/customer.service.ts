@@ -229,4 +229,64 @@ export class CustomerService {
 
     return result;
   }
+
+  async uploadProductFile(id: number, file: Express.Multer.File) {
+    const customer = await this.getByIdWithError(id);
+    const workSheetsFromBuffer = xlsx.parse(file.buffer);
+
+    if (workSheetsFromBuffer.length <= 0) {
+      throw new ApiException(
+        'can not find recoed',
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          type: 'ProductEntity',
+        },
+      );
+    }
+
+    const workSheet = workSheetsFromBuffer[0];
+    const rows = workSheet.data.splice(1);
+    const pricesEntities: ProductPriceEntity[] = [];
+    const remains: string[] = [];
+
+    await this.repoForPrice
+      .createQueryBuilder()
+      .delete()
+      .where({
+        customer: {
+          id,
+        },
+      })
+      .execute();
+
+    for (const row of rows) {
+      const product = await this.productService.getByName(
+        (row[1] as string).trim(),
+      );
+
+      if (!product) {
+        remains.push(row[1] as string);
+      } else {
+        pricesEntities.push(
+          new ProductPriceEntity().extend({
+            customer,
+            discount: (row[3] as number) * 1 || 100,
+            price: toPrice(row[2] as number),
+            product: product,
+          }),
+        );
+      }
+    }
+
+    if (pricesEntities.length) {
+      await this.repoForPrice.save(pricesEntities);
+    }
+
+    return {
+      successCount: rows.length - remains.length,
+      errorCount: remains.length,
+      remains,
+    };
+  }
 }

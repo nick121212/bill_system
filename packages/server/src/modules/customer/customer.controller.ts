@@ -88,4 +88,24 @@ export class CustomerController {
   ) {
     return this.customerService.uploadFile(file);
   }
+
+  @Post('/:id/upload/product')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadProductFile(
+    @Param('id') id: number,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1000000 }),
+          new FileTypeValidator({
+            fileType:
+              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          }),
+        ],
+      }),
+    )
+    file: Express.Multer.File,
+  ) {
+    return this.customerService.uploadProductFile(id, file);
+  }
 }

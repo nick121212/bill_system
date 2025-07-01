@@ -14,7 +14,7 @@ export class AppController {
 
   @Get('/product.xlsx')
   getFile(@Res() res: any) {
-    const file = readFileSync(join(process.cwd(), 'template.xlsx'));
+    const file = readFileSync(join(process.cwd(), 'product.xlsx'));
     const bufferStream = new PassThrough();
     bufferStream.end(file);
 
@@ -25,6 +25,16 @@ export class AppController {
   @Get('/customer.xlsx')
   getCustomerFile(@Res() res: any) {
     const file = readFileSync(join(process.cwd(), 'customer.xlsx'));
+    const bufferStream = new PassThrough();
+    bufferStream.end(file);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return bufferStream.pipe(res);
+  }
+
+  @Get('/customer.product.xlsx')
+  getCustomerProductFile(@Res() res: any) {
+    const file = readFileSync(join(process.cwd(), 'customer.product.xlsx'));
     const bufferStream = new PassThrough();
     bufferStream.end(file);
 

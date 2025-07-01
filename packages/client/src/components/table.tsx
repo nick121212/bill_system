@@ -17,7 +17,7 @@ export type TablePageProps = {
 type MenuItem = GetProp<BreadcrumbProps, "items">[number];
 
 function TablePage(props: React.PropsWithChildren<TablePageProps>) {
-  const { extra, tableProps, children } = props;
+  const { extra, title, tableProps, children } = props;
   const { t } = useTranslation();
   const matches = useMatches();
   const flattenedRoutes = useFlattenedRoutes();
@@ -56,7 +56,7 @@ function TablePage(props: React.PropsWithChildren<TablePageProps>) {
   return (
     <div className="flex items-center overflow-hidden size-full flex-col line-highlight">
       <Card
-        title={breadCrumbs.map((b) => b.title).join("-")}
+        title={title || breadCrumbs.map((b) => b.title).join("-")}
         extra={extra}
         style={{ width: "100%", border: "none" }}
         variant="outlined"
