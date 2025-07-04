@@ -60,7 +60,7 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
   }, []);
   const download = () => {
     axiosInstanceFile
-      .get('商品模板.xlsx', {
+      .get('product.xlsx', {
         responseType: 'blob',
       })
       .then((response) => {
