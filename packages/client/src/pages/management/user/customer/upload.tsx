@@ -3,10 +3,7 @@ import { Button, Drawer, message, UploadProps } from 'antd';
 import type { ButtonType } from 'antd/es/button';
 import { useTranslation } from 'react-i18next';
 import { PlusOutlined } from '@ant-design/icons';
-import {
-  ApiStatusCode,
-  type ProductEntity,
-} from '@bill/database/esm';
+import { ApiStatusCode, type ProductEntity } from '@bill/database/esm';
 
 import {
   axiosInstanceFile,
@@ -61,7 +58,7 @@ function ProductUploadForm({ title, onSuccess, onClose }: ProductModalProps) {
   }, []);
   const download = () => {
     axiosInstanceFile
-      .get('customer.xlsx', {
+      .get('客户专价模板.xlsx', {
         responseType: 'blob',
       })
       .then((response) => {

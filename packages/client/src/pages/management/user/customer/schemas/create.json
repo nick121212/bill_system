@@ -12,6 +12,7 @@
     },
     "desc": { "type": "string", "title": "客户描述", "default": "" },
     "paytime": { "type": "number", "title": "账期", "default": 0 },
+    "balance": { "type": "number", "title": "余额", "default": 0 },
     "phone": {
       "type": "string",
       "format": "regex",

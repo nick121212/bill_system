@@ -119,6 +119,7 @@ export default function UnitCreateModal({
 
               <AutoFields fields={['fullname', 'phone', 'email', 'address']} />
 
+              {/* <NumField step={1} min={0} name="balance" /> */}
               <NumField step={1} min={10} max={100} name="discount" />
               <NumField step={1} min={0} name="paytime" />
 

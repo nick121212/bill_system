@@ -157,6 +157,7 @@ export class CustomerService {
     const { ...rest } = body;
     const customer = new CustomerEntity().extend({
       ...rest,
+      balance: 0,
       companyId: this.request.userEntity.company?.id,
       userId: this.request.userEntity.id,
     });

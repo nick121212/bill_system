@@ -47,10 +47,10 @@ export class UserEntity extends BaseEntity {
   @Column()
   password?: string;
 
-  @Column()
+  @Column({ default: "" })
   avatar: string;
 
-  @Column()
+  @Column({ default: "" })
   address: string;
 
   @Column()

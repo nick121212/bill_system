@@ -36,7 +36,7 @@ export default function SettingButton() {
     themeLayout,
     themeStretch,
     breadCrumb,
-    multiTab,
+    // multiTab,
     darkSidebar,
     fontSize,
     fontFamily,
@@ -78,12 +78,12 @@ export default function SettingButton() {
     });
   };
 
-  const setMultiTab = (checked: boolean) => {
-    setSettings({
-      ...settings,
-      multiTab: checked,
-    });
-  };
+  // const setMultiTab = (checked: boolean) => {
+  //   setSettings({
+  //     ...settings,
+  //     multiTab: checked,
+  //   });
+  // };
 
   const setDarkSidebar = (checked: boolean) => {
     setSettings({
@@ -501,14 +501,14 @@ export default function SettingButton() {
                   onChange={(checked) => setBreadCrumn(checked)}
                 />
               </div>
-              <div className="flex items-center justify-between text-sm text-text-disabled">
+              {/* <div className="flex items-center justify-between text-sm text-text-disabled">
                 <div>Multi Tab</div>
                 <Switch
                   size="small"
                   checked={multiTab}
                   onChange={(checked) => setMultiTab(checked)}
                 />
-              </div>
+              </div> */}
               <div className="flex items-center justify-between text-sm text-text-disabled">
                 <div>Dark Sidebar</div>
                 <Switch
