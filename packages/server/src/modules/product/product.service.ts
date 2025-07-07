@@ -91,6 +91,7 @@ export class ProductService {
 
     const data = await this.repo.findOneBy({
       name,
+      ...dataFilter(this.request.userEntity),
     });
 
     return data || null;
