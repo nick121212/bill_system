@@ -212,12 +212,16 @@ export class ProductService {
         );
       }
 
+      if (!row[1] || !row[3]) {
+        continue;
+      }
+
       const product =
         (await this.getByName(row[1] as string)) ||
         new ProductEntity().extend({
           name: row[1] as string,
-          price: toPrice(row[3] * 1),
-          cost: toPrice(row[4] * 1),
+          price: toPrice(row[3] * 1) || 0,
+          cost: toPrice(row[4] * 1) || 0,
           desc: (row[6] as string) || (row[1] as string) || '',
           label: (row[1] as string) || '',
           companyId: this.request.userEntity.company?.id,

@@ -51,6 +51,7 @@ import {
   convertPriceFromServer,
 } from '@/utils';
 
+import CustomerInfo from '../customerDetail/customer';
 import ComfirmDetail from './confirmDetail';
 import schema from './schemas/create.json';
 
@@ -390,37 +391,46 @@ function CustomerSelect() {
   });
   const [field] = useField(`customerProducts`, {}, { absoluteName: true });
   const [discountField] = useField(`discount`, {}, { absoluteName: true });
-  const [customerField] = useField(`customer`, {}, { absoluteName: true });
+  const [customerField] = useField<any, any>(`customer`, {} as any, {
+    absoluteName: true,
+  });
 
   return (
-    <AutoField
-      name="customerId"
-      options={customers?.map((c) => {
-        return {
-          label: c.fullname,
-          value: c.id,
-          data: c,
-        };
-      })}
-      onChangeData={(id: number, data: { data: CustomerEntity }) => {
-        fetchProducts({
-          url: `customers/${id}/products`,
-        }).then(({ data }) => {
-          field.onChange(data.map, field.name);
-        });
+    <>
+      {customerField.value?.id ? (
+        <div className="mb-3">
+          <CustomerInfo customerId={customerField.value?.id} />
+        </div>
+      ) : null}
+      <AutoField
+        name="customerId"
+        options={customers?.map((c) => {
+          return {
+            label: c.fullname,
+            value: c.id,
+            data: c,
+          };
+        })}
+        onChangeData={(id: number, data: { data: CustomerEntity }) => {
+          fetchProducts({
+            url: `customers/${id}/products`,
+          }).then(({ data }) => {
+            field.onChange(data.map, field.name);
+          });
 
-        customerField.onChange(data.data, customerField.name);
-        discountField.onChange(data.data.discount, discountField.name);
-      }}
-      loading={cusLoading}
-      showSearch
-      filterOption={false}
-      onSearch={(val: string) =>
-        debouncedOnCustomerSearch({
-          name: val === '' ? undefined : convertEmptyToSearchAll(val),
-        })
-      }
-    ></AutoField>
+          customerField.onChange(data.data, customerField.name);
+          discountField.onChange(data.data.discount, discountField.name);
+        }}
+        loading={cusLoading}
+        showSearch
+        filterOption={false}
+        onSearch={(val: string) =>
+          debouncedOnCustomerSearch({
+            fullname: val === '' ? undefined : convertEmptyToSearchAll(val),
+          })
+        }
+      ></AutoField>
+    </>
   );
 }
 

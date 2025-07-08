@@ -45,10 +45,6 @@ export default function ProductTemplateDetail({
     'products',
     showModal && !!data?.customer?.id,
   );
-  // const { uuid, loading: uuidLoading } = useUUID(showModal);  
-
-  console.log(data , categories , products);
-  
 
   return (
     <>
