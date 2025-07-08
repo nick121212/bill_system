@@ -202,7 +202,7 @@ export class ProductService {
     const categoryMap: Record<string, ProductCategoryEntity> = {};
 
     for (const row of rows) {
-      const cateName = row[2] as string;
+      const cateName = (row[2] as string) || '未分类';
       const unit = await this.productUnitService.findOrCreate(row[5] as string);
 
       if (!categoryMap[cateName]) {
