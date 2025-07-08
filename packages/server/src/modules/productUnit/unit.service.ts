@@ -41,7 +41,7 @@ export class ProductUnitService {
   async findOrCreate(name: string) {
     const data = await this.repo.findOneBy({
       name,
-      companyId: this.request.userEntity.company?.id,
+      ...dataFilter(this.request.userEntity),
     });
 
     if (data) {

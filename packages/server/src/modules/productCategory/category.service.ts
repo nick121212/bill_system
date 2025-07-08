@@ -75,7 +75,7 @@ export class ProductCategoryService {
   ): Promise<ProductCategoryEntity> {
     const data = await this.repo.findOneBy({
       name,
-      companyId: this.request.userEntity.company?.id,
+      ...dataFilter(this.request.userEntity),
     });
 
     if (data) {
