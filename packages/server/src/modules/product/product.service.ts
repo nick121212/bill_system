@@ -217,17 +217,18 @@ export class ProductService {
       }
 
       const product =
-        (await this.getByName(row[1] as string)) ||
-        new ProductEntity().extend({
-          name: row[1] as string,
-          price: toPrice(row[3] * 1) || 0,
-          cost: toPrice(row[4] * 1) || 0,
-          desc: (row[6] as string) || (row[1] as string) || '',
-          label: (row[1] as string) || '',
-          companyId: this.request.userEntity.company?.id,
-          userId: this.request.userEntity.id,
-          unit,
-        });
+        (await this.getByName(row[1] as string)) || new ProductEntity();
+
+      product.extend({
+        name: row[1] as string,
+        price: toPrice(row[3] * 1) || 0,
+        cost: toPrice(row[4] * 1) || 0,
+        desc: (row[6] as string) || (row[1] as string) || '',
+        label: (row[1] as string) || '',
+        companyId: this.request.userEntity.company?.id,
+        userId: this.request.userEntity.id,
+        unit,
+      });
 
       products.push(product);
       if (!categoryMap[cateName].products) {
