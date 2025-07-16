@@ -1,7 +1,7 @@
-import { UserEntity } from "@bill/database";
+import { UserEntity } from '@bill/database';
 
 export default function dataFilter(userEntity: UserEntity) {
-  if (userEntity.role?.label === "admin") {
+  if (userEntity.role?.label === 'admin') {
     return {};
   }
 

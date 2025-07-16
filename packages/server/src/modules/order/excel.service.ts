@@ -291,7 +291,9 @@ export class OrderExportService {
       };
     }
 
-    return {};
+    return {
+      ...dataFilter(this.request.userEntity),
+    };
   }
 
   async export(body: OrderExportRequest) {
