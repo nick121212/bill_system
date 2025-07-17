@@ -10,9 +10,13 @@ import {
   ProductUnitEntity,
   TemplateCategoryEntity,
   TemplateCategoryProductEntity,
+  UserEntity,
 } from '@bill/database/dist/entities';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { REQUEST } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import dataFilter from '@/common/utils/dataFilter';
 
 @Injectable()
 export class ResetService {
@@ -27,23 +31,31 @@ export class ResetService {
     private productCategoryRepo: Repository<ProductCategoryEntity>,
     @InjectRepository(ProductInfoEntity)
     private productInfoRepo: Repository<ProductInfoEntity>,
+    @Inject(REQUEST) private request: Request & { userEntity: UserEntity },
   ) {}
 
   async resetProducts() {
     await this.em.transaction(async (em) => {
-      await em.delete(TemplateCategoryProductEntity, {});
-      await em.delete(TemplateCategoryEntity, {});
-      await em.delete(ProductCategoryEntity, {});
-      await em.delete(ProductPriceEntity, {});
+      await em
+        .createQueryBuilder()
+        .delete()
+        .from(ProductCategoryEntity)
+        .where('userId = :id', { id: this.request.userEntity.id })
+        .execute();
 
-      await em.delete(OrderProductEntity, {});
-      await em.delete(OrderCategoryEntity, {});
-      await em.delete(OrderEntity, {});
+      await em
+        .createQueryBuilder()
+        .delete()
+        .from(ProductEntity)
+        .where('userId = :id', { id: this.request.userEntity.id })
+        .execute();
 
-      await em.delete(ProductEntity, {});
-      await em.delete(ProductInfoEntity, {});
-
-      await em.delete(ProductUnitEntity, {});
+      await em
+        .createQueryBuilder()
+        .delete()
+        .from(ProductUnitEntity)
+        .where('userId = :id', { id: this.request.userEntity.id })
+        .execute();
     });
 
     return 'ok';
