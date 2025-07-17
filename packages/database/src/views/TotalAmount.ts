@@ -25,6 +25,9 @@ export class TotalAmountView {
   customerId: number;
 
   @ViewColumn()
+  userId: number;
+
+  @ViewColumn()
   companyId: number;
 
   @ViewColumn()
