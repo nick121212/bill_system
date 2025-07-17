@@ -25,12 +25,13 @@ export class ChargeService {
   async all(
     query: ChargeQuery,
   ): Promise<{ rows: ChargeEntity[]; count: number }> {
-    const { user, ...rest } = query?.where || {};
+    const { user, customerId, ...rest } = query?.where || {};
     const [rows, count] = await this.repoCharge.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
         ...rest,
+        customer: { id: customerId },
         user: user?.id ? { id: ~~user.id } : undefined,
       },
       relations: {

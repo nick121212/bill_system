@@ -23,6 +23,7 @@ export default function usePagination(onChange: (data: unknown) => void) {
     setPage,
     setPageSize,
     setSearchData,
+    searchData,
     page,
     pageSize,
     refresh

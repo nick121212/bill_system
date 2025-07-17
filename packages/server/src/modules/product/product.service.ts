@@ -199,11 +199,12 @@ export class ProductService {
     const workSheet = workSheetsFromBuffer[0];
     const rows = workSheet.data.splice(1);
     const products: ProductEntity[] = [];
+    const productInfos: ProductInfoEntity[] = [];
     const categoryMap: Record<string, ProductCategoryEntity> = {};
 
     for (const row of rows) {
-      const cateName = (row[2] as string) || '未分类';
-      const unit = await this.productUnitService.findOrCreate(row[5] as string);
+      const cateName = (row[3] as string) || '未分类';
+      const unit = await this.productUnitService.findOrCreate(row[6] as string);
 
       if (!categoryMap[cateName]) {
         categoryMap[cateName] = await this.productCategoryService.findOrCreate(
@@ -212,19 +213,33 @@ export class ProductService {
         );
       }
 
-      if (!row[1] || !row[3]) {
+      if (!row[2] || !row[4]) {
         continue;
       }
 
       const product =
-        (await this.getByName(row[1] as string)) || new ProductEntity();
+        (await this.getByName(row[2] as string)) || new ProductEntity();
+
+      if (row[7]) {
+        if (product?.info) {
+          product.info.stock = row[7] * 1 || 0;
+          productInfos.push(product.info);
+        } else {
+          const productInfo = new ProductInfoEntity().extend({
+            stock: row[7] * 1 || 0,
+          });
+          product.info = productInfo;
+          productInfos.push(productInfo);
+        }
+      }
 
       product.extend({
-        name: row[1] as string,
-        price: toPrice(row[3] * 1) || 0,
-        cost: toPrice(row[4] * 1) || 0,
-        desc: (row[6] as string) || (row[1] as string) || '',
-        label: (row[1] as string) || '',
+        name: row[2] as string,
+        sku: (row[1] as string) || '',
+        price: toPrice(row[4] * 1) || 0,
+        cost: toPrice(row[5] * 1) || 0,
+        desc: (row[8] as string) || (row[2] as string) || '',
+        label: (row[2] as string) || '',
         companyId: this.request.userEntity.company?.id,
         userId: this.request.userEntity.id,
         unit,
@@ -236,6 +251,8 @@ export class ProductService {
       }
       categoryMap[cateName].products.push(product);
     }
+
+    await this.infoRepo.save(productInfos);
 
     const result = await this.repo.save(products);
 

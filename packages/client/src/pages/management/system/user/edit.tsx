@@ -1,80 +1,65 @@
-import { useCallback, useRef } from "react";
-import type { SomeJSONSchema } from "ajv/dist/types/json-schema";
-import { Button, Drawer, Form, Space, Spin } from "antd";
-import { useTranslation } from "react-i18next";
-import { EditOutlined } from "@ant-design/icons";
-import type { CompanyEntity, RoleEntity, UserEntity } from "@bill/database/esm";
+import { useCallback, useRef, useState } from 'react';
+import type { SomeJSONSchema } from 'ajv/dist/types/json-schema';
+import { Button, Drawer, Form, Space, Spin } from 'antd';
+import { useTranslation } from 'react-i18next';
+import { EditOutlined } from '@ant-design/icons';
+import type { CompanyEntity, RoleEntity, UserEntity } from '@bill/database/esm';
 
-import useData from "@/hooks/data/useData";
-import useFormAction from "@/hooks/form/useFormAction";
-import { getBridge } from "@/uniforms/ajv";
-import {
-  AutoField,
-  AutoForm,
-  DateField,
-  ErrorsField,
-  SelectField,
-} from "@/uniforms/fields";
+import useData from '@/hooks/data/useData';
+import useFormAction from '@/hooks/form/useFormAction';
+import { getBridge } from '@/uniforms/ajv';
+import { AutoField, AutoForm, DateField } from '@/uniforms/fields';
 
-import schema from "./schemas/create.json";
+import schema from './schemas/create.json';
 
 export type UserModalProps = {
-  formValue?: Partial<UserEntity>;
+  formValue?: UserEntity;
+  onClose?: () => void;
   title: string;
   onSuccess: () => void;
 };
 
 const bridge = getBridge(schema as SomeJSONSchema);
 
-export default function PermissionModal({
+export function UserCreateModal({
   title,
-  formValue,
   onSuccess,
+  onClose,
+  formValue,
 }: UserModalProps) {
   const { t } = useTranslation();
-  const formRef = useRef<any>();
-  const { rows: company, loading: comLoad } =
-    useData<CompanyEntity[]>("companies");
-  const { rows, loading } = useData<RoleEntity[]>("roles");
-  const onSuccessCall = useCallback(() => {
-    onSuccess?.();
-    setShowModal(false);
-  }, [onSuccess]);
+  const formRef = useRef();
   const {
-    onSubmit,
-    showModal,
-    setShowModal,
-    setFormData,
-    onClose,
-    loadingAjax,
-    callAjax,
-  } = useFormAction(
+    rows: roles,
+    loading: roleLoad,
+    onSearch: debouncedOnRoleSearch,
+  } = useData<RoleEntity[]>('roles', {
+    id: formValue?.role,
+  });
+  const {
+    rows: company,
+    loading: comLoad,
+    onSearch: debouncedOnCompanySearch,
+  } = useData<CompanyEntity[]>('companies', {
+    id: formValue?.company,
+  });
+  const { onSubmit, setFormData, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
-      url: `/users/${formValue?.id}`,
-      method: "PUT",
+      url: '/users',
+      method: 'POST',
     },
-    onSuccessCall
+    onSuccess,
   );
 
   return (
     <>
-      <Button
-        type="text"
-        shape="circle"
-        loading={loadingAjax}
-        icon={<EditOutlined />}
-        onClick={() => {
-          setShowModal(true);
-        }}
-      />
-
       <Drawer
         title={title}
         destroyOnClose
         width={720}
         onClose={onClose}
-        open={showModal}
+        open={true}
         styles={{
           body: {
             paddingBottom: 80,
@@ -83,10 +68,10 @@ export default function PermissionModal({
         extra={
           <Space>
             <Button loading={loadingAjax} onClick={onClose}>
-              {t("crud.cancel")}
+              {t('crud.cancel')}
             </Button>
             <Button loading={loadingAjax} onClick={onSubmit} type="primary">
-              {t("crud.confirm")}
+              {t('crud.confirm')}
             </Button>
           </Space>
         }
@@ -111,41 +96,84 @@ export default function PermissionModal({
                 });
               }}
             >
-              <ErrorsField />
-
               <AutoField name="fullname" />
               <AutoField name="email" />
               <AutoField name="avatar" />
               <AutoField name="address" />
-              <SelectField
+              <AutoField
                 name="company"
+                options={company?.map((c) => {
+                  return {
+                    label: c.name,
+                    value: c.id,
+                  };
+                })}
                 loading={comLoad}
-                options={company?.map((r: CompanyEntity) => {
-                  return {
-                    label: r.name,
-                    value: r.id,
-                  };
-                })}
+                showSearch
+                filterOption={false}
+                onSearch={(val: string) =>
+                  debouncedOnCompanySearch({
+                    name: val === '' ? undefined : val,
+                  })
+                }
               />
-              {/* <AutoField name="password" /> */}
               <AutoField name="phone" />
-              <DateField name="validateDate" showTime={false}/>
+              <DateField name="validateDate" showTime={false} />
               {/* <AutoField name="isActive" /> */}
-
-              <SelectField
+              <AutoField
                 name="role"
-                loading={loading}
-                options={rows?.map((r: RoleEntity) => {
+                options={roles?.map((c) => {
                   return {
-                    label: r.name,
-                    value: r.id,
+                    label: c.name,
+                    value: c.id,
                   };
                 })}
+                loading={roleLoad}
+                showSearch
+                filterOption={false}
+                onSearch={(val: string) =>
+                  debouncedOnRoleSearch({
+                    name: val === '' ? undefined : val,
+                  })
+                }
               />
             </AutoForm>
           </Spin>
         </Form>
       </Drawer>
+    </>
+  );
+}
+
+export default function UserCreateButton({
+  title,
+  onSuccess,
+  formValue,
+}: UserModalProps) {
+  const [showModal, setShowModal] = useState(false);
+  const onSuccessCall = useCallback(() => {
+    onSuccess?.();
+    setShowModal(false);
+  }, [onSuccess]);
+
+  return (
+    <>
+      <Button
+        type="text"
+        icon={<EditOutlined />}
+        onClick={() => {
+          setShowModal(true);
+        }}
+      />
+
+      {showModal && (
+        <UserCreateModal
+          title={title}
+          formValue={formValue}
+          onClose={() => setShowModal(false)}
+          onSuccess={onSuccessCall}
+        />
+      )}
     </>
   );
 }

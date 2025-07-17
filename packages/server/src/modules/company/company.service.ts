@@ -1,34 +1,35 @@
-import * as crypto from "crypto";
-import * as _ from "lodash";
-import { In, Repository } from "typeorm";
-import { ApiStatusCode } from "@bill/database";
+import * as crypto from 'crypto';
+import * as _ from 'lodash';
+import { In, Like, Repository } from 'typeorm';
+import { ApiStatusCode } from '@bill/database';
 import {
   CompanyEntity,
   MenuEntity,
   RoleEntity,
-} from "@bill/database/dist/entities";
-import { HttpStatus, Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
+} from '@bill/database/dist/entities';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
-import { ApiException } from "@/common/exception/api.exception";
+import { ApiException } from '@/common/exception/api.exception';
 
-import { CompanyRequest, CompanyQuery } from "./company.interface";
+import { CompanyRequest, CompanyQuery } from './company.interface';
 
 @Injectable()
 export class CompanyService {
   constructor(
-    @InjectRepository(CompanyEntity) private repo: Repository<CompanyEntity>
+    @InjectRepository(CompanyEntity) private repo: Repository<CompanyEntity>,
   ) {}
 
   async all(
     query: CompanyQuery,
-    withRelation = false
   ): Promise<{ rows: CompanyEntity[]; count: number }> {
+    const { name, ...rest } = query.where || {};
     const [rows, count] = await this.repo.findAndCount({
       skip: query.skip,
       take: query.take,
       where: {
-        ...query.where,
+        ...rest,
+        name: name ? Like(`%${name as string}%`) : undefined,
       },
       relations: {},
       withDeleted: false,
@@ -42,7 +43,7 @@ export class CompanyService {
 
   async getById(
     id?: number,
-    loadRelationIds = false
+    loadRelationIds = false,
   ): Promise<CompanyEntity | null> {
     if (!id) {
       return null;
@@ -72,13 +73,13 @@ export class CompanyService {
 
     if (!role) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
         HttpStatus.OK,
         {
           id: id,
-          entity: "CompanyEntity",
-        }
+          entity: 'CompanyEntity',
+        },
       );
     }
 
@@ -92,9 +93,9 @@ export class CompanyService {
 
     if (!role) {
       throw new ApiException(
-        "can not find recoed",
+        'can not find recoed',
         ApiStatusCode.KEY_NOT_EXIST,
-        HttpStatus.OK
+        HttpStatus.OK,
       );
     }
 

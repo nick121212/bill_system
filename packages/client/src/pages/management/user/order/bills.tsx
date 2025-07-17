@@ -40,7 +40,7 @@ export default function OrderPage() {
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectedIds, setSelectedIds] = useState<React.Key[]>([]);
-  const [allChecked, setAllChecked] = useState(false);
+  const [allChecked, setAllChecked] = useState(true);
 
   const rowSelection = {
     selectedRowKeys: selectedIds,

@@ -20,6 +20,7 @@ import Upload from './upload';
 
 export default function PermissionPage() {
   const { t } = useTranslation();
+  
   const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
     {
       url: '/products',
@@ -31,12 +32,13 @@ export default function PermissionPage() {
   const onSuccess = useCallback(
     (formData?: unknown) => {
       refresh({
-        params: formData,
+        params: formData ,
       });
     },
     [refresh],
   );
   const pag = usePagination(onSuccess);
+
 
   const columns: ColumnsType<ProductEntity> = [
     {
@@ -85,7 +87,7 @@ export default function PermissionPage() {
       title: t('cls.product.stock'),
       dataIndex: 'info',
       align: 'center',
-      render: (obj: ProductInfoEntity) => obj?.stock ?? "-",
+      render: (obj: ProductInfoEntity) => obj?.stock ?? '-',
     },
     {
       title: t('cls.com.createTime'),
@@ -104,12 +106,12 @@ export default function PermissionPage() {
           <Edit
             title={t('cls.product.modal.eTitle')}
             formValue={record}
-            onSuccess={onSuccess}
+            onSuccess={pag.refresh}
           />
           <Remove
             title={t('cls.product.modal.dTitle')}
             formValue={record}
-            onSuccess={onSuccess}
+            onSuccess={pag.refresh}
           />
         </div>
       ),

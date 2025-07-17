@@ -83,7 +83,7 @@ export default function ProductUnit() {
     <TablePage
       extra={
         <Space direction="horizontal" size="small" style={{ display: 'flex' }}>
-          <Create title={t('cls.proUnit.modal.createTitle')} onSuccess={pag.refresh} />
+          <Create title={t('cls.proUnit.modal.cTitle')} onSuccess={pag.refresh} />
           <Button
             icon={<ReloadOutlined />}
             type="text"

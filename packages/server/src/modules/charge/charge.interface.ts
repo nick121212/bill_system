@@ -6,6 +6,8 @@ class ChargeSearchModel {
   user?: {
     id: number;
   };
+
+  customerId?: number;
 }
 
 export class ChargeQuery extends BaseQuery<ChargeSearchModel> {}

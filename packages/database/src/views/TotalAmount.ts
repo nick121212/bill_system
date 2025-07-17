@@ -6,6 +6,7 @@ import { OrderStatus } from "../enums/OrderStatus";
   expression: `
         select \`order\`.\`customerId\`, 
           \`order\`.\`companyId\`, 
+          \`order\`.\`userId\`, 
           \`customer\`.\`fullname\`, 
           \`order\`.\`status\`, 
           \`order\`.\`no\`, 

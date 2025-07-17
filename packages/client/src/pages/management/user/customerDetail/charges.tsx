@@ -38,7 +38,12 @@ export default function CustomerCharges({ customerId }: CustomerChargesProps) {
   const onSuccess = useCallback(
     (formData?: unknown) => {
       refresh({
-        params: formData,
+        params: {
+          ...(formData as Record<string, any>),
+          where: {
+            customerId,
+          },
+        },
       });
     },
     [refresh],

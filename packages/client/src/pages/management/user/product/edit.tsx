@@ -50,7 +50,9 @@ function ProductCreateForm({
     rows: units,
     loading: unitLoad,
     onSearch: debouncedOnUnitSearch,
-  } = useData<ProductUnitEntity[]>('product/units');
+  } = useData<ProductUnitEntity[]>('product/units', {
+    id: formValue?.unit?.id,
+  });
 
   return (
     <Drawer

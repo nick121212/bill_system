@@ -1,10 +1,6 @@
-import {
-  IsNumber,
-  IsString,
-} from "class-validator";
+import { IsString } from 'class-validator';
 
-import { BaseQuery } from "@/common/interfaces/query";
-import { MenuBodyRequest } from "@/modules/menu/menu.interface";
+import { BaseQuery } from '@/common/interfaces/query';
 
 export class CompanyRequest {
   @IsString()
