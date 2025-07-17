@@ -38,7 +38,14 @@ export class AuthService {
   }
 
   async login(body: AuthRequest) {
-    const user = await this.usersService.findOne(body.username, body.password);
+    let user = await this.usersService.findOne(body.username, body.password);
+
+    if (!user) {
+      user = await this.usersService.findOneThroughPhone(
+        body.username,
+        body.password,
+      );
+    }
 
     if (!user) {
       throw new UnauthorizedException();

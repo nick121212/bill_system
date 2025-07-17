@@ -1,18 +1,18 @@
-import React from "react";
-import { Avatar, Divider, type MenuProps } from "antd";
-import Dropdown, { type DropdownProps } from "antd/es/dropdown/dropdown";
-import { useTranslation } from "react-i18next";
-import { NavLink } from "react-router";
-import { UserOutlined } from "@ant-design/icons";
+import React from 'react';
+import { Avatar, Divider, type MenuProps } from 'antd';
+import Dropdown, { type DropdownProps } from 'antd/es/dropdown/dropdown';
+import { useTranslation } from 'react-i18next';
+import { NavLink } from 'react-router';
+import { UserOutlined } from '@ant-design/icons';
 
-import { useLoginStateContext } from "@/pages/sys/login/providers/LoginStateProvider";
-import { useRouter } from "@/router/hooks";
-import { useLogout, useUserActions, useUserInfo } from "@/store/userStore";
-import { useTheme } from "@/theme/hooks";
+import { useLoginStateContext } from '@/pages/sys/login/providers/LoginStateProvider';
+import { useRouter } from '@/router/hooks';
+import { useLogout, useUserActions, useUserInfo } from '@/store/userStore';
+import { useTheme } from '@/theme/hooks';
 
-import ChangePassword from "./change-password";
-import Report from "./report";
-import SettingButton from "./setting-button";
+import ChangePassword from './change-password';
+import Report from './report';
+import SettingButton from './setting-button';
 
 // const { VITE_APP_HOMEPAGE: HOMEPAGE } = import.meta.env;
 
@@ -21,7 +21,7 @@ import SettingButton from "./setting-button";
  */
 export default function AccountDropdown() {
   const { replace } = useRouter();
-  const { fullname, email, avatar } = useUserInfo();
+  const { fullname, email, avatar, phone } = useUserInfo();
   const { clearUserInfoAndToken } = useUserActions();
   const { backToLogin } = useLoginStateContext();
   const logoutAction = useLogout();
@@ -35,7 +35,7 @@ export default function AccountDropdown() {
     } finally {
       clearUserInfoAndToken();
       backToLogin();
-      replace("/login");
+      replace('/login');
     }
   };
   const {
@@ -49,36 +49,36 @@ export default function AccountDropdown() {
   };
 
   const menuStyle: React.CSSProperties = {
-    boxShadow: "none",
+    boxShadow: 'none',
   };
 
-  const dropdownRender: DropdownProps["dropdownRender"] = (menu) => (
+  const dropdownRender: DropdownProps['dropdownRender'] = (menu) => (
     <div style={contentStyle}>
       <div className="flex flex-col items-start p-4">
         <div>{fullname}</div>
-        <div className="text-gray">{email}</div>
+        <div className="text-gray">{email || phone}</div>
       </div>
       <Divider style={{ margin: 0 }} />
       {React.cloneElement(menu as React.ReactElement, { style: menuStyle })}
     </div>
   );
 
-  const items: MenuProps["items"] = [
+  const items: MenuProps['items'] = [
     {
       label: <ChangePassword />,
-      key: "5",
+      key: '5',
     },
     {
       label: <Report />,
-      key: "6",
+      key: '6',
     },
     {
       label: (
         <NavLink to="https://docs-admin.slashspaces.com/" target="_blank">
-          {t("sys.docs")}
+          {t('sys.docs')}
         </NavLink>
       ),
-      key: "0",
+      key: '0',
     },
     // {
     //   label: <NavLink to={HOMEPAGE}>{t("sys.menu.dashboard")}</NavLink>,
@@ -98,16 +98,16 @@ export default function AccountDropdown() {
     // },
     {
       label: <SettingButton />,
-      key: "2",
+      key: '2',
     },
-    { type: "divider" },
+    { type: 'divider' },
     {
       label: (
         <button className="font-bold text-warning" type="button">
-          {t("sys.login.logout")}
+          {t('sys.login.logout')}
         </button>
       ),
-      key: "4",
+      key: '4',
       onClick: logout,
     },
   ];
@@ -115,7 +115,7 @@ export default function AccountDropdown() {
   return (
     <Dropdown
       menu={{ items }}
-      trigger={["click"]}
+      trigger={['click']}
       dropdownRender={dropdownRender}
     >
       {avatar ? <Avatar src={avatar} /> : <Avatar icon={<UserOutlined />} />}

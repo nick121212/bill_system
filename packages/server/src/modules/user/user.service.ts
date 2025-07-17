@@ -121,6 +121,25 @@ export class UserService {
     });
   }
 
+  async findOneThroughPhone(
+    phone: string,
+    pass: string,
+  ): Promise<UserEntity | null> {
+    return this.repo.findOne({
+      where: {
+        phone,
+        password: hashPwd(
+          pass,
+          this.configService.get<{ secret: string }>('app')?.secret || '',
+        ),
+      },
+      relations: {
+        role: true,
+        company: true,
+      },
+    });
+  }
+
   async create(body: UserRequest): Promise<UserEntity> {
     const { password, company, role, ...rest } = body;
     const user = new UserEntity().extend({
