@@ -46,8 +46,8 @@ export function UserCreateModal({
   const { onSubmit, setFormData, callAjax, loadingAjax } = useFormAction(
     formRef,
     {
-      url: '/users',
-      method: 'POST',
+      url: `/users/${formValue?.id}`,
+      method: 'PUT',
     },
     onSuccess,
   );

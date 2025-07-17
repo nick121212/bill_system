@@ -55,6 +55,7 @@ import { UserModule } from '@/modules/user/user.module';
           {
             entities: entities || [],
             synchronize: true,
+            logging: true,
           },
           configService.get<{ synchronize: boolean }>('database') || {},
           {},

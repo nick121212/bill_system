@@ -1,5 +1,5 @@
 import * as dayjs from 'dayjs';
-import type { FindOptionsRelations, Repository } from 'typeorm';
+import { Not, type FindOptionsRelations, type Repository } from 'typeorm';
 import { ApiStatusCode } from '@bill/database';
 import { UserEntity } from '@bill/database/dist/entities';
 import { Global, HttpStatus, Injectable } from '@nestjs/common';
@@ -141,9 +141,28 @@ export class UserService {
   }
 
   async create(body: UserRequest): Promise<UserEntity> {
-    const { password, company, role, ...rest } = body;
+    const { password, phone, email, company, role, ...rest } = body;
+    const userEntity =
+      (await this.repo.find({ where: { email } })).length ||
+      (await this.repo.find({ where: { phone } })).length;
+
+    if (userEntity) {
+      throw new ApiException(
+        'email or phone already exists',
+        ApiStatusCode.KEY_ALREADY_EXISTS,
+        HttpStatus.OK,
+        {
+          email: email,
+          phone: phone,
+          type: 'UserEntity',
+        },
+      );
+    }
+
     const user = new UserEntity().extend({
       ...rest,
+      email,
+      phone,
       avatar: rest.avatar || '',
       password: hashPwd(
         password ?? '123456789',
@@ -158,12 +177,30 @@ export class UserService {
 
   async update(id: number, body: UserRequest): Promise<UserEntity> {
     const user = await this.getByIdWithError(id);
-    const { company, role, validateDate, ...rest } = body;
+    const { company, role, email, phone, validateDate, ...rest } = body;
+    const userEntity =
+      (await this.repo.find({ where: { email, id: Not(user.id) } })).length ||
+      (await this.repo.find({ where: { phone, id: Not(user.id) } })).length;
+
+    if (userEntity) {
+      throw new ApiException(
+        'email or phone already exists',
+        ApiStatusCode.KEY_ALREADY_EXISTS,
+        HttpStatus.OK,
+        {
+          email: email,
+          phone: phone,
+          type: 'UserEntity',
+        },
+      );
+    }
 
     user.extend({
       ...rest,
       avatar: rest.avatar || '',
       password: user.password,
+      email,
+      phone,
       validateDate: (validateDate as any) * 1 || 0,
       role: await this.roleService.getById(role),
       company: await this.companyService.getById(company),

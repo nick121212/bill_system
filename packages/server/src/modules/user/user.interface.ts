@@ -11,6 +11,9 @@ export class UserRequest {
   email: string;
 
   @IsString()
+  phone: string;
+
+  @IsString()
   avatar?: string;
 
   @IsString()

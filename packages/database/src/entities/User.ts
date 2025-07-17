@@ -20,7 +20,7 @@ import { RoleEntity } from "./Role";
 @Entity({
   name: "user",
 })
-@Unique(["email", "fullname"])
+@Unique(["email", "fullname", "phone"])
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
