@@ -15,12 +15,13 @@ import { convertPriceFromServer } from '@/utils';
 import Create from './create';
 import Edit from './edit';
 import Remove from './remove';
+import Reset from './reset';
 import Search from './search';
 import Upload from './upload';
 
 export default function PermissionPage() {
   const { t } = useTranslation();
-  
+
   const [{ data: rows, loading, error: apiError }, refresh] = useAxios(
     {
       url: '/products',
@@ -32,13 +33,12 @@ export default function PermissionPage() {
   const onSuccess = useCallback(
     (formData?: unknown) => {
       refresh({
-        params: formData ,
+        params: formData,
       });
     },
     [refresh],
   );
   const pag = usePagination(onSuccess);
-
 
   const columns: ColumnsType<ProductEntity> = [
     {
@@ -145,6 +145,10 @@ export default function PermissionPage() {
           >
             {t('common.redo')}
           </Button>
+          <Reset
+            title={t('cls.product.modal.rTitle')}
+            onSuccess={pag.refresh}
+          />
         </Space>
       }
       tableProps={{

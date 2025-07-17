@@ -5,7 +5,7 @@
       "desc": "描述",
       "createTime": "创建时间",
       "updateTime": "更新时间",
-      "operator":"操作员",
+      "operator": "操作员",
       "operation": "操作"
     },
     "customer": {
@@ -37,7 +37,8 @@
         "cTitle": "新建商品",
         "eTitle": "编辑商品",
         "dTitle": "删除商品",
-        "uTitle": "上传商品"
+        "uTitle": "上传商品",
+        "rTitle": "重置商品库"
       }
     },
     "proCategory": {
@@ -47,7 +48,7 @@
         "cTitle": "新建分类",
         "eTitle": "编辑分类",
         "dTitle": "删除分类"
-      } 
+      }
     },
     "proTemp": {
       "name": "模板名称",

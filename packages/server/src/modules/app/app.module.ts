@@ -25,6 +25,7 @@ import { ProductCategoryModule } from '@/modules/productCategory/category.module
 import { ProductUnitModule } from '@/modules/productUnit/unit.module';
 import { RedisModule } from '@/modules/redis/redis.module';
 import { ReportModule } from '@/modules/report/report.module';
+import { ResetModule } from '@/modules/reset/reset.module';
 import { RoleModule } from '@/modules/role/role.module';
 import { StatisticsModule } from '@/modules/statistics/statistics.module';
 import { TemplateModule } from '@/modules/template/template.module';
@@ -77,6 +78,7 @@ import { UserModule } from '@/modules/user/user.module';
     StatisticsModule,
     ReportModule,
     ChargeModule,
+    ResetModule,
   ],
   providers: [
     {
