@@ -292,7 +292,9 @@ export class OrderExportService {
     }
 
     return {
-      ...dataFilter(this.request.userEntity),
+      where: {
+        ...dataFilter(this.request.userEntity),
+      },
     };
   }
 
