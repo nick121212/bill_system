@@ -1,5 +1,8 @@
 import { EntityManager, Repository } from 'typeorm';
 import {
+  OrderCategoryEntity,
+  OrderEntity,
+  OrderProductEntity,
   ProductCategoryEntity,
   ProductEntity,
   ProductInfoEntity,
@@ -33,12 +36,16 @@ export class ResetService {
       await em.delete(ProductCategoryEntity, {});
       await em.delete(ProductPriceEntity, {});
 
+      await em.delete(OrderProductEntity, {});
+      await em.delete(OrderCategoryEntity, {});
+      await em.delete(OrderEntity, {});
+
       await em.delete(ProductEntity, {});
       await em.delete(ProductInfoEntity, {});
 
       await em.delete(ProductUnitEntity, {});
     });
 
-    return "ok";
+    return 'ok';
   }
 }
