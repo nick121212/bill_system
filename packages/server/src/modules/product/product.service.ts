@@ -235,7 +235,7 @@ export class ProductService {
 
       product.extend({
         name: row[2] as string,
-        sku: (row[1] as string) || '',
+        sku: (row[1] as string) || undefined,
         price: toPrice(row[4] * 1) || 0,
         cost: toPrice(row[5] * 1) || 0,
         desc: (row[8] as string) || (row[2] as string) || '',
