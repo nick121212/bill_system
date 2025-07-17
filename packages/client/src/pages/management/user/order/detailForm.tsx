@@ -683,6 +683,7 @@ export default function DetailForm({
             options={[
               { label: '现金', value: 0 },
               { label: '余额', value: 1 },
+              { label: '账单', value: 2 },
             ]}
           />
           <TotalPrice />
