@@ -321,6 +321,7 @@ function CategoryItem(props: any) {
                     title: '描述',
                     dataIndex: 'desc',
                     align: 'center',
+                    width: 300,
                   },
                   {
                     title: '价格',
@@ -567,7 +568,7 @@ export default function DetailForm({
     >
       <Form
         labelCol={{ span: 5 }}
-        wrapperCol={{ span: 14 }}
+        wrapperCol={{ span: 19 }}
         preserve={false}
         layout="horizontal"
         labelAlign="right"
