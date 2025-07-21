@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsString } from 'class-validator';
 
 import { BaseQuery } from '@/common/interfaces/query';
 
@@ -7,8 +7,8 @@ export class UserRequest {
   @IsString()
   fullname: string;
 
-  @IsEmail()
-  email: string;
+  @IsString({})
+  email?: string;
 
   @IsString()
   phone: string;

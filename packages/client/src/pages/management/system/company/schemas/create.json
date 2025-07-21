@@ -3,13 +3,12 @@
   "type": "object",
   "properties": {
     "name": { "type": "string", "title": "公司名称" },
-    "address": { "type": "string", "title": "地址" },
+    "address": { "type": "string", "title": "地址", "default": "" },
     "phone": {
       "type": "string",
-      "format": "regex",
-      "pattern": "^1[3-9]\\d{9}$",
-      "title": "手机号"
+      "title": "手机号",
+      "default": ""
     }
   },
-  "required": ["name", "address", "phone"]
+  "required": ["name"]
 }

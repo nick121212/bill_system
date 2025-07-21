@@ -137,7 +137,39 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#all" >all</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#changePassword" >changePassword</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#create" >create</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#findOne" >findOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#findOneThroughPhone" >findOneThroughPhone</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getById" >getById</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getByIdWithError" >getByIdWithError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#remove" >remove</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#update" >update</a>
                             </li>
                         </ul>
                     </td>
@@ -157,12 +189,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(userRepo: Repository<UserEntity>)</code>
+<code>constructor(configService: ConfigService, roleService: <a href="../injectables/RoleService.html" target="_self">RoleService</a>, companyService: <a href="../injectables/CompanyService.html" target="_self">CompanyService</a>, repo: Repository<UserEntity>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/modules/user/user.service.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/modules/user/user.service.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -180,7 +212,43 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>userRepo</td>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>roleService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RoleService.html" target="_self" >RoleService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>companyService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/CompanyService.html" target="_self" >CompanyService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>repo</td>
                                                   
                                                         <td>
                                                                     <code>Repository&lt;UserEntity&gt;</code>
@@ -209,6 +277,225 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="all"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>all</b></span>
+                        <a href="#all"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>all(query: <a href="../classes/UserQuery.html" target="_self">UserQuery</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="31"
+                                    class="link-to-prism">src/modules/user/user.service.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/UserQuery.html" target="_self" >UserQuery</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="changePassword"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>changePassword</b></span>
+                        <a href="#changePassword"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>changePassword(body: <a href="../classes/UserPasswordRequest.html" target="_self">UserPasswordRequest</a>, user: <a href="../interfaces/ActiveUserData.html" target="_self">ActiveUserData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="218"
+                                    class="link-to-prism">src/modules/user/user.service.ts:218</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/UserPasswordRequest.html" target="_self" >UserPasswordRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ActiveUserData.html" target="_self" >ActiveUserData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="create"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>create</b></span>
+                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>create(body: <a href="../classes/UserRequest.html" target="_self">UserRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="143"
+                                    class="link-to-prism">src/modules/user/user.service.ts:143</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/UserRequest.html" target="_self" >UserRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="findOne"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -220,15 +507,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOne(email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>findOne(email: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, pass: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="12"
-                                    class="link-to-prism">src/modules/user/user.service.ts:12</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="108"
+                                    class="link-to-prism">src/modules/user/user.service.ts:108</a></div>
                         </td>
                     </tr>
 
@@ -260,11 +547,416 @@
 
 
                                         </tr>
+                                        <tr>
+                                                <td>pass</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
                             <b>Returns : </b>    <code>Promise&lt;UserEntity | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="findOneThroughPhone"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>findOneThroughPhone</b></span>
+                        <a href="#findOneThroughPhone"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>findOneThroughPhone(phone: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, pass: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="124"
+                                    class="link-to-prism">src/modules/user/user.service.ts:124</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>phone</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>pass</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserEntity | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getById"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getById</b></span>
+                        <a href="#getById"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getById(id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, relations?: FindOptionsRelations<UserEntity>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/modules/user/user.service.ts:61</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>relations</td>
+                                            <td>
+                                                        <code>FindOptionsRelations&lt;UserEntity&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserEntity | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getByIdWithError"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getByIdWithError</b></span>
+                        <a href="#getByIdWithError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getByIdWithError(id?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, relations?: FindOptionsRelations<UserEntity>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="87"
+                                    class="link-to-prism">src/modules/user/user.service.ts:87</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>relations</td>
+                                            <td>
+                                                        <code>FindOptionsRelations&lt;UserEntity&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserEntity&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="remove"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>remove</b></span>
+                        <a href="#remove"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>remove(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">src/modules/user/user.service.ts:212</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="update"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>update</b></span>
+                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>update(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, body: <a href="../classes/UserRequest.html" target="_self">UserRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="178"
+                                    class="link-to-prism">src/modules/user/user.service.ts:178</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/UserRequest.html" target="_self" >UserRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;UserEntity&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -280,34 +972,254 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UserEntity } from &quot;@bill/database/dist/entities&quot;;
-import { Injectable } from &quot;@nestjs/common&quot;;
-import { InjectRepository } from &quot;@nestjs/typeorm&quot;;
-import { Repository } from &quot;typeorm&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import * as dayjs from &#x27;dayjs&#x27;;
+import { Not, type FindOptionsRelations, type Repository } from &#x27;typeorm&#x27;;
+import { ApiStatusCode } from &#x27;@bill/database&#x27;;
+import { UserEntity } from &#x27;@bill/database/dist/entities&#x27;;
+import { Global, HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;;
+import { ConfigService } from &#x27;@nestjs/config&#x27;;
+import { InjectRepository } from &#x27;@nestjs/typeorm&#x27;;
+
+import { ApiException } from &#x27;@/common/exception/api.exception&#x27;;
+import { ActiveUserData } from &#x27;@/common/interfaces/active-user-data.interface&#x27;;
+import hashPwd from &#x27;@/common/utils/hash&#x27;;
+import { RoleService } from &#x27;@/modules/role/role.service&#x27;;
+
+import { CompanyService } from &#x27;../company/company.service&#x27;;
+import type {
+  UserPasswordRequest,
+  UserQuery,
+  UserRequest,
+} from &#x27;./user.interface&#x27;;
 
 @Injectable()
+@Global()
 export class UserService {
   constructor(
-    @InjectRepository(UserEntity) private userRepo: Repository&lt;UserEntity&gt;
+    private configService: ConfigService,
+    private roleService: RoleService,
+    private companyService: CompanyService,
+    @InjectRepository(UserEntity) private repo: Repository&lt;UserEntity&gt;,
   ) {}
 
-  async findOne(email: string): Promise&lt;UserEntity | null&gt; {
-    console.log(1111);
-    return {
-      email: &quot;nick@126.com&quot;,
-      id: 1,
-      fullname: &quot;&quot;,
-      password: &quot;changeme&quot;,
-      avatar: &quot;&quot;,
-      address: &quot;&quot;,
-      isActive: false,
-    };
+  async all(query: UserQuery): Promise&lt;{ rows: UserEntity[]; count: number }&gt; {
+    const { role, ...rest } &#x3D; query?.where || {};
+    const [rows, count] &#x3D; await this.repo.findAndCount({
+      skip: query.skip,
+      take: query.take,
+      where: {
+        ...rest,
+        role: role?.id ? { id: ~~role.id } : undefined,
+      },
+      relations: {
+        role: true,
+        company: true,
+      },
+      select: [&#x27;role&#x27;, &#x27;company&#x27;],
+      withDeleted: false,
+    });
 
-    // return this.userRepo.findOne({
-    //   where: {
-    //     email,
-    //   },
-    // });
+    return {
+      rows: rows.map((u) &#x3D;&gt; {
+        u.password &#x3D; &#x27;&#x27;;
+        u.validateDate &#x3D; (u.validateDate || 0) * 1;
+        u.expireDay &#x3D; dayjs(u.validateDate)
+          .startOf(&#x27;day&#x27;)
+          .diff(dayjs().startOf(&#x27;day&#x27;), &#x27;day&#x27;);
+        return u;
+      }),
+      count,
+    };
+  }
+
+  async getById(
+    id?: number,
+    relations?: FindOptionsRelations&lt;UserEntity&gt;,
+  ): Promise&lt;UserEntity | null&gt; {
+    if (!id) {
+      return null;
+    }
+
+    const data &#x3D; await this.repo.findOne({
+      where: { id },
+      relations,
+    });
+
+    if (data) {
+      data.expireDay &#x3D; dayjs((data.validateDate || 0) * 1)
+        .startOf(&#x27;day&#x27;)
+        .diff(dayjs().startOf(&#x27;day&#x27;), &#x27;day&#x27;);
+    }
+
+    if (data?.role?.label &#x3D;&#x3D;&#x3D; &#x27;admin&#x27;) {
+      data.expireDay &#x3D; 9999;
+    }
+
+    return data || null;
+  }
+
+  async getByIdWithError(
+    id?: number,
+    relations?: FindOptionsRelations&lt;UserEntity&gt;,
+  ): Promise&lt;UserEntity&gt; {
+    const user &#x3D; await this.getById(id, relations);
+
+    if (!user) {
+      throw new ApiException(
+        &#x27;can not find recoed&#x27;,
+        ApiStatusCode.KEY_NOT_EXIST,
+        HttpStatus.OK,
+        {
+          id: id,
+          type: &#x27;UserEntity&#x27;,
+        },
+      );
+    }
+
+    return user;
+  }
+
+  async findOne(email: string, pass: string): Promise&lt;UserEntity | null&gt; {
+    return this.repo.findOne({
+      where: {
+        email,
+        password: hashPwd(
+          pass,
+          this.configService.get&lt;{ secret: string }&gt;(&#x27;app&#x27;)?.secret || &#x27;&#x27;,
+        ),
+      },
+      relations: {
+        role: true,
+        company: true,
+      },
+    });
+  }
+
+  async findOneThroughPhone(
+    phone: string,
+    pass: string,
+  ): Promise&lt;UserEntity | null&gt; {
+    return this.repo.findOne({
+      where: {
+        phone,
+        password: hashPwd(
+          pass,
+          this.configService.get&lt;{ secret: string }&gt;(&#x27;app&#x27;)?.secret || &#x27;&#x27;,
+        ),
+      },
+      relations: {
+        role: true,
+        company: true,
+      },
+    });
+  }
+
+  async create(body: UserRequest): Promise&lt;UserEntity&gt; {
+    const { password, phone, email, company, role, ...rest } &#x3D; body;
+    const userEntity &#x3D;
+      (await this.repo.find({ where: { email } })).length ||
+      (await this.repo.find({ where: { phone } })).length;
+
+    if (userEntity) {
+      throw new ApiException(
+        &#x27;email or phone already exists&#x27;,
+        ApiStatusCode.KEY_ALREADY_EXISTS,
+        HttpStatus.OK,
+        {
+          email: email,
+          phone: phone,
+          type: &#x27;UserEntity&#x27;,
+        },
+      );
+    }
+
+    const user &#x3D; new UserEntity().extend({
+      ...rest,
+      email,
+      phone,
+      avatar: rest.avatar || &#x27;&#x27;,
+      password: hashPwd(
+        password ?? &#x27;123456789&#x27;,
+        this.configService.get&lt;{ secret: string }&gt;(&#x27;app&#x27;)?.secret || &#x27;&#x27;,
+      ),
+      role: (await this.roleService.getById(role)) ?? undefined,
+      company: (await this.companyService.getById(company)) ?? undefined,
+    });
+
+    return await this.repo.save(user);
+  }
+
+  async update(id: number, body: UserRequest): Promise&lt;UserEntity&gt; {
+    const user &#x3D; await this.getByIdWithError(id);
+    const { company, role, email, phone, validateDate, ...rest } &#x3D; body;
+    const userEntity &#x3D;
+      (await this.repo.find({ where: { email, id: Not(user.id) } })).length ||
+      (await this.repo.find({ where: { phone, id: Not(user.id) } })).length;
+
+    if (userEntity) {
+      throw new ApiException(
+        &#x27;email or phone already exists&#x27;,
+        ApiStatusCode.KEY_ALREADY_EXISTS,
+        HttpStatus.OK,
+        {
+          email: email,
+          phone: phone,
+          type: &#x27;UserEntity&#x27;,
+        },
+      );
+    }
+
+    user.extend({
+      ...rest,
+      avatar: rest.avatar || &#x27;&#x27;,
+      password: user.password,
+      email,
+      phone,
+      validateDate: (validateDate as any) * 1 || 0,
+      role: await this.roleService.getById(role),
+      company: await this.companyService.getById(company),
+    });
+
+    return this.repo.save(user);
+  }
+
+  async remove(id: number) {
+    const child &#x3D; await this.getByIdWithError(id);
+
+    return this.repo.softRemove(child);
+  }
+
+  async changePassword(body: UserPasswordRequest, user: ActiveUserData) {
+    const userEntity &#x3D; await this.getByIdWithError(user.id);
+
+    if (
+      userEntity.password !&#x3D;&#x3D;
+      hashPwd(
+        body.password,
+        this.configService.get&lt;{ secret: string }&gt;(&#x27;app&#x27;)?.secret || &#x27;&#x27;,
+      )
+    ) {
+      throw new ApiException(
+        &#x27;password not correct&#x27;,
+        ApiStatusCode.PASSWORD_NOT_CORRECT,
+        HttpStatus.OK,
+      );
+    }
+
+    if (body.passwordNew !&#x3D;&#x3D; body.passwordNewAgain) {
+      throw new ApiException(
+        &#x27;2 passwords are not match.&#x27;,
+        ApiStatusCode.TWO_PASSWORDS_NOT_MATCH,
+        HttpStatus.OK,
+      );
+    }
+
+    userEntity.password &#x3D; hashPwd(
+      body.passwordNew,
+      this.configService.get&lt;{ secret: string }&gt;(&#x27;app&#x27;)?.secret || &#x27;&#x27;,
+    );
+
+    return this.repo.save(userEntity);
   }
 }
 </code></pre>

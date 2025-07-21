@@ -137,7 +137,19 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#generateAccessToken" >generateAccessToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#login" >login</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#profile" >profile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#signOut" >signOut</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -161,12 +173,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(usersService: <a href="../injectables/UserService.html" target="_self">UserService</a>, jwtService: JwtService)</code>
+<code>constructor(usersService: <a href="../injectables/UserService.html" target="_self">UserService</a>, roleService: <a href="../injectables/RoleService.html" target="_self">RoleService</a>, jwtService: JwtService, redisService: <a href="../injectables/RedisService.html" target="_self">RedisService</a>, configService: ConfigService)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="7" class="link-to-prism">src/modules/auth/auth.service.ts:7</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/modules/auth/auth.service.ts:16</a></div>
                             </td>
                         </tr>
 
@@ -196,10 +208,46 @@
                                                     
                                                 </tr>
                                                 <tr>
+                                                        <td>roleService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RoleService.html" target="_self" >RoleService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
                                                         <td>jwtService</td>
                                                   
                                                         <td>
                                                                     <code>JwtService</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>redisService</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/RedisService.html" target="_self" >RedisService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                        <td>configService</td>
+                                                  
+                                                        <td>
+                                                                    <code>ConfigService</code>
                                                         </td>
                                                   
                                                     <td>
@@ -225,26 +273,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="login"></a>
+                    <a name="generateAccessToken"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>login</b></span>
-                        <a href="#login"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>generateAccessToken</b></span>
+                        <a href="#generateAccessToken"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>login(user: UserEntity)</code>
+                    <code>generateAccessToken(user: UserEntity)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="25"
-                                    class="link-to-prism">src/modules/auth/auth.service.ts:25</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="88"
+                                    class="link-to-prism">src/modules/auth/auth.service.ts:88</a></div>
                         </td>
                     </tr>
 
@@ -280,7 +328,214 @@
                                 </table>
                             </div>
                         <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="login"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>login</b></span>
+                        <a href="#login"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>login(body: <a href="../classes/AuthRequest.html" target="_self">AuthRequest</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/modules/auth/auth.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/AuthRequest.html" target="_self" >AuthRequest</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
                             <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="profile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>profile</b></span>
+                        <a href="#profile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>profile(user: <a href="../interfaces/ActiveUserData.html" target="_self">ActiveUserData</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="67"
+                                    class="link-to-prism">src/modules/auth/auth.service.ts:67</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/ActiveUserData.html" target="_self" >ActiveUserData</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Partial&lt;UserEntity&gt;&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signOut"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>signOut</b></span>
+                        <a href="#signOut"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>signOut(userId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="63"
+                                    class="link-to-prism">src/modules/auth/auth.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>userId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -312,8 +567,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="13"
-                                    class="link-to-prism">src/modules/auth/auth.service.ts:13</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="25"
+                                    class="link-to-prism">src/modules/auth/auth.service.ts:25</a></div>
                         </td>
                     </tr>
 
@@ -361,7 +616,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;any&gt;</code>
+                            <b>Returns : </b>    <code>Promise&lt;Partial | null&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -377,36 +632,113 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Get, Injectable, Req, UseGuards } from &quot;@nestjs/common&quot;;
-import { UserService } from &quot;@/modules/user/user.service&quot;;
-import { JwtService } from &quot;@nestjs/jwt&quot;;
-import { UserEntity } from &quot;@bill/database/dist/entities&quot;;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { randomUUID } from &#x27;crypto&#x27;;
+import * as dayjs from &#x27;dayjs&#x27;;
+import { UserEntity } from &#x27;@bill/database/dist/entities&#x27;;
+import { Injectable, UnauthorizedException } from &#x27;@nestjs/common&#x27;;
+import { ConfigService } from &#x27;@nestjs/config&#x27;;
+import { JwtService } from &#x27;@nestjs/jwt&#x27;;
+
+import { ActiveUserData } from &#x27;@/common/interfaces/active-user-data.interface&#x27;;
+import { RedisService } from &#x27;@/modules/redis/redis.service&#x27;;
+import { RoleService } from &#x27;@/modules/role/role.service&#x27;;
+import { UserService } from &#x27;@/modules/user/user.service&#x27;;
+
+import { AuthRequest } from &#x27;./auth.interface&#x27;;
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UserService,
-    private jwtService: JwtService
+    private roleService: RoleService,
+    private jwtService: JwtService,
+    private readonly redisService: RedisService,
+    private configService: ConfigService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise&lt;any&gt; {
-    const user &#x3D; await this.usersService.findOne(email);
+  async validateUser(
+    email: string,
+    pass: string,
+  ): Promise&lt;Partial&lt;UserEntity&gt; | null&gt; {
+    const user &#x3D; await this.usersService.findOne(email, pass);
 
-    if (user &amp;&amp; user.password &#x3D;&#x3D;&#x3D; pass) {
-      const { password, ...result } &#x3D; user;
+    if (user) {
+      user.password &#x3D; undefined;
 
-      return result;
+      return user;
     }
 
     return null;
   }
 
-  async login(user: UserEntity) {
-    const payload &#x3D; { email: user.email, sub: user.id };
+  async login(body: AuthRequest) {
+    let user &#x3D; await this.usersService.findOne(body.username, body.password);
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    if (!user) {
+      user &#x3D; await this.usersService.findOneThroughPhone(
+        body.username,
+        body.password,
+      );
+    }
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const role &#x3D; await this.roleService.getByIdWithPermission(
+      user.role?.id ?? 0,
+    );
+
+    user.permissions &#x3D; role.menus;
+
+    return await this.generateAccessToken(user);
+  }
+
+  async signOut(userId: string): Promise&lt;void&gt; {
+    return this.redisService.delete(&#x60;user-${userId}&#x60;);
+  }
+
+  async profile(user: ActiveUserData): Promise&lt;Partial&lt;UserEntity&gt;&gt; {
+    const userEntity &#x3D; await this.usersService.getByIdWithError(user.id, {
+      role: true,
+      company: true,
+    });
+    const role &#x3D; await this.roleService.getByIdWithPermission(
+      userEntity.role?.id ?? 0,
+    );
+
+    userEntity.permissions &#x3D; role.menus;
+    userEntity.password &#x3D; &#x27;&#x27;;
+
+    if (dayjs(userEntity.createTime).add(65, &#x27;day&#x27;) &gt; dayjs()) {
+      userEntity.returnDate &#x3D; dayjs(userEntity.createTime)
+        .add(65, &#x27;day&#x27;)
+        .format(&#x27;YYYY-MM-DD&#x27;);
+    }
+
+    return userEntity;
+  }
+
+  async generateAccessToken(
+    user: UserEntity,
+  ): Promise&lt;{ accessToken: string; user?: UserEntity }&gt; {
+    const tokenId &#x3D; randomUUID();
+
+    await this.redisService.insert(&#x60;user-${user.id}&#x60;, tokenId);
+
+    const accessToken &#x3D; await this.jwtService.signAsync(
+      {
+        id: user.id,
+        email: user.email,
+        companyId: user.company?.id,
+        tokenId,
+      } as ActiveUserData,
+      {
+        secret: this.configService.get&lt;{ secret: string }&gt;(&#x27;jwt&#x27;)?.secret,
+      },
+    );
+
+    return { accessToken, user };
   }
 }
 </code></pre>

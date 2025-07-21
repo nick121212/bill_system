@@ -35,7 +35,7 @@ function Login() {
 					background: bg,
 				}}
 			>
-				<div className="text-3xl font-bold leading-normal lg:text-4xl xl:text-5xl">新实界图文管理系统</div>
+				<div className="text-3xl font-bold leading-normal lg:text-4xl xl:text-5xl">账目管理系统</div>
 				<img className="max-w-[480px] xl:max-w-[560px]" src={DashboardImg} alt="" />
 				<Typography.Text className="flex flex-row gap-[16px] text-2xl">
 				上海信新实界企业发展有限公司

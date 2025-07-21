@@ -106,6 +106,13 @@ export class UserService {
   }
 
   async findOne(email: string, pass: string): Promise<UserEntity | null> {
+    console.log(
+      hashPwd(
+        pass,
+        this.configService.get<{ secret: string }>('app')?.secret || '',
+      ),
+    );
+
     return this.repo.findOne({
       where: {
         email,
@@ -143,7 +150,7 @@ export class UserService {
   async create(body: UserRequest): Promise<UserEntity> {
     const { password, phone, email, company, role, ...rest } = body;
     const userEntity =
-      (await this.repo.find({ where: { email } })).length ||
+      // (email && (await this.repo.find({ where: { email } })).length) ||
       (await this.repo.find({ where: { phone } })).length;
 
     if (userEntity) {
@@ -179,7 +186,9 @@ export class UserService {
     const user = await this.getByIdWithError(id);
     const { company, role, email, phone, validateDate, ...rest } = body;
     const userEntity =
-      (await this.repo.find({ where: { email, id: Not(user.id) } })).length ||
+      // (email &&
+      //   (await this.repo.find({ where: { email, id: Not(user.id) } }))
+      //     .length) ||
       (await this.repo.find({ where: { phone, id: Not(user.id) } })).length;
 
     if (userEntity) {

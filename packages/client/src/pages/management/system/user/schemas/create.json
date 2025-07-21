@@ -3,7 +3,11 @@
   "type": "object",
   "properties": {
     "fullname": { "type": "string", "title": "用户名称" },
-    "email": { "type": "string", "format": "email", "title": "邮箱" },
+    "email": {
+      "type": "string",
+      "title": "邮箱",
+      "default": ""
+    },
     "avatar": { "type": "string", "title": "头像", "default": "" },
     "address": { "type": "string", "title": "地址", "default": "" },
     "password": { "type": "string", "title": "密码" },
@@ -31,7 +35,6 @@
   "required": [
     "fullname",
     "password",
-    "email",
     "phone",
     "company",
     "validateDate",
