@@ -15,8 +15,6 @@
     "balance": { "type": "number", "title": "余额", "default": 0 },
     "phone": {
       "type": "string",
-      "format": "regex",
-      "pattern": "^1[3-9]\\d{9}$",
       "title": "手机号"
     },
     "deliver": {
@@ -47,5 +45,5 @@
       "default": "0"
     }
   },
-  "required": ["fullname", "phone"]
+  "required": ["fullname"]
 }

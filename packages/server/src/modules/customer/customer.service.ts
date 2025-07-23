@@ -51,7 +51,7 @@ export class CustomerService {
     });
 
     rows.map((row) => {
-      row.phone = dataDesensitization(row.phone, 'tel', 3, 4);
+      row.phone = dataDesensitization(row.phone || '', 'tel', 3, 4);
     });
 
     return {
@@ -72,7 +72,7 @@ export class CustomerService {
     });
 
     if (data) {
-      data.phone = dataDesensitization(data.phone, 'tel', 3, 4);
+      data.phone = dataDesensitization(data.phone || '', 'tel', 3, 4);
     }
 
     return data || null;

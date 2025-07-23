@@ -55,7 +55,7 @@ export class OrderExportService {
           '',
           '',
           '电话',
-          dataDesensitization(order.customer.phone, 'tel', 3, 4),
+          dataDesensitization(order.customer.phone || '', 'tel', 3, 4),
           '',
         ]);
         ranges.push({ s: { c: 1, r: rowIndex }, e: { c: 3, r: rowIndex } });

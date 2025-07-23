@@ -114,7 +114,7 @@ export class OrderService {
 
     if (data?.customer) {
       data.customer.phone = dataDesensitization(
-        data.customer.phone,
+        data.customer.phone || '',
         'tel',
         3,
         4,
