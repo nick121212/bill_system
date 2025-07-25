@@ -213,7 +213,7 @@ export class ProductService {
         );
       }
 
-      if (!row[2] || !row[4]) {
+      if (!row[2]) {
         continue;
       }
 
@@ -259,7 +259,7 @@ export class ProductService {
     for (const category of Object.values(categoryMap)) {
       await this.productCategoryService.update(category.id, {
         ...category,
-        products: category.products.map((p) => p.id),
+        products: category.products?.map((p) => p.id) || [],
       });
     }
 
